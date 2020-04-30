@@ -73,7 +73,9 @@ After successful login, server will answer:
 {"logon":false}
 ```
 
-Logged users can use different JSON requests to modify their characters and interact with others on the server.
+Each logged client is constantly updated with the current state of a Flame module through an update response.
+
+Logged clients can use different JSON requests to modify their characters and interact with others on the server.
 
 Check documentation for a detailed description of all client requests and server responses.
 
