@@ -1,0 +1,65 @@
+.TH trade
+.SH NAME
+trade - client request for trade.
+.SH DESCRIPTION
+The trade request is used by the client to exchange items between one object controlled
+by the client and another object.
+.br
+Trade request contains IDs and serial values of two objects(buyer and seller) and list
+of items to exchange.
+.br
+Items to exchange are stored inside request as maps with item ID as key and
+list with serial values as a value.
+.br
+Example JSON map to sell 5 items with ID 'coin' and 1 with 'ironSword':
+.nf
+"items-sell": {
+  "coin": [
+    "0",
+    "8",
+    "4",
+    "102",
+    "10",
+  ],
+  "ironSword": [
+    "14",
+  ]
+}
+.br
+This request needs to be confirmed by the owner of another object.
+.br
+To do this, the server saves this request and sends a trade response to the owner of another object.
+.br
+If the owner sends accept request with ID received in trade response,
+the server will realize pending request.
+.br
+After the owner of another object sends an accept request server will send a trade-accepted
+response ta a client who sends a trade request.
+.SH JSON EXAMPLE
+.nf
+{
+  "trade": [
+    {
+      "buyer-id": "char1",
+      "buyer-serial": "0",
+      "seller-id": "char1",
+      "seller-serial": "1",
+      "items-buy": {
+        "coin": [
+          "0",
+          "2"
+        ]
+      },
+      "items-sell": {
+        "armor": [
+          "2"
+        ],
+        "weapon": [
+          "1"
+        ]
+      }
+    }
+  ]
+}
+.SH SEE ALSO
+response/trade, response/trade-accepted, request/accept

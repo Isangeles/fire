@@ -1,0 +1,24 @@
+.TH .fire
+.SH NAME
+\[char46]fire - file for server configuration.
+.SH DESCRIPTION
+This file contains server configuration values.
+.br
+The configuration file is loaded by the server on startup.
+.SH VALUES
+.P
+* host
+.br
+Address of server host.
+.br
+If not specified, the server will use default value: localhost.
+.P
+* port
+.br
+Port number for the server.
+.br
+If not specified, the server will use default value: 8000.
+.SH EXAMPLE
+.nf
+host:localhost
+port:8000

@@ -1,0 +1,21 @@
+MAJOR:
+* Burn command request/response
+* Dialog request
+* Loot request
+* Speak request
+* Change area request
+* Train request
+* Quest requests
+* Equipment requests
+* Skill request
+* Item requests
+MINOR:
+* Kicking clients
+* Canceling unaccepted requests
+DONE:
+* Handling requests and sending responses
+* Update response
+* Trade request/response
+* Login request/response
+* Move request
+* Users

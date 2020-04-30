@@ -1,0 +1,24 @@
+.TH user
+.SH NAME
+user - directory with server users.
+.SH DESCRIPTION
+This directory stores all server users in sub-directories.
+.br
+The directory is placed under data/fire inside the server executable directory.
+.br
+The name of the user sub-directory is used as a unique user ID.
+.br
+The user sub-directory contains a user configuration file.
+.br
+Users are loaded by the server on startup.
+.SH DIRECTORY EXAMPLE
+.nf
+/data/fire/user
+	/user1
+		.user
+	/user2
+		.user
+	/user5
+		.user
+.SH SEE ALSO
+config/.user

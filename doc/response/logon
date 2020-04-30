@@ -1,0 +1,18 @@
+.TH logon
+.SH NAME
+logon - server response to inform client about login requirement.
+.SH DESCRIPTION
+Logon response is sent to the client to inform him about the login requirement.
+.br
+If logon has value 'true', then the client needs to send a valid login request.
+.br
+Logon response with value 'false' indicates that the client does not need to log in.
+.br
+The server sends a logon request to all new connections.
+.SH JSON EXAMPLE
+.nf
+{
+  "logon":true
+}
+.SH SEE ALSO
+request/login

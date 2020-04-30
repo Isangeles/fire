@@ -1,0 +1,26 @@
+.TH accept
+.SH NAME
+accept - client request with ID of pending request to accept.
+.SH DESCRIPTION
+The accept request can be sent by a client to accept one of the pending
+requests on the server.
+.br
+Accept request need to contain a valid ID of pending request on the server-side.
+.br
+Only a client who controls an object being a target of the pending request is allowed
+to accept it.
+.br
+The accept request will be ignored if a client sends an accept request for the pending
+request that doesn't target any of the objects controlled by him.
+.br
+For all requests, that need acceptance server sends proper responses to inform clients.
+.br
+For example, the server will send a trade response with ID of pending trade request
+to a client that owns the object requested for trade.
+.SH JSON EXAMPLE
+.nf
+{
+  "accept": 12
+}
+.SH SEE ALSO
+response/trade

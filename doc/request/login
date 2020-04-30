@@ -1,0 +1,27 @@
+.TH login
+.SH NAME
+login - client request with user name and password for authorization.
+.SH DESCRIPTION
+Login request is sent by the client to authorize himself as a user with ID specified in request.
+.br
+Login request uses two values: "id" and "pass".
+.br
+To successfully login, both of these values need to be valid user credentials defined
+in a users data file on the server-side.
+.br
+All new connections need to send a valid login request.
+.br
+The server would ignore any other request from an unauthorized client and answer with
+logon response.
+.SH JSON EXAMPLE
+.nf
+{
+  "login": [
+    {
+      "id": "asd",
+      "pass": "asd"
+    }
+  ]
+}
+.SH SEE ALSO
+response/logon

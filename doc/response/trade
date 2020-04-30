@@ -1,0 +1,46 @@
+.TH trade
+.SH NAME
+trade - server response with trade to accept.
+.SH DESCRIPTION
+The trade response is sent to the owner of an object which is a target of trade
+request from another client.
+.br
+Trade response contains ID of the server request, IDs and serial values of
+two objects(buyer and seller) and a list of items to exchange.
+.br
+Items to exchange are stored inside request as maps with item ID as key and
+list with serial values as a value.
+.br
+To accept trade request and realize item exchange on server-side,
+client need to send a accept request with ID from recivied trade response.
+.br
+Without accept request trade from response would not be realised.
+.SH JSON EXAMPLE
+.nf
+{
+  "trade": [
+    {
+      "id": 0,
+      "buyer-id": "char1",
+      "buyer-serial": "0",
+      "seller-id": "char1",
+      "seller-serial": "1",
+      "items-buy": {
+        "coin": [
+          "0",
+          "2"
+        ]
+      },
+      "items-sell": {
+        "armor": [
+          "2"
+        ],
+        "weapon": [
+          "1"
+        ]
+      }
+    }
+  ]
+}
+.SH SEE ALSO
+request/trade, request/accept, response/trade-accepted

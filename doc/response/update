@@ -1,0 +1,11 @@
+.TH update
+.SH NAME
+update - server response with current game module data.
+.SH DESCRIPTION
+Udate response contains a marshaled game module.
+.br
+The client can use this data to recreate the current module on the client-side.
+.br
+Update response is sent to all logged clients after each new request processed by a server.
+.SH JSON EXAMPLE
+.nf

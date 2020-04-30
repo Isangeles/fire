@@ -1,0 +1,26 @@
+.TH .user
+.SH NAME
+\[char46]user - file for user configuration.
+.SH DESCRIPTION
+This file contains user configuration values.
+.br
+The user configuration file for each user is loaded by the server on startup.
+.SH VALUES
+.P
+* pass
+.br
+User password.
+.P
+* chars
+.br
+List of characters controlled by user.
+.br
+Each value is a concatenated character ID and serial value.
+.br
+For example for a character with ID char1 and serial value 12: char112
+.br
+Values are separated by semicolons.
+.SH EXAMPLE
+.nf
+pass:asd
+chars:char13;char240
