@@ -2,20 +2,24 @@ MAJOR:
 * Burn command request/response
 * Dialog request
 * Loot request
-* Speak request
+* Speak request/response
 * Change area request
 * Train request
 * Quest requests
 * Equipment requests
 * Skill request
 * Item requests
+* Spawning user characters on login and removing them on logout
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
+* New character validation
+* Saving state of the game module
 DONE:
 * Handling requests and sending responses
 * Update response
 * Trade request/response
 * Login request/response
 * Move request
+* Error request
 * Users
