@@ -1,0 +1,74 @@
+.TH new-char
+.SH NAME
+new-char - a client request with data for new game characters to create.
+.SH DESCRIPTION
+The new-char request is sent by the client to create new characters and place
+them in the start area of the current game module on the server-side.
+.br
+After this the character is assigned to a client user to controll it.
+.br
+This request contains a list of game character data that stores all data needed
+to create a game character in a game module.
+.br
+Character data from the request need to match configuration for new characters
+from the game module.
+.br
+In case of an error, the server sends a proper error response to the client.
+.SH JSON EXAMPLE
+.nf
+{
+  "new-char": [
+    {
+      "char": {
+        "id": "char1",
+        "serial": "",
+        "name": "charName",
+        "ai": true,
+        "level": 2,
+        "sex": "",
+        "race": "",
+        "attitude": "",
+        "guild": "guildID",
+        "alignment": "",
+        "pos-x": 0,
+        "pos-y": 0,
+        "def-pos-x": 0,
+        "def-pos-y": 0,
+        "hp": 0,
+        "mana": 0,
+        "exp": 0,
+        "resore": false,
+        "attributes": {
+          "str": 0,
+          "con": 0,
+          "dex": 0,
+          "int": 0,
+          "wis": 0
+        },
+        "inventory": {
+          "cap": 0,
+          "items": null
+        },
+        "equipment": {
+          "items": null
+        },
+        "quests": {
+          "quests": null
+        },
+        "crafting": {
+          "recipes": null
+        },
+        "trainings": {
+          "AttrTrainings": null
+        },
+        "flags": null,
+        "effects": null,
+        "skills": null,
+        "memory": null,
+        "dialogs": null
+      }
+    }
+  ]
+}
+.SH SEE ALSO
+response/error

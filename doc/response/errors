@@ -1,0 +1,18 @@
+.TH errors
+.SH NAME
+errors - a server response with errors.
+.SH DESCRIPTION
+The errors response is sent to a client to inform about occurred errors.
+.br
+It is usually sent as a response to an unsuccessful client request.
+.br
+This request contains a list of error messages.
+.SH JSON EXAMPLE
+.nf
+{
+  "errors": [
+    "Invalid request syntax"
+  ]
+}
+.SH SEE ALSO
+responses

@@ -1,0 +1,25 @@
+.TH move
+.SH NAME
+move - a client request used to move one of the controlled objects.
+.SH DESCRIPTION
+The move request is sent by the client to change the position of one of the module objects.
+.br
+This request contains an ID and serial value of the object to move and XY position.
+.br
+Only objects controlled by the author of the move request can be moved.
+.br
+In case of error, the server sends a proper error response to the client.
+.SH JSON EXAMPLE
+.nf
+{
+  "move": [
+    {
+      "id": "char1",
+      "serial": "0",
+      "pos-x": 10,
+      "pos-y": 20
+    }
+  ]
+}
+.SH SEE ALSO
+response/error
