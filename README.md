@@ -5,7 +5,6 @@ to connect and play together.
 Communication between client and server is realized through a JSON request/response system.
 
 Currently in a very early development stage.
-
 ## Build
 Get sources from git:
 ```
@@ -15,20 +14,23 @@ Build server executable:
 ```
 $ go build github.com/isangeles/fire
 ```
-Configure host address and port for server in `.fire`, for example in Bash:
+Configure host address and port for server and ID of Flame module to load on startup in `.fire`, for example in Bash:
 ```
-$ printf "host:[host]\nport:[port]" > .fire
+$ printf "host:[host]\nport:[port]\nmodule:[module ID]" > .fire
 ```
-Without configuration, the server will use localhost:8000 by default.
+Without address and host configuration, the server will use localhost:8000 by default.
+
+Module ID is the name of the module directory placed in `data/modules` in the server executable directory.
+
+Flame modules are available to download [here](http://flame.isangeles.pl/mods).
 
 Run server:
 ```
 $ ./fire
 ```
-
+After this, the server is ready to handle incoming connections.
 ## Configuration
 Server configuration is stored in `.fire` file placed in the server executable directory.
-
 ### Configuration values:
 ```
 host:[host name]
@@ -38,7 +40,12 @@ Value for server host address, localhost by default.
 port:[host port]
 ```
 Value for server host port number, 8000 by default.
+```
+module:[module ID]
+```
+Name of the directory with a Flame module to load on startup.
 
+The module should be placed in the data/modules directory in the server executable directory.
 ## Users
 Users are stored in the `data/fire/user` directory in the server executable directory.
 
@@ -54,7 +61,6 @@ pass:asd123!
 chars:player_asd1;player_asd2
 ```
 Check documentation for a detailed description of the user directory.
-
 ## Client
 Any program able to send data through a TCP connection could serve as a Fire client.
 
@@ -62,23 +68,19 @@ For each new connection, server sends a logon request to client, which is JSON i
 ```
 {"logon":true}
 ```
-
 First thing that server client need to do, is to send valid login request in following format:
 ```
 {"login":[{"id":"[user ID]","pass":"[user password]"}]}
 ```
-
 After successful login, server will answer:
 ```
 {"logon":false}
 ```
-
 Each logged client is constantly updated with the current state of a Flame module through an update response.
 
 Logged clients can use different JSON requests to modify their characters and interact with others on the server.
 
 Check documentation for a detailed description of all client requests and server responses.
-
 ## Documentation
 Source code documentation could be easily browsed with the `go doc` command.
 
@@ -89,7 +91,6 @@ For example to display documentation page for server login request:
 ```
 $ man doc/request/login
 ```
-
 ## Contributing
 You are welcome to contribute to project development.
 
@@ -97,7 +98,6 @@ If you looking for things to do, then check the TODO file or contact me(dev@isan
 
 When you find something to do, create a new branch for your feature.
 After you finish, open a pull request to merge your changes with master branch.
-
 ## License
 Copyright (C) 2020 Dariusz Sikora <<dev@isangeles.pl>>
 

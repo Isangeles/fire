@@ -22,17 +22,17 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"log"
-	
+	"time"
+
 	"github.com/isangeles/flame"
-	flameconf "github.com/isangeles/flame/config"
 	flamedata "github.com/isangeles/flame/data"
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
 
 	"github.com/isangeles/fire/client"
+	"github.com/isangeles/fire/config"
 )
 
 // Server-side wrapper for game.
@@ -40,15 +40,13 @@ type Game struct {
 	*flame.Game
 }
 
-// newGame loads flame config and starts game
-// with module specified in Flame config.
+// newGame loads module with ID set in config and
+// starts a game.
 func newGame() (*Game, error) {
-	err := flameconf.Load()
-	if err != nil {
-		return nil, fmt.Errorf("unable to load Flame config: %v",
-			err)
+	if len(config.Module) < 1 {
+		return nil, fmt.Errorf("no Flame module configurated")
 	}
-	modData, err := flamedata.ImportModule(flameconf.ModulePath())
+	modData, err := flamedata.ImportModule(config.ModulePath())
 	if err != nil {
 		return nil, fmt.Errorf("unable to load game module: %v",
 			err)

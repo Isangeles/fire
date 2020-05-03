@@ -18,7 +18,14 @@ If not specified, the server will use default value: localhost.
 Port number for the server.
 .br
 If not specified, the server will use default value: 8000.
+.P
+* module
+.br
+Name of the directory with a Flame module to load on startup.
+.br
+The module should be placed in the data/modules directory in the server executable directory.
 .SH EXAMPLE
 .nf
 host:localhost
 port:8000
+module:test
