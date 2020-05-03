@@ -37,8 +37,9 @@ const (
 )
 
 var (
-	Host = ""
-	Port = "8000"
+	Host   = ""
+	Port   = "8000"
+	Module = ""
 )
 
 // LoadConfig load server configuration file.
@@ -60,6 +61,9 @@ func Load() error {
 	if len(conf["port"]) > 0 {
 		Port = conf["port"][0]
 	}
+	if len(conf["module"]) > 0 {
+		Module = conf["module"][0]
+	}
 	return nil
 }
 
@@ -74,12 +78,18 @@ func Save() error {
 	conf := make(map[string][]string)
 	conf["host"] = []string{Host}
 	conf["port"] = []string{Port}
+	conf["module"] = []string{Module}
 	text := text.MarshalConfig(conf)
 	// Write config to file.
 	write := bufio.NewWriter(file)
 	write.WriteString(text)
 	write.Flush()
 	return nil
+}
+
+// ModulePath returns path to current module directory.
+func ModulePath() string {
+	return filepath.Join("data/modules", Module)
 }
 
 // UsersDir returns path to directory with users.
