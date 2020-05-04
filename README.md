@@ -5,7 +5,7 @@ to connect and play together.
 Communication between client and server is realized through a JSON request/response system.
 
 Currently in a very early development stage.
-## Build
+## Build & Run
 Get sources from git:
 ```
 $ go get -u github.com/isangeles/fire
@@ -18,7 +18,7 @@ Configure host address and port for server and ID of Flame module to load on sta
 ```
 $ printf "host:[host]\nport:[port]\nmodule:[module ID]" > .fire
 ```
-Without address and host configuration, the server will use localhost:8000 by default.
+Without address and host configuration, the server will use `localhost:8000` by default.
 
 Module ID is the name of the module directory placed in `data/modules` in the server executable directory.
 
@@ -45,7 +45,7 @@ module:[module ID]
 ```
 Name of the directory with a Flame module to load on startup.
 
-The module should be placed in the data/modules directory in the server executable directory.
+The module should be placed in the `data/modules` directory in the server executable directory.
 ## Users
 Users are stored in the `data/fire/user` directory in the server executable directory.
 
@@ -63,6 +63,8 @@ chars:player_asd1;player_asd2
 Check documentation for a detailed description of the user directory.
 ## Client
 Any program able to send data through a TCP connection could serve as a Fire client.
+
+For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
 
 For each new connection, server sends a logon request to client, which is JSON in following format:
 ```
@@ -85,6 +87,7 @@ Check documentation for a detailed description of all client requests and server
 Source code documentation could be easily browsed with the `go doc` command.
 
 Besides that `doc` directory contains documentation pages for request/response system and server files.
+
 Documentation pages are in Troff format and could be easily displayed with `man` command.
 
 For example to display documentation page for server login request:
@@ -94,7 +97,7 @@ $ man doc/request/login
 ## Contributing
 You are welcome to contribute to project development.
 
-If you looking for things to do, then check the TODO file or contact me(dev@isangeles.pl).
+If you looking for things to do, then check the TODO file or contact maintainer(dev@isangeles.pl).
 
 When you find something to do, create a new branch for your feature.
 After you finish, open a pull request to merge your changes with master branch.
