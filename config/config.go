@@ -94,5 +94,5 @@ func ModulePath() string {
 
 // UsersDir returns path to directory with users.
 func UsersDir() string {
-	return filepath.FromSlash("data/fire/user")
+	return filepath.FromSlash("data/users")
 }

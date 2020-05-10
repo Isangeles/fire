@@ -47,7 +47,7 @@ Name of the directory with a Flame module to load on startup.
 
 The module should be placed in the `data/modules` directory in the server executable directory.
 ## Users
-Users are stored in the `data/fire/user` directory in the server executable directory.
+Users are stored in the `data/users` directory in the server executable directory.
 
 Each user has its own directory with `.user` configuration file.
 
@@ -66,7 +66,7 @@ Any program able to send data through a TCP connection could serve as a Fire cli
 
 For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
 
-For each new connection, server sends a logon request to client, which is JSON in following format:
+For each new connection, server sends a logon response to client, which is JSON in following format:
 ```
 {"logon":true}
 ```
