@@ -88,6 +88,7 @@ func handleNewCharRequest(cli *client.Client, req request.NewChar, resp *respons
 		resp.Errors = append(resp.Errors, response.Error("Internal error"))
 	}
 	cli.User().Chars = append(cli.User().Chars, char.ID()+char.Serial())
+	resp.NewChars = append(resp.NewChars, char.Data())
 }
 
 // handleMoveRequest handles move request.

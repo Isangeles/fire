@@ -1,0 +1,67 @@
+.TH new-chars
+.SH NAME
+new-chars - server response with data of new characters for the client to control.
+.SH DESCRIPTION
+The new-chars response is sent by the server to inform client about new characters that he can control.
+.br
+Usually is send as a response on successful new-char request.
+.br
+The new-chars request contains a list of character's data.
+.br
+This data can be used by the client to recreate controlled characters on the client-side.
+.SH JSON EXAMPLE
+.nf
+{
+  "new-chars": [
+    {
+      "id": "char1",
+      "serial": "0",
+      "name": "charName",
+      "ai": true,
+      "level": 2,
+      "sex": "",
+      "race": "",
+      "attitude": "",
+      "guild": "",
+      "alignment": "",
+      "pos-x": 0,
+      "pos-y": 0,
+      "def-pos-x": 0,
+      "def-pos-y": 0,
+      "hp": 300,
+      "mana": 20,
+      "exp": 1000,
+      "resore": true,
+      "attributes": {
+        "str": 0,
+        "con": 0,
+        "dex": 0,
+        "int": 0,
+        "wis": 0
+      },
+      "inventory": {
+        "cap": 10,
+        "items": null
+      },
+      "equipment": {
+        "items": null
+      },
+      "quests": {
+        "quests": null
+      },
+      "crafting": {
+        "recipes": null
+      },
+      "trainings": {
+        "AttrTrainings": null
+      },
+      "flags": null,
+      "effects": null,
+      "skills": null,
+      "memory": null,
+      "dialogs": null
+    }
+  ]
+}
+.SH SEE ALSO
+request/new-char
