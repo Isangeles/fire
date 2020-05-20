@@ -4,16 +4,9 @@ Responses are used by the server to inform clients about required acctions, curr
 .br
 The server sends response to the client after each of request made by the client.
 .br
-Besides that the server can send response to a client any time(not only after client request).
+Update response is sent to every logged client after any response made by one of the logged clients.
 .br
-For example an update response or as a resoult of a request from another client that needs confirmation from the owner
-of specific module object.
-.SH JSON EXAMPLE
-.nf
-{
-  "errors": [
-    "Invalid request syntax"
-  ]
-}
-.SH SEE ALSO
-responses
+Besides that, the server can send a response to a client at any time(not only after the client request).
+.br
+For example as a result of a request from another client that needs confirmation from the owner
+of the specific module object.
