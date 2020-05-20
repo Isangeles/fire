@@ -1,0 +1,19 @@
+.TH responses
+.SH DESCRIPTION
+Responses are used by the server to inform clients about required acctions, current state of game module, errors, etc.
+.br
+The server sends response to the client after each of request made by the client.
+.br
+Besides that the server can send response to a client any time(not only after client request).
+.br
+For example an update response or as a resoult of a request from another client that needs confirmation from the owner
+of specific module object.
+.SH JSON EXAMPLE
+.nf
+{
+  "errors": [
+    "Invalid request syntax"
+  ]
+}
+.SH SEE ALSO
+responses
