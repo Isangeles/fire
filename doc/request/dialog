@@ -1,0 +1,26 @@
+.TH dialog
+.SH NAME
+dialog - client request for dialog.
+.SH DESCRIPTION
+The dialog request is used by the client to start a dialog between one object controlled
+by the client and another object.
+.br
+Dialog request contains IDs and serial values of two objects(dialog owner and dialog target)
+and ID of dialog to start.
+.br
+The server will answer with the dialog response if this request was successfully handled.
+.SH JSON EXAMPLE
+.nf
+{
+  "dialog": [
+    {
+      "target-id": "char1",
+      "target-serial": "0",
+      "owner-id": "char2",
+      "owner-serial": "0",
+      "dialog-id": "dialog1"
+    }
+  ]
+}
+.SH SEE ALSO
+request/dialog-answer, response/dialog

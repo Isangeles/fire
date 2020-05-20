@@ -1,0 +1,23 @@
+.TH dialog
+.SH NAME
+dialog - server response with started dialog data.
+.SH DESCRIPTION
+The dialog response is sent to the client to confirm that the dialog/dialog-answer request
+send previously was successfully handled.
+.br
+This response contains an ID of started dialog, and an ID of current stage of this dialog.
+.br
+The server sends this response as an answer to the dialog or dialog-answer request made by
+the client.
+.SH JSON EXAMPLE
+.nf
+{
+  "dialog": [
+    {
+      "id": "dialog1",
+      "stage": "dialog1_s0_2"
+    }
+  ]
+}
+.SH SEE ALSO
+request/dialog, request/dialog-answer

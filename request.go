@@ -24,7 +24,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/character"
+	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/objects"
 
 	"github.com/isangeles/fire/client"
@@ -52,6 +54,12 @@ func handleRequest(req clientRequest) {
 	}
 	for _, m := range req.Move {
 		handleMoveRequest(req.Client, m, &resp)
+	}
+	for _, d := range req.Dialog {
+		handleDialogRequest(req.Client, d, &resp)
+	}
+	for _, da := range req.DialogAnswer {
+		handleDialogAnswerRequest(req.Client, da, &resp)
 	}
 	for _, t := range req.Trade {
 		handleTradeRequest(req.Client, t, &resp)
@@ -120,6 +128,139 @@ func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Resp
 		return
 	}
 	posOb.SetPosition(req.PosX, req.PosY)
+}
+
+// handleDialogRequest handles dialog request.
+func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.Response) {
+	// Check if client controls dialog target.
+	if !cli.OwnsChar(req.TargetID, req.TargetSerial) {
+		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Retrieve dialog onwer & target.
+	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
+	if object == nil {
+		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
+			req.OwnerSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	owner, ok := object.(dialog.Talker)
+	if !ok {
+		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
+			req.OwnerSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	object = game.Module().Object(req.TargetID, req.TargetSerial)
+	if object == nil {
+		err := fmt.Sprintf("Dialog target not found: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	target, ok := object.(dialog.Talker)
+	if !ok {
+		err := fmt.Sprintf("Invalid dialog target: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Retrieve requested dialog from owner.
+	var dialog *dialog.Dialog
+	for _, d := range owner.Dialogs() {
+		if d.ID() == req.DialogID {
+			dialog = d
+		}
+	}
+	if dialog == nil {
+		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	if dialog.Target() != nil {
+		err := fmt.Sprintf("Dialog already started")
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Set dialog target.
+	dialog.SetTarget(target)
+	// Make response for the client.
+	dialogResp := res.ObjectDialogData{dialog.ID(), dialog.Stage().ID()}
+	resp.Dialog = append(resp.Dialog, dialogResp)
+}
+
+// handleDialogAnswerRequest handles dialog answer request.
+func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, resp *response.Response) {
+	// Check if client controls dialog target.
+	if !cli.OwnsChar(req.Dialog.TargetID, req.Dialog.TargetSerial) {
+		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Retrieve dialog onwer & target.
+	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
+	if object == nil {
+		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
+			req.OwnerSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	owner, ok := object.(dialog.Talker)
+	if !ok {
+		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
+			req.OwnerSerial)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Retrieve requested dialog from owner.
+	var reqDialog *dialog.Dialog
+	for _, d := range owner.Dialogs() {
+		if d.ID() == req.DialogID {
+			reqDialog = d
+		}
+	}
+	if reqDialog == nil {
+		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Check dialog target.
+	if reqDialog.Target() == nil {
+		err := fmt.Sprintf("Dialog not started")
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	if reqDialog.Target().ID() != req.TargetID ||
+		reqDialog.Target().Serial() != req.TargetSerial {
+		err := fmt.Sprintf("Target different then specified in request")
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	// Apply answer.
+	if reqDialog.Stage() == nil {
+		err := fmt.Sprintf("Requested dialog has no active stage")
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	var answer *dialog.Answer
+	for _, a := range reqDialog.Stage().Answers() {
+		if a.ID() == req.AnswerID {
+			answer = a
+		}
+	}
+	if answer == nil {
+		err := fmt.Sprintf("Requested answer not found: %s", req.AnswerID)
+		resp.Errors = append(resp.Errors, response.Error(err))
+		return
+	}
+	reqDialog.Next(answer)
+	// Make response for the client.
+	dialogResp := res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
+	resp.Dialog = append(resp.Dialog, dialogResp)
 }
 
 // handleTradeRequest handles trade request.

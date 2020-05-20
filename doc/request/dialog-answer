@@ -1,0 +1,27 @@
+.TH dialog-answer
+.SH NAME
+dialog-answer - client request for dialog answer.
+.SH DESCRIPTION
+The dialog-answer request is used by the client to send an answer for previously started dialog
+between one object controlled by the client and another object.
+.br
+This request contains IDs and serial values of two objects(dialog owner and dialog target),
+an ID of dialog to start, and an ID of one of the answers available for the current dialog stage.
+.br
+The server will answer with the dialog response if this request was successfully handled.
+.SH JSON EXAMPLE
+.nf
+{
+  "dialog-answer": [
+    {
+      "target-id": "char1",
+      "target-serial": "0",
+      "owner-id": "char2",
+      "owner-serial": "0",
+      "dialog-id": "dialog1",
+      "answer-id": "dialog1_s0_2_a1"
+    }
+  ]
+}
+.SH SEE ALSO
+request/dialog, response/dialog

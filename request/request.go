@@ -29,11 +29,13 @@ import (
 
 // Struct for client action.
 type Request struct {
-	Login   []Login   `json:"login"`
-	NewChar []NewChar `json:"new-char"`
-	Move    []Move    `json:"move"`
-	Trade   []Trade   `json:"trade"`
-	Accept  []Accept  `json:"accept"`
+	Login        []Login        `json:"login"`
+	NewChar      []NewChar      `json:"new-char"`
+	Move         []Move         `json:"move"`
+	Dialog       []Dialog       `json:"dialog"`
+	DialogAnswer []DialogAnswer `json:"dialog-answer"`
+	Trade        []Trade        `json:"trade"`
+	Accept       []Accept       `json:"accept"`
 }
 
 // Unmarshal parses specified text data to action struct.

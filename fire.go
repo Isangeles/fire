@@ -43,7 +43,7 @@ var (
 	charResponses   = make(chan charResponse)
 	confirmRequests = make(chan charConfirmRequest)
 	confirmed       = make(chan *clientConfirm)
-	pendingReqs     = make(map[int]charConfirmRequest, 0)
+	pendingReqs     = make(map[int]charConfirmRequest)
 )
 
 // Server-side wrapper for client request.
