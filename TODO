@@ -1,6 +1,5 @@
 MAJOR:
 * Burn command request/response
-* Dialog request
 * Loot request
 * Speak request/response
 * Change area request
@@ -15,10 +14,12 @@ MINOR:
 * Canceling unaccepted requests
 * New character validation
 * Saving state of the game module
+* Validate range between objects in dialog and trade requests
 DONE:
 * Handling requests and sending responses
 * Update response
 * Trade request/response
+* Dialog request/response
 * Login request/response
 * Move request
 * Error request
