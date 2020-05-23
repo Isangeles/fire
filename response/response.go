@@ -31,20 +31,14 @@ import (
 
 // Struct for server response.
 type Response struct {
-	Logon         Logon                  `json:"logon"`
+	Logon         bool                   `json:"logon"`
 	Update        Update                 `json:"update"`
 	NewChars      []res.CharacterData    `json:"new-chars"`
 	Trade         []Trade                `json:"trade"`
 	TradeAccepted []TradeAccepted        `json:"trade-accepted"`
 	Dialog        []res.ObjectDialogData `json:"dialog"`
-	Errors        []Error                `json:"errors"`
+	Errors        []string               `json:"errors"`
 }
-
-// Type for error response.
-type Error string
-
-// Struct for login response.
-type Logon bool
 
 // Unmarshal parses specified text data to response struct.
 func Unmarshal(s string) (Response, error) {

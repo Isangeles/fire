@@ -75,12 +75,12 @@ func handleLoginRequest(cli *client.Client, req request.Login, resp *response.Re
 	user := data.User(req.ID)
 	if user == nil || user.Pass() != req.Pass {
 		err := fmt.Sprintf("Invalid ID/password")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	if user.Logged {
 		err := fmt.Sprintf("Already logged")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	cli.SetUser(user)
@@ -88,12 +88,12 @@ func handleLoginRequest(cli *client.Client, req request.Login, resp *response.Re
 }
 
 // handleNewCharRequest handles new character request.
-func handleNewCharRequest(cli *client.Client, req request.NewChar, resp *response.Response) {
-	char, err := game.SpawnChar(req.Char)
+func handleNewCharRequest(cli *client.Client, charData res.CharacterData, resp *response.Response) {
+	char, err := game.SpawnChar(charData)
 	if err != nil {
 		log.Printf("handle new char: unable to spawn char: %v",
 			err)
-		resp.Errors = append(resp.Errors, response.Error("Internal error"))
+		resp.Errors = append(resp.Errors, "Internal error")
 	}
 	cli.User().Chars = append(cli.User().Chars, char.ID()+char.Serial())
 	resp.NewChars = append(resp.NewChars, char.Data())
@@ -105,7 +105,7 @@ func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Resp
 	chapter := game.Module().Chapter()
 	ob := chapter.Object(req.ID, req.Serial)
 	if ob == nil {
-		resp.Errors = append(resp.Errors, response.Error("Object not found"))
+		resp.Errors = append(resp.Errors, "Object not found")
 		return
 	}
 	// Check if object is under client control.
@@ -118,13 +118,13 @@ func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Resp
 		break
 	}
 	if !control {
-		resp.Errors = append(resp.Errors, response.Error("Object not controled"))
+		resp.Errors = append(resp.Errors, "Object not controled")
 		return
 	}
 	// Set position.
 	posOb, ok := ob.(objects.Positioner)
 	if !ok {
-		resp.Errors = append(resp.Errors, response.Error("Object without position"))
+		resp.Errors = append(resp.Errors, "Object without position")
 		return
 	}
 	posOb.SetPosition(req.PosX, req.PosY)
@@ -136,7 +136,7 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 	if !cli.OwnsChar(req.TargetID, req.TargetSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve dialog onwer & target.
@@ -144,28 +144,28 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 	if object == nil {
 		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	owner, ok := object.(dialog.Talker)
 	if !ok {
 		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object = game.Module().Object(req.TargetID, req.TargetSerial)
 	if object == nil {
 		err := fmt.Sprintf("Dialog target not found: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	target, ok := object.(dialog.Talker)
 	if !ok {
 		err := fmt.Sprintf("Invalid dialog target: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve requested dialog from owner.
@@ -177,12 +177,12 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 	}
 	if dialog == nil {
 		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	if dialog.Target() != nil {
 		err := fmt.Sprintf("Dialog already started")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Set dialog target.
@@ -198,7 +198,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 	if !cli.OwnsChar(req.Dialog.TargetID, req.Dialog.TargetSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve dialog onwer & target.
@@ -206,14 +206,14 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 	if object == nil {
 		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	owner, ok := object.(dialog.Talker)
 	if !ok {
 		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve requested dialog from owner.
@@ -225,25 +225,25 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 	}
 	if reqDialog == nil {
 		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Check dialog target.
 	if reqDialog.Target() == nil {
 		err := fmt.Sprintf("Dialog not started")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	if reqDialog.Target().ID() != req.TargetID ||
 		reqDialog.Target().Serial() != req.TargetSerial {
 		err := fmt.Sprintf("Target different then specified in request")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Apply answer.
 	if reqDialog.Stage() == nil {
 		err := fmt.Sprintf("Requested dialog has no active stage")
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	var answer *dialog.Answer
@@ -254,7 +254,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 	}
 	if answer == nil {
 		err := fmt.Sprintf("Requested answer not found: %s", req.AnswerID)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	reqDialog.Next(answer)
@@ -268,21 +268,21 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 	if !cli.OwnsChar(req.BuyerID, req.BuyerSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.BuyerID,
 			req.BuyerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object := game.Module().Object(req.SellerID, req.SellerSerial)
 	if object == nil {
 		err := fmt.Sprintf("Object not found: %s %s", req.SellerID,
 			req.SellerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
 		err := fmt.Sprintf("Object is not a character: %s %s", req.SellerID,
 			req.SellerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	confirmReq := charConfirmRequest{
@@ -312,8 +312,8 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 }
 
 // handleAcceptRequest handles accept request.
-func handleAcceptRequest(cli *client.Client, req request.Accept, resp *response.Response) {
-	confirm := clientConfirm{req, cli}
+func handleAcceptRequest(cli *client.Client, id int, resp *response.Response) {
+	confirm := clientConfirm{id, cli}
 	confirmReq := func(){confirmed <- &confirm}
 	go confirmReq()
 }

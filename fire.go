@@ -63,8 +63,8 @@ type charConfirmRequest struct {
 
 // Struct for client confirmation.
 type clientConfirm struct {
-	AcceptReq request.Accept
-	Client    *client.Client
+	ID     int
+	Client *client.Client
 }
 
 // Struct with request for owner of game
@@ -137,12 +137,12 @@ func update() {
 		case req := <-confirmRequests:
 			pendingReqs[req.ID] = req
 		case con := <- confirmed:
-			req := pendingReqs[int(con.AcceptReq)]
+			req := pendingReqs[con.ID]
 			if !con.Client.OwnsChar(req.CharID, req.CharSerial) {
 				continue
 			}
 			handleConfirmedRequest(req)
-			delete(pendingReqs, int(con.AcceptReq))
+			delete(pendingReqs, int(con.ID))
 		}
 		for _, c := range clients {
 			if c.User == nil {
@@ -177,7 +177,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Client: %s: unable to create request: %v",
 				cli.RemoteAddr(), err)
 			resp := response.Response{
-				Errors: []response.Error{response.Error("Invalid request syntax")},
+				Errors: []string{"Invalid request syntax"},
 			}
 			cli.Out <- resp
 			continue

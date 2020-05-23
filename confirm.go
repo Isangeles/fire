@@ -55,28 +55,28 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 	object := game.Module().Object(req.BuyerID, req.BuyerSerial)
 	if object == nil {
 		err := fmt.Sprintf("Object not found: %s %s", req.BuyerID, req.BuyerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	buyer, ok := object.(*character.Character)
 	if !ok {
 		err := fmt.Sprintf("Object is not a character: %s %s", req.BuyerID,
 			req.BuyerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object = game.Module().Object(req.SellerID, req.SellerSerial)
 	if object == nil {
 		err := fmt.Sprintf("Object not found: %s %s", req.SellerID,
 			req.SellerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
 		err := fmt.Sprintf("Object is not a character: %s %s", req.SellerID,
 			req.SellerSerial)
-		resp.Errors = append(resp.Errors, response.Error(err))
+		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Trade items.
@@ -86,7 +86,7 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 			if item == nil {
 				err := fmt.Sprintf("Item to buy not found: %s %s",
 					id, serial)
-				resp.Errors = append(resp.Errors, response.Error(err))
+				resp.Errors = append(resp.Errors, err)
 				continue
 			}
 			seller.Inventory().RemoveItem(item)
@@ -94,7 +94,7 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 			if err != nil {
 				err := fmt.Sprintf("Unable to add item to buyer inventory: %v",
 					err)
-				resp.Errors = append(resp.Errors, response.Error(err))
+				resp.Errors = append(resp.Errors, err)
 			}
 		}
 	}
@@ -104,7 +104,7 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 			if item == nil {
 				err := fmt.Sprintf("Item to sell not found: %s %s",
 					id, serial)
-				resp.Errors = append(resp.Errors, response.Error(err))
+				resp.Errors = append(resp.Errors, err)
 				continue
 			}
 			buyer.Inventory().RemoveItem(item)
@@ -112,7 +112,7 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 			if err != nil {
 				err := fmt.Sprintf("Unable to add item to seller inventory: %v",
 					err)
-				resp.Errors = append(resp.Errors, response.Error(err))
+				resp.Errors = append(resp.Errors, err)
 			}
 		}
 	}
