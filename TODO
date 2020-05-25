@@ -1,5 +1,4 @@
 MAJOR:
-* Burn command request/response
 * Loot request
 * Speak request/response
 * Change area request
@@ -15,6 +14,7 @@ MINOR:
 * New character validation
 * Saving state of the game module
 * Validate range between objects in dialog and trade requests
+* Permissions for users to use only specific Burn commands(now any client can use any command)
 DONE:
 * Handling requests and sending responses
 * Update response
@@ -23,4 +23,5 @@ DONE:
 * Login request/response
 * Move request
 * Error request
+* Burn command request/response
 * Users
