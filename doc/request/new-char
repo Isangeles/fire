@@ -18,8 +18,7 @@ In case of an error, the server sends a proper error response to the client.
 .nf
 {
   "new-char": [
-    {
-      "char": {
+      {
         "id": "char1",
         "serial": "",
         "name": "charName",
@@ -67,7 +66,6 @@ In case of an error, the server sends a proper error response to the client.
         "memory": null,
         "dialogs": null
       }
-    }
   ]
 }
 .SH SEE ALSO
