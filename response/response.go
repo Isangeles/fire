@@ -37,6 +37,7 @@ type Response struct {
 	Trade         []Trade                `json:"trade"`
 	TradeAccepted []TradeAccepted        `json:"trade-accepted"`
 	Dialog        []res.ObjectDialogData `json:"dialog"`
+	Command       []Command              `json:"command"`
 	Errors        []string               `json:"errors"`
 }
 

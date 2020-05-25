@@ -28,6 +28,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/isangeles/burn"
+
 	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/data"
@@ -92,6 +94,8 @@ func main() {
 		panic(fmt.Errorf("Unable to start game: %v", err))
 	}
 	go game.Update()
+	burn.Game = game.Game
+	burn.Module = game.Module()
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	server, err := net.Listen("tcp", addr)
 	if err != nil {

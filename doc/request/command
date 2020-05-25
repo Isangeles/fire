@@ -1,0 +1,18 @@
+.TH command 
+.SH NAME
+command - client request with the command to execute.
+.SH DESCRIPTION
+The command request can be sent by a client to execute Burn command on the server-side.
+.br
+This request contains the text of the Burn command to execute.
+.br
+It is also possible to send commands joined into expression.
+.SH JSON EXAMPLE
+.nf
+{
+  "command": [
+    "engineshow -o version"
+  ]
+}
+.SH SEE ALSO
+response/command

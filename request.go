@@ -29,6 +29,9 @@ import (
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/objects"
 
+	"github.com/isangeles/burn"
+	"github.com/isangeles/burn/syntax"
+
 	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
@@ -66,6 +69,9 @@ func handleRequest(req clientRequest) {
 	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a, &resp)
+	}
+	for _, c := range req.Command {
+		handleCommandRequest(req.Client, c, &resp)
 	}
 	req.Client.Out <- resp
 }
@@ -316,4 +322,16 @@ func handleAcceptRequest(cli *client.Client, id int, resp *response.Response) {
 	confirm := clientConfirm{id, cli}
 	confirmReq := func(){confirmed <- &confirm}
 	go confirmReq()
+}
+
+// handleCommandRequest handles command request.
+func handleCommandRequest(cli *client.Client, cmdText string, resp *response.Response) {
+	exp, err := syntax.NewSTDExpression(cmdText)
+	if err != nil {
+		err := fmt.Sprintf("Invalid command syntax: %v", err)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	res, out := burn.HandleExpression(exp)
+	resp.Command = append(resp.Command, response.Command{res, out})
 }

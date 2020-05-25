@@ -1,0 +1,21 @@
+.TH command
+.SH NAME
+command - server response with result of executed command.
+.SH DESCRIPTION
+The command response is sent to the client to inform about the result of the executed Burn command.
+.br
+The response contains result ID and textual output.
+.br
+This response is sent after successfully handled command request.
+.SH JSON EXAMPLE
+.nf
+{
+  "command": [
+    {
+      "result": "0",
+      "out": "char1 char2"
+    }
+  ]
+}
+.SH SEE ALSO
+request/command

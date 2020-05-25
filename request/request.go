@@ -38,6 +38,7 @@ type Request struct {
 	DialogAnswer []DialogAnswer      `json:"dialog-answer"`
 	Trade        []Trade             `json:"trade"`
 	Accept       []int               `json:"accept"`
+	Command      []string            `json:"command"`
 }
 
 // Unmarshal parses specified text data to action struct.
