@@ -80,40 +80,16 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *re
 		return
 	}
 	// Trade items.
-	for id, serials := range req.ItemsBuy {
-		for _, serial := range serials {
-			item := seller.Inventory().Item(id, serial)
-			if item == nil {
-				err := fmt.Sprintf("Item to buy not found: %s %s",
-					id, serial)
-				resp.Errors = append(resp.Errors, err)
-				continue
-			}
-			seller.Inventory().RemoveItem(item)
-			err := buyer.Inventory().AddItem(item)
-			if err != nil {
-				err := fmt.Sprintf("Unable to add item to buyer inventory: %v",
-					err)
-				resp.Errors = append(resp.Errors, err)
-			}
-		}
+	err := transferItems(seller, buyer, req.ItemsBuy)
+	if err != nil {
+		err := fmt.Sprintf("Unable to transfer items to buy: %v", err)
+		resp.Errors = append(resp.Errors, err)
+		return
 	}
-	for id, serials := range req.ItemsSell {
-		for _, serial := range serials {
-			item := buyer.Inventory().Item(id, serial)
-			if item == nil {
-				err := fmt.Sprintf("Item to sell not found: %s %s",
-					id, serial)
-				resp.Errors = append(resp.Errors, err)
-				continue
-			}
-			buyer.Inventory().RemoveItem(item)
-			err := seller.Inventory().AddItem(item)
-			if err != nil {
-				err := fmt.Sprintf("Unable to add item to seller inventory: %v",
-					err)
-				resp.Errors = append(resp.Errors, err)
-			}
-		}
+	err = transferItems(buyer, seller, req.ItemsSell)
+	if err != nil {
+		err := fmt.Sprintf("Unable to transfer items to sell: %v", err)
+		resp.Errors = append(resp.Errors, err)
+		return
 	}
 }
