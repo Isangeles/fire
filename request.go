@@ -27,6 +27,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/dialog"
+	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
 
 	"github.com/isangeles/burn"
@@ -66,6 +67,9 @@ func handleRequest(req clientRequest) {
 	}
 	for _, t := range req.Trade {
 		handleTradeRequest(req.Client, t, &resp)
+	}
+	for _, ti := range req.TransferItems {
+		handleTransferItemsRequest(req.Client, ti, &resp)
 	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a, &resp)
@@ -117,7 +121,7 @@ func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Resp
 	// Check if object is under client control.
 	control := false
 	for _, c := range cli.User().Chars {
-		if c != ob.ID() + ob.Serial() {
+		if c != ob.ID()+ob.Serial() {
 			continue
 		}
 		control = true
@@ -300,7 +304,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 		CharSerial: seller.Serial(),
 		ID:         len(pendingReqs),
 	}
-	addConfirmReq := func(){confirmRequests <- confirmReq}
+	addConfirmReq := func() { confirmRequests <- confirmReq }
 	go addConfirmReq()
 	tradeResp := response.Trade{
 		ID:           confirmReq.ID,
@@ -313,14 +317,73 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 	}
 	charResp := charResponse{CharID: seller.ID(), CharSerial: seller.Serial()}
 	charResp.Response.Trade = append(charResp.Response.Trade, tradeResp)
-	sendCharResp := func(){charResponses <- charResp}
+	sendCharResp := func() { charResponses <- charResp }
 	go sendCharResp()
+}
+
+// handleTransferItemsRequest handles transfer request.
+func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, resp *response.Response) {
+	ob := game.Module().Object(req.ObjectToID, req.ObjectToSerial)
+	if ob == nil {
+		err := fmt.Sprintf("Object 'to' not found: %s %s", req.ObjectToID,
+			req.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	to, ok := ob.(item.Container)
+	if !ok {
+		err := fmt.Sprintf("Object 'to' is not a container: %s %s", req.ObjectToID,
+			req.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	if !cli.OwnsChar(to.ID(), to.Serial()) {
+		err := fmt.Sprintf("Object 'to' is not controlled: %s %s", req.ObjectToID,
+			req.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	ob = game.Module().Object(req.ObjectFromID, req.ObjectFromSerial)
+	if ob == nil {
+		err := fmt.Sprintf("Object 'from' not found: %s %s", req.ObjectFromID,
+			req.ObjectFromSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	from, ok := ob.(item.Container)
+	if !ok {
+		err := fmt.Sprintf("Object 'from' is not a container: %s %s", req.ObjectFromID,
+			req.ObjectFromSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	switch from := from.(type) {
+	case *character.Character:
+		if !cli.OwnsChar(from.ID(), from.Serial()) && from.Live() {
+			err := fmt.Sprintf("Can't transfer items from: %s %s", req.ObjectFromID,
+				req.ObjectFromSerial)
+			resp.Errors = append(resp.Errors, err)
+			return
+		}
+		log.Printf("items: %v", from.Inventory().Items())
+		err := transferItems(from, to, req.Items)
+		if err != nil {
+			err := fmt.Sprintf("Unable to transfer items: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			return
+		}
+	default:
+		err := fmt.Sprintf("Unsupported object 'from': %s %s", req.ObjectFromID,
+			req.ObjectFromSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
 }
 
 // handleAcceptRequest handles accept request.
 func handleAcceptRequest(cli *client.Client, id int, resp *response.Response) {
 	confirm := clientConfirm{id, cli}
-	confirmReq := func(){confirmed <- &confirm}
+	confirmReq := func() { confirmed <- &confirm }
 	go confirmReq()
 }
 

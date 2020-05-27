@@ -29,3 +29,12 @@ type Trade struct {
 	ItemsBuy     map[string][]string `json:"items-buy"`
 	ItemsSell    map[string][]string `json:"items-sell"`
 }
+
+// Struct with transfer request.
+type TransferItems struct {
+	ObjectFromID     string `json:"object-from"`
+	ObjectFromSerial string `json:"object-from-serial"`
+	ObjectToID       string `json:"object-to"`
+	ObjectToSerial   string `json:"object-to-serial"`
+	Items            map[string][]string `json:"items"`
+}

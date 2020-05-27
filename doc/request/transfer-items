@@ -1,0 +1,29 @@
+.TH transfer-items
+.SH NAME
+transfer-items - client request for transferring items between objects.
+.SH DESCRIPTION
+The transfer-items request is used by the client to transfer items from one object
+to another object that is controlled by the client.
+.br
+Object to transfer items from, need to be under client control or need to be available to loot,
+e.g. not live.
+.br
+This request contains IDs and serial values of two objects and list
+of items to transfer.
+.SH JSON EXAMPLE
+.nf
+{
+  "transfer-items": [
+    {
+      "object-from": "char1",
+      "object-from-serial": "0",
+      "object-to": "char2",
+      "object-to-serial": "0",
+      "items": {
+        "imWater1": [
+          "0"
+        ]
+      }
+    }
+  ]
+}
