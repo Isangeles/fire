@@ -45,7 +45,7 @@ func handleRequest(req clientRequest) {
 	for _, l := range req.Login {
 		handleLoginRequest(req.Client, l, &resp)
 	}
-	if req.Client.User == nil {
+	if req.Client.User() == nil {
 		// Request login.
 		log.Printf("Authorization requested: %s",
 			req.Client.RemoteAddr())

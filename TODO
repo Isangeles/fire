@@ -15,7 +15,6 @@ MINOR:
 * Validate range between objects in dialog, trade, transfer-items requests
 * Permissions for users to use only specific Burn commands(now any client can use any command)
 * Client struct: rename OwnsChar function to Owns(or Controls)
-* Fix bug: not authorized clients can crash the server with a new-char request
 DONE:
 * Handling requests and sending responses
 * Update response
