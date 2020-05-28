@@ -55,17 +55,6 @@ func (c *Client) SetUser(u *user.User) {
 	c.user = u
 }
 
-// OwnsChar checks if client owns character with
-// specified ID and serial value.
-func (c *Client) OwnsChar(id, serial string) bool {
-	for _, sid := range c.User().Chars {
-		if sid == id + serial {
-			return true
-		}
-	}
-	return false
-}
-
 // Close closes client connection and removes
 // a logged flag from client user.
 func (c *Client) Close() {

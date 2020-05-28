@@ -14,7 +14,6 @@ MINOR:
 * Saving state of the game module
 * Validate range between objects in dialog, trade, transfer-items requests
 * Permissions for users to use only specific Burn commands(now any client can use any command)
-* Client struct: rename OwnsChar function to Owns(or Controls)
 DONE:
 * Handling requests and sending responses
 * Update response

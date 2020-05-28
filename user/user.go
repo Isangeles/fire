@@ -51,3 +51,14 @@ func (u *User) ID() string {
 func (u *User) Pass() string {
 	return u.pass
 }
+
+// Controls checks if user controls object with
+// specified ID and serial value.
+func (u *User) Controls(id, serial string) bool {
+	for _, sid := range u.Chars {
+		if sid == id + serial {
+			return true
+		}
+	}
+	return false
+}

@@ -134,7 +134,7 @@ func update() {
 			handleRequest(req)
 		case resp := <-charResponses:
 			for _, c := range clients {
-				if c.OwnsChar(resp.CharID, resp.CharSerial) {
+				if c.User().Controls(resp.CharID, resp.CharSerial) {
 					c.Out <- resp.Response
 				}
 			}
@@ -142,7 +142,7 @@ func update() {
 			pendingReqs[req.ID] = req
 		case con := <- confirmed:
 			req := pendingReqs[con.ID]
-			if !con.Client.OwnsChar(req.CharID, req.CharSerial) {
+			if !con.Client.User().Controls(req.CharID, req.CharSerial) {
 				continue
 			}
 			handleConfirmedRequest(req)

@@ -143,7 +143,7 @@ func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Resp
 // handleDialogRequest handles dialog request.
 func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.Response) {
 	// Check if client controls dialog target.
-	if !cli.OwnsChar(req.TargetID, req.TargetSerial) {
+	if !cli.User().Controls(req.TargetID, req.TargetSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
 		resp.Errors = append(resp.Errors, err)
@@ -205,7 +205,7 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 // handleDialogAnswerRequest handles dialog answer request.
 func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, resp *response.Response) {
 	// Check if client controls dialog target.
-	if !cli.OwnsChar(req.Dialog.TargetID, req.Dialog.TargetSerial) {
+	if !cli.User().Controls(req.Dialog.TargetID, req.Dialog.TargetSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
 		resp.Errors = append(resp.Errors, err)
@@ -275,7 +275,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 
 // handleTradeRequest handles trade request.
 func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Response) {
-	if !cli.OwnsChar(req.BuyerID, req.BuyerSerial) {
+	if !cli.User().Controls(req.BuyerID, req.BuyerSerial) {
 		err := fmt.Sprintf("Object not controlled: %s %s", req.BuyerID,
 			req.BuyerSerial)
 		resp.Errors = append(resp.Errors, err)
@@ -337,7 +337,7 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, r
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
-	if !cli.OwnsChar(to.ID(), to.Serial()) {
+	if !cli.User().Controls(to.ID(), to.Serial()) {
 		err := fmt.Sprintf("Object 'to' is not controlled: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
 		resp.Errors = append(resp.Errors, err)
@@ -359,7 +359,7 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, r
 	}
 	switch from := from.(type) {
 	case *character.Character:
-		if !cli.OwnsChar(from.ID(), from.Serial()) && from.Live() {
+		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
 			err := fmt.Sprintf("Can't transfer items from: %s %s", req.ObjectFromID,
 				req.ObjectFromSerial)
 			resp.Errors = append(resp.Errors, err)
