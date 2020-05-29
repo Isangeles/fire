@@ -22,12 +22,8 @@ package request
 
 // Struct for trade request.
 type Trade struct {
-	BuyerID      string              `json:"buyer-id"`
-	BuyerSerial  string              `json:"buyer-serial"`
-	SellerID     string              `json:"seller-id"`
-	SellerSerial string              `json:"seller-serial"`
-	ItemsBuy     map[string][]string `json:"items-buy"`
-	ItemsSell    map[string][]string `json:"items-sell"`
+	Sell TransferItems `json:"sell"`
+	Buy  TransferItems `json:"buy"`
 }
 
 // Struct with transfer request.

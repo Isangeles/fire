@@ -275,26 +275,29 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 
 // handleTradeRequest handles trade request.
 func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Response) {
-	if !cli.User().Controls(req.BuyerID, req.BuyerSerial) {
-		err := fmt.Sprintf("Object not controlled: %s %s", req.BuyerID,
-			req.BuyerSerial)
+	// Check if client controls buyer.
+	if !cli.User().Controls(req.Buy.ObjectToID, req.Buy.ObjectToSerial) {
+		err := fmt.Sprintf("Object not controlled: %s %s", req.Buy.ObjectToID,
+			req.Buy.ObjectToSerial)
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
-	object := game.Module().Object(req.SellerID, req.SellerSerial)
+	// Find seller.
+	object := game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Object not found: %s %s", req.SellerID,
-			req.SellerSerial)
+		err := fmt.Sprintf("Object not found: %s %s", req.Sell.ObjectToID,
+			req.Sell.ObjectToSerial)
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Object is not a character: %s %s", req.SellerID,
-			req.SellerSerial)
+		err := fmt.Sprintf("Object is not a character: %s %s", req.Sell.ObjectToID,
+			req.Sell.ObjectToSerial)
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
+	// Send confiramtion request to seller owner.
 	confirmReq := charConfirmRequest{
 		clientRequest: clientRequest{
 			Request: &request.Request{Trade: []request.Trade{req}},
@@ -308,12 +311,12 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 	go addConfirmReq()
 	tradeResp := response.Trade{
 		ID:           confirmReq.ID,
-		BuyerID:      req.BuyerID,
-		BuyerSerial:  req.BuyerSerial,
-		SellerID:     req.SellerID,
-		SellerSerial: req.SellerSerial,
-		ItemsBuy:     req.ItemsBuy,
-		ItemsSell:    req.ItemsSell,
+		BuyerID:      req.Buy.ObjectToID,
+		BuyerSerial:  req.Buy.ObjectToSerial,
+		SellerID:     req.Sell.ObjectToID,
+		SellerSerial: req.Sell.ObjectToSerial,
+		ItemsBuy:     req.Buy.Items,
+		ItemsSell:    req.Sell.Items,
 	}
 	charResp := charResponse{CharID: seller.ID(), CharSerial: seller.Serial()}
 	charResp.Response.Trade = append(charResp.Response.Trade, tradeResp)
