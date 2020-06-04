@@ -46,6 +46,10 @@ module:[module ID]
 Name of the directory with a Flame module to load on startup.
 
 The module should be placed in the `data/modules` directory in the server executable directory.
+```
+action-min-range:[range value]
+```
+The minimum range required for game objects to interact with each other.
 ## Users
 Users are stored in the `data/users` directory in the server executable directory.
 

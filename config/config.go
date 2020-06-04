@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/isangeles/flame/data/text"
 )
@@ -37,9 +38,10 @@ const (
 )
 
 var (
-	Host   = ""
-	Port   = "8000"
-	Module = ""
+	Host           = ""
+	Port           = "8000"
+	Module         = ""
+	ActionMinRange = 50.0
 )
 
 // LoadConfig load server configuration file.
@@ -64,6 +66,12 @@ func Load() error {
 	if len(conf["module"]) > 0 {
 		Module = conf["module"][0]
 	}
+	if len(conf["action-min-range"]) > 0 {
+		minRange, err := strconv.ParseFloat(conf["action-min-range"][0], 64)
+		if err == nil {
+			ActionMinRange = minRange
+		}
+	}
 	return nil
 }
 
@@ -79,6 +87,7 @@ func Save() error {
 	conf["host"] = []string{Host}
 	conf["port"] = []string{Port}
 	conf["module"] = []string{Module}
+	conf["action-min-range"] = []string{fmt.Sprintf("%f", ActionMinRange)}
 	text := text.MarshalConfig(conf)
 	// Write config to file.
 	write := bufio.NewWriter(file)
