@@ -24,6 +24,9 @@ import (
 	"fmt"
 
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/objects"
+
+	"github.com/isangeles/fire/config"
 )
 
 // transferItems transfer items between specified objects.
@@ -45,4 +48,20 @@ func transferItems(from, to item.Container, items map[string][]string) error {
 		}
 	}
 	return nil
+}
+
+// inRange checks if specified objects are in the minimum range between each other.
+// The minimum range value is specified in config package.
+// The function always returns true if at least one of the specified objects have
+// no position.
+func inRange(ob1, ob2 objects.Object) bool {
+	pos1, ok := ob1.(objects.Positioner)
+	if !ok {
+		return true
+	}
+	pos2, ok := ob2.(objects.Positioner)
+	if !ok {
+		return true
+	}
+	return objects.Range(pos1, pos2) <= config.ActionMinRange
 }

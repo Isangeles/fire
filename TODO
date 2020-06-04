@@ -12,7 +12,6 @@ MINOR:
 * Canceling unaccepted requests
 * New character validation
 * Saving state of the game module
-* Validate range between objects in dialog, trade, transfer-items requests
 * Permissions for users to use only specific Burn commands(now any client can use any command)
 DONE:
 * Handling requests and sending responses

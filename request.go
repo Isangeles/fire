@@ -178,6 +178,12 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
+	// Check range.
+	if !inRange(owner, target) {
+		err := fmt.Sprintf("Objects are not in the minimal range")
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
 	// Retrieve requested dialog from owner.
 	var dialog *dialog.Dialog
 	for _, d := range owner.Dialogs() {
@@ -223,6 +229,26 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 	if !ok {
 		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
 			req.OwnerSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	object = game.Module().Object(req.TargetID, req.TargetSerial)
+	if object == nil {
+		err := fmt.Sprintf("Dialog target not found: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	target, ok := object.(dialog.Talker)
+	if !ok {
+		err := fmt.Sprintf("Invalid dialog target: %s %s", req.TargetID,
+			req.TargetSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	// Check range.
+	if !inRange(owner, target) {
+		err := fmt.Sprintf("Objects are not in the minimal range")
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
@@ -282,18 +308,38 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
-	// Find seller.
+	// Find seller & buyer.
 	object := game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Object not found: %s %s", req.Sell.ObjectToID,
+		err := fmt.Sprintf("Seller not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Object is not a character: %s %s", req.Sell.ObjectToID,
+		err := fmt.Sprintf("Seller is not a character: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	object = game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
+	if object == nil {
+		err := fmt.Sprintf("Buyer not found: %s %s", req.Buy.ObjectToID,
+			req.Buy.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	buyer, ok := object.(*character.Character)
+	if !ok {
+		err := fmt.Sprintf("Buyer is not a character: %s %s", req.Buy.ObjectToID,
+			req.Buy.ObjectToSerial)
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	// Check range.
+	if !inRange(buyer, seller) {
+		err := fmt.Sprintf("Objects are not in the minimal range")
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
@@ -326,6 +372,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 
 // handleTransferItemsRequest handles transfer request.
 func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, resp *response.Response) {
+	// Retrive objects 'to' and 'from'.
 	ob := game.Module().Object(req.ObjectToID, req.ObjectToSerial)
 	if ob == nil {
 		err := fmt.Sprintf("Object 'to' not found: %s %s", req.ObjectToID,
@@ -360,6 +407,13 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, r
 		resp.Errors = append(resp.Errors, err)
 		return
 	}
+	// Check range.
+	if !inRange(from, to) {
+		err := fmt.Sprintf("Objects are not in the minimal range")
+		resp.Errors = append(resp.Errors, err)
+		return
+	}
+	// Transfer items.
 	switch from := from.(type) {
 	case *character.Character:
 		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
