@@ -31,5 +31,5 @@ type Trade struct {
 	ItemsSell    map[string][]string `json:"items-sell"`
 }
 
-// Struct for trade accepted response.
-type TradeAccepted Trade
+// Struct for trade completed response.
+type TradeCompleted Trade

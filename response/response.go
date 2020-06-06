@@ -31,14 +31,14 @@ import (
 
 // Struct for server response.
 type Response struct {
-	Logon         bool                   `json:"logon"`
-	Update        Update                 `json:"update"`
-	NewChars      []res.CharacterData    `json:"new-chars"`
-	Trade         []Trade                `json:"trade"`
-	TradeAccepted []TradeAccepted        `json:"trade-accepted"`
-	Dialog        []res.ObjectDialogData `json:"dialog"`
-	Command       []Command              `json:"command"`
-	Errors        []string               `json:"errors"`
+	Logon          bool                   `json:"logon"`
+	Update         Update                 `json:"update"`
+	NewChars       []res.CharacterData    `json:"new-chars"`
+	Trade          []Trade                `json:"trade"`
+	TradeCompleted []TradeCompleted       `json:"trade-completed"`
+	Dialog         []res.ObjectDialogData `json:"dialog"`
+	Command        []Command              `json:"command"`
+	Errors         []string               `json:"errors"`
 }
 
 // Unmarshal parses specified text data to response struct.

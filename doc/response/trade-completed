@@ -1,24 +1,19 @@
-.TH trade
+.TH trade-completed
 .SH NAME
-trade - server response with trade to accept.
+trade-completed - server response with completed trade data.
 .SH DESCRIPTION
-The trade response is sent to the owner of an object which is a target of trade
-request from another client.
+The trade-tradecompleted response is sent to both objects of trade
+request(buyer and seller) that was completed on the server-side.
 .br
-Trade response contains ID of the server request, IDs and serial values of
-two objects(buyer and seller) and a list of items to exchange.
+This request contains ID of the original request, IDs, and serial values of
+two objects(buyer and seller) and lists with items to exchange.
 .br
 Items to exchange are stored inside request as maps with item ID as key and
 list with serial values as a value.
-.br
-To accept trade request and realize item exchange on server-side,
-client need to send a accept request with ID from recivied trade response.
-.br
-Without accept request trade from response would not be realised.
 .SH JSON EXAMPLE
 .nf
 {
-  "trade": [
+  "trade-completed": [
     {
       "sell": {
         "object-from": "char1",
@@ -50,4 +45,4 @@ Without accept request trade from response would not be realised.
   ]
 }
 .SH SEE ALSO
-request/trade, request/accept, response/trade-completed
+request/trade, request/accept, response/trade

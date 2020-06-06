@@ -34,7 +34,8 @@ import (
 func handleConfirmedRequest(req charConfirmRequest) {
 	resp := response.Response{}
 	for _, t := range req.Trade {
-		tradeAccept := response.TradeAccepted{
+		// Send trade completed response.
+		tradeCompleted := response.TradeCompleted{
 			ID:           req.ID,
 			BuyerID:      t.Buy.ObjectToID,
 			BuyerSerial:  t.Buy.ObjectToSerial,
@@ -43,7 +44,7 @@ func handleConfirmedRequest(req charConfirmRequest) {
 			ItemsBuy:     t.Buy.Items,
 			ItemsSell:    t.Sell.Items,
 		}
-		resp.TradeAccepted = append(resp.TradeAccepted, tradeAccept)
+		resp.TradeCompleted = append(resp.TradeCompleted, tradeCompleted)
 		handleConfirmedTradeRequest(req.Client, t, &resp)
 	}
 	req.Client.Out <- resp

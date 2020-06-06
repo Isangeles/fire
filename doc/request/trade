@@ -70,4 +70,4 @@ response to a client who sent a trade request.
   ]
 }
 .SH SEE ALSO
-request/accept, request/transfer-items, response/trade, response/trade-accepted
+request/accept, request/transfer-items, response/trade, response/trade-completed
