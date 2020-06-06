@@ -29,7 +29,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 )
 
-// Struct for client action.
+// Struct for client request.
 type Request struct {
 	Login         []Login             `json:"login"`
 	NewChar       []res.CharacterData `json:"new-char"`

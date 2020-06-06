@@ -1,5 +1,5 @@
 /*
- * trade.go
+ * transferitems.go
  *
  * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -20,8 +20,11 @@
 
 package request
 
-// Struct for trade request.
-type Trade struct {
-	Sell TransferItems `json:"sell"`
-	Buy  TransferItems `json:"buy"`
+// Struct with transfer items request.
+type TransferItems struct {
+	ObjectFromID     string              `json:"object-from"`
+	ObjectFromSerial string              `json:"object-from-serial"`
+	ObjectToID       string              `json:"object-to"`
+	ObjectToSerial   string              `json:"object-to-serial"`
+	Items            map[string][]string `json:"items"`
 }
