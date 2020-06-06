@@ -34,7 +34,12 @@ import (
 func handleConfirmedRequest(req charConfirmRequest) {
 	resp := response.Response{}
 	for _, t := range req.Trade {
-		// Send trade completed response.
+		err := handleConfirmedTradeRequest(req.Client, t)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle trade request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
 		tradeCompleted := response.TradeCompleted{
 			ID:           req.ID,
 			BuyerID:      t.Buy.ObjectToID,
@@ -45,54 +50,51 @@ func handleConfirmedRequest(req charConfirmRequest) {
 			ItemsSell:    t.Sell.Items,
 		}
 		resp.TradeCompleted = append(resp.TradeCompleted, tradeCompleted)
-		handleConfirmedTradeRequest(req.Client, t, &resp)
+		// Send trade completed response to seller.
+		charResp := charResponse{
+			CharID:     t.Sell.ObjectToID,
+			CharSerial: t.Sell.ObjectToSerial,
+		}
+		charResp.Response.TradeCompleted = append(charResp.Response.TradeCompleted,
+			tradeCompleted)
+		sendCharResp := func() { charResponses <- charResp }
+		go sendCharResp()
 	}
 	req.Client.Out <- resp
 }
 
 // handleConfirmedTradeRequest handles specified trade request as confirmed.
-func handleConfirmedTradeRequest(cli *client.Client, req request.Trade, resp *response.Response) {
+func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) error {
 	// Find buyer.
 	object := game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Object not found: %s %s", req.Buy.ObjectToID,
+		return fmt.Errorf("Object not found: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	buyer, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Object is not a character: %s %s", req.Buy.ObjectToID,
+		return fmt.Errorf("Object is not a character: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	// Find seller.
 	object = game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Object not found: %s %s", req.Sell.ObjectToID,
+		return fmt.Errorf("Object not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Object is not a character: %s %s", req.Sell.ObjectToID,
+		return fmt.Errorf("Object is not a character: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	// Trade items.
 	err := transferItems(seller, buyer, req.Buy.Items)
 	if err != nil {
-		err := fmt.Sprintf("Unable to transfer items to buy: %v", err)
-		resp.Errors = append(resp.Errors, err)
-		return
+		return fmt.Errorf("Unable to transfer items to buy: %v", err)
 	}
 	err = transferItems(buyer, seller, req.Sell.Items)
 	if err != nil {
-		err := fmt.Sprintf("Unable to transfer items to sell: %v", err)
-		resp.Errors = append(resp.Errors, err)
-		return
+		return fmt.Errorf("Unable to transfer items to sell: %v", err)
 	}
+	return nil
 }
