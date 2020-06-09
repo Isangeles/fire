@@ -94,7 +94,7 @@ Besides that `doc` directory contains documentation pages for request/response s
 
 Documentation pages are in Troff format and could be easily displayed with `man` command.
 
-For example to display documentation page for server login request:
+For example to display documentation page for login request:
 ```
 $ man doc/request/login
 ```
