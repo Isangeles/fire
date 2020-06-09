@@ -34,29 +34,21 @@ import (
 func handleConfirmedRequest(req charConfirmRequest) {
 	resp := response.Response{}
 	for _, t := range req.Trade {
-		err := handleConfirmedTradeRequest(req.Client, t)
+		r, err := handleConfirmedTradeRequest(req.Client, t)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle trade request: %v", err)
 			resp.Errors = append(resp.Errors, err)
 			continue
 		}
-		tradeCompleted := response.TradeCompleted{
-			ID:           req.ID,
-			BuyerID:      t.Buy.ObjectToID,
-			BuyerSerial:  t.Buy.ObjectToSerial,
-			SellerID:     t.Sell.ObjectToID,
-			SellerSerial: t.Sell.ObjectToSerial,
-			ItemsBuy:     t.Buy.Items,
-			ItemsSell:    t.Sell.Items,
-		}
-		resp.TradeCompleted = append(resp.TradeCompleted, tradeCompleted)
+		r.ID = req.ID
+		resp.TradeCompleted = append(resp.TradeCompleted, r)
 		// Send trade completed response to seller.
 		charResp := charResponse{
 			CharID:     t.Sell.ObjectToID,
 			CharSerial: t.Sell.ObjectToSerial,
 		}
 		charResp.Response.TradeCompleted = append(charResp.Response.TradeCompleted,
-			tradeCompleted)
+			r)
 		sendCharResp := func() { charResponses <- charResp }
 		go sendCharResp()
 	}
@@ -64,37 +56,52 @@ func handleConfirmedRequest(req charConfirmRequest) {
 }
 
 // handleConfirmedTradeRequest handles specified trade request as confirmed.
-func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) error {
+func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) (resp response.TradeCompleted, err error) {
 	// Find buyer.
 	object := game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {
-		return fmt.Errorf("Object not found: %s %s", req.Buy.ObjectToID,
+		err = fmt.Errorf("Object not found: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
+		return
 	}
 	buyer, ok := object.(*character.Character)
 	if !ok {
-		return fmt.Errorf("Object is not a character: %s %s", req.Buy.ObjectToID,
+		err = fmt.Errorf("Object is not a character: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
+		return
 	}
 	// Find seller.
 	object = game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
-		return fmt.Errorf("Object not found: %s %s", req.Sell.ObjectToID,
+		err = fmt.Errorf("Object not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
+		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
-		return fmt.Errorf("Object is not a character: %s %s", req.Sell.ObjectToID,
+		err = fmt.Errorf("Object is not a character: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
+		return
 	}
 	// Trade items.
-	err := transferItems(seller, buyer, req.Buy.Items)
+	err = transferItems(seller, buyer, req.Buy.Items)
 	if err != nil {
-		return fmt.Errorf("Unable to transfer items to buy: %v", err)
+		err = fmt.Errorf("Unable to transfer items to buy: %v", err)
+		return
 	}
 	err = transferItems(buyer, seller, req.Sell.Items)
 	if err != nil {
-		return fmt.Errorf("Unable to transfer items to sell: %v", err)
+		err = fmt.Errorf("Unable to transfer items to sell: %v", err)
+		return
 	}
-	return nil
+	// Make response.
+	resp = response.TradeCompleted{
+		BuyerID:      req.Buy.ObjectToID,
+		BuyerSerial:  req.Buy.ObjectToSerial,
+		SellerID:     req.Sell.ObjectToID,
+		SellerSerial: req.Sell.ObjectToSerial,
+		ItemsBuy:     req.Buy.Items,
+		ItemsSell:    req.Sell.Items,
+	}
+	return
 }

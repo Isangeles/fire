@@ -43,145 +43,173 @@ import (
 func handleRequest(req clientRequest) {
 	resp := response.Response{}
 	for _, l := range req.Login {
-		handleLoginRequest(req.Client, l, &resp)
+		err := handleLoginRequest(req.Client, l)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle login request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+		}
 	}
 	if req.Client.User() == nil {
 		// Request login.
-		log.Printf("Authorization requested: %s",
-			req.Client.RemoteAddr())
+		log.Printf("Authorization requested: %s", req.Client.RemoteAddr())
 		resp.Logon = true
 		req.Client.Out <- resp
 		return
 	}
 	for _, nc := range req.NewChar {
-		handleNewCharRequest(req.Client, nc, &resp)
+		r, err := handleNewCharRequest(req.Client, nc)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle new-char request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
+		resp.NewChars = append(resp.NewChars, r)
 	}
 	for _, m := range req.Move {
-		handleMoveRequest(req.Client, m, &resp)
+		err := handleMoveRequest(req.Client, m)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle move request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+		}
 	}
 	for _, d := range req.Dialog {
-		handleDialogRequest(req.Client, d, &resp)
+		r, err := handleDialogRequest(req.Client, d)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle dialog request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
+		resp.Dialog = append(resp.Dialog, r)
 	}
 	for _, da := range req.DialogAnswer {
-		handleDialogAnswerRequest(req.Client, da, &resp)
+		r, err := handleDialogAnswerRequest(req.Client, da)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle dialog-answer request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
+		resp.Dialog = append(resp.Dialog, r)
 	}
 	for _, t := range req.Trade {
-		handleTradeRequest(req.Client, t, &resp)
+		r, err := handleTradeRequest(req.Client, t)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle trade request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
+		// Send response to trade target owner.
+		charResp := charResponse{
+			CharID:     t.Buy.ObjectFromID,
+			CharSerial: t.Buy.ObjectFromSerial,
+		}
+		charResp.Response.Trade = append(charResp.Response.Trade, r)
+		sendCharResp := func() { charResponses <- charResp }
+		go sendCharResp()
 	}
 	for _, ti := range req.TransferItems {
-		handleTransferItemsRequest(req.Client, ti, &resp)
+		err := handleTransferItemsRequest(req.Client, ti)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle transfer-items request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+		}
 	}
 	for _, a := range req.Accept {
-		handleAcceptRequest(req.Client, a, &resp)
+		handleAcceptRequest(req.Client, a)
 	}
 	for _, c := range req.Command {
-		handleCommandRequest(req.Client, c, &resp)
+		r, err := handleCommandRequest(req.Client, c)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle command request: %v", err)
+			resp.Errors = append(resp.Errors, err)
+			continue
+		}
+		resp.Command = append(resp.Command, r)
 	}
 	req.Client.Out <- resp
 }
 
 // handleLoginReqest handles login request.
-func handleLoginRequest(cli *client.Client, req request.Login, resp *response.Response) {
+func handleLoginRequest(cli *client.Client, req request.Login) error {
 	user := data.User(req.ID)
 	if user == nil || user.Pass() != req.Pass {
-		err := fmt.Sprintf("Invalid ID/password")
-		resp.Errors = append(resp.Errors, err)
-		return
+		return fmt.Errorf("Invalid ID/password")
 	}
 	if user.Logged {
-		err := fmt.Sprintf("Already logged")
-		resp.Errors = append(resp.Errors, err)
-		return
+		return fmt.Errorf("Already logged")
 	}
 	cli.SetUser(user)
-	resp.Logon = false
+	return nil
 }
 
 // handleNewCharRequest handles new character request.
-func handleNewCharRequest(cli *client.Client, charData res.CharacterData, resp *response.Response) {
+func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp res.CharacterData, err error) {
 	char, err := game.SpawnChar(charData)
-	if err != nil {
-		log.Printf("handle new char: unable to spawn char: %v",
-			err)
-		resp.Errors = append(resp.Errors, "Internal error")
+	if err != nil {	
+		err = fmt.Errorf("Unable to spawn char: %v", err)
+		return
 	}
 	cli.User().Chars = append(cli.User().Chars, char.ID()+char.Serial())
-	resp.NewChars = append(resp.NewChars, char.Data())
+	resp = char.Data()
+	return
 }
 
 // handleMoveRequest handles move request.
-func handleMoveRequest(cli *client.Client, req request.Move, resp *response.Response) {
+func handleMoveRequest(cli *client.Client, req request.Move) error {
 	// Retrieve object.
 	chapter := game.Module().Chapter()
 	ob := chapter.Object(req.ID, req.Serial)
 	if ob == nil {
-		resp.Errors = append(resp.Errors, "Object not found")
-		return
+		return fmt.Errorf("Object not found: %s %s", req.ID, req.Serial)
 	}
 	// Check if object is under client control.
-	control := false
-	for _, c := range cli.User().Chars {
-		if c != ob.ID()+ob.Serial() {
-			continue
-		}
-		control = true
-		break
-	}
-	if !control {
-		resp.Errors = append(resp.Errors, "Object not controled")
-		return
+	if cli.User().Controls(ob.ID(), ob.Serial()) {
+		return fmt.Errorf("Object not controled: %s %s", req.ID, req.Serial)
 	}
 	// Set position.
 	posOb, ok := ob.(objects.Positioner)
 	if !ok {
-		resp.Errors = append(resp.Errors, "Object without position")
-		return
+		return fmt.Errorf("Object without position: %s %s", req.ID, req.Serial)
 	}
 	posOb.SetPosition(req.PosX, req.PosY)
+	return nil
 }
 
 // handleDialogRequest handles dialog request.
-func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.Response) {
+func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.ObjectDialogData, err error) {
 	// Check if client controls dialog target.
 	if !cli.User().Controls(req.TargetID, req.TargetSerial) {
-		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
+		err = fmt.Errorf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve dialog onwer & target.
 	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
 	if object == nil {
-		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
+		err = fmt.Errorf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	owner, ok := object.(dialog.Talker)
 	if !ok {
-		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
+		err = fmt.Errorf("Invalid dialog onwer: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object = game.Module().Object(req.TargetID, req.TargetSerial)
 	if object == nil {
-		err := fmt.Sprintf("Dialog target not found: %s %s", req.TargetID,
+		err = fmt.Errorf("Dialog target not found: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	target, ok := object.(dialog.Talker)
 	if !ok {
-		err := fmt.Sprintf("Invalid dialog target: %s %s", req.TargetID,
+		err = fmt.Errorf("Invalid dialog target: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Check range.
 	if !inRange(owner, target) {
-		err := fmt.Sprintf("Objects are not in the minimal range")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Objects are not in the minimal range")
 		return
 	}
 	// Retrieve requested dialog from owner.
@@ -192,64 +220,56 @@ func handleDialogRequest(cli *client.Client, req request.Dialog, resp *response.
 		}
 	}
 	if dialog == nil {
-		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Dialog not found: %s", req.DialogID)
 		return
 	}
 	if dialog.Target() != nil {
-		err := fmt.Sprintf("Dialog already started")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Dialog already started")
 		return
 	}
 	// Set dialog target.
 	dialog.SetTarget(target)
 	// Make response for the client.
-	dialogResp := res.ObjectDialogData{dialog.ID(), dialog.Stage().ID()}
-	resp.Dialog = append(resp.Dialog, dialogResp)
+	resp = res.ObjectDialogData{dialog.ID(), dialog.Stage().ID()}
+	return
 }
 
 // handleDialogAnswerRequest handles dialog answer request.
-func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, resp *response.Response) {
+func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (resp res.ObjectDialogData, err error) {
 	// Check if client controls dialog target.
 	if !cli.User().Controls(req.Dialog.TargetID, req.Dialog.TargetSerial) {
-		err := fmt.Sprintf("Object not controlled: %s %s", req.TargetID,
+		err = fmt.Errorf("Object not controlled: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Retrieve dialog onwer & target.
 	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
 	if object == nil {
-		err := fmt.Sprintf("Dialog owner not found: %s %s", req.OwnerID,
+		err = fmt.Errorf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	owner, ok := object.(dialog.Talker)
 	if !ok {
-		err := fmt.Sprintf("Invalid dialog onwer: %s %s", req.OwnerID,
+		err = fmt.Errorf("Invalid dialog onwer: %s %s", req.OwnerID,
 			req.OwnerSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object = game.Module().Object(req.TargetID, req.TargetSerial)
 	if object == nil {
-		err := fmt.Sprintf("Dialog target not found: %s %s", req.TargetID,
+		err = fmt.Errorf("Dialog target not found: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	target, ok := object.(dialog.Talker)
 	if !ok {
-		err := fmt.Sprintf("Invalid dialog target: %s %s", req.TargetID,
+		err = fmt.Errorf("Invalid dialog target: %s %s", req.TargetID,
 			req.TargetSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Check range.
 	if !inRange(owner, target) {
-		err := fmt.Sprintf("Objects are not in the minimal range")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Objects are not in the minimal range")
 		return
 	}
 	// Retrieve requested dialog from owner.
@@ -260,26 +280,24 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 		}
 	}
 	if reqDialog == nil {
-		err := fmt.Sprintf("Dialog not found: %s", req.DialogID)
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Dialog not found: %s", req.DialogID)
 		return
 	}
 	// Check dialog target.
 	if reqDialog.Target() == nil {
-		err := fmt.Sprintf("Dialog not started")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Dialog not started: %s", reqDialog.ID())
 		return
 	}
 	if reqDialog.Target().ID() != req.TargetID ||
 		reqDialog.Target().Serial() != req.TargetSerial {
-		err := fmt.Sprintf("Target different then specified in request")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Target different then specified in request: %s %s",
+			reqDialog.Target().ID(), reqDialog.Target().Serial())
 		return
 	}
 	// Apply answer.
 	if reqDialog.Stage() == nil {
-		err := fmt.Sprintf("Requested dialog has no active stage")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Requested dialog has no active stage: %s",
+			reqDialog.ID())
 		return
 	}
 	var answer *dialog.Answer
@@ -289,58 +307,51 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer, res
 		}
 	}
 	if answer == nil {
-		err := fmt.Sprintf("Requested answer not found: %s", req.AnswerID)
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Requested answer not found: %s", req.AnswerID)
 		return
 	}
 	reqDialog.Next(answer)
 	// Make response for the client.
-	dialogResp := res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
-	resp.Dialog = append(resp.Dialog, dialogResp)
+	resp = res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
+	return
 }
 
 // handleTradeRequest handles trade request.
-func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Response) {
+func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Trade, err error)  {
 	// Check if client controls buyer.
 	if !cli.User().Controls(req.Buy.ObjectToID, req.Buy.ObjectToSerial) {
-		err := fmt.Sprintf("Object not controlled: %s %s", req.Buy.ObjectToID,
+		err = fmt.Errorf("Object not controlled: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Find seller & buyer.
 	object := game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Seller not found: %s %s", req.Sell.ObjectToID,
+		err = fmt.Errorf("Seller not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	seller, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Seller is not a character: %s %s", req.Sell.ObjectToID,
+		err = fmt.Errorf("Seller is not a character: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	object = game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {
-		err := fmt.Sprintf("Buyer not found: %s %s", req.Buy.ObjectToID,
+		err = fmt.Errorf("Buyer not found: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	buyer, ok := object.(*character.Character)
 	if !ok {
-		err := fmt.Sprintf("Buyer is not a character: %s %s", req.Buy.ObjectToID,
+		err = fmt.Errorf("Buyer is not a character: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
 		return
 	}
 	// Check range.
 	if !inRange(buyer, seller) {
-		err := fmt.Sprintf("Objects are not in the minimal range")
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Objects are not in the minimal range")
 		return
 	}
 	// Send confiramtion request to seller owner.
@@ -355,7 +366,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 	}
 	addConfirmReq := func() { confirmRequests <- confirmReq }
 	go addConfirmReq()
-	tradeResp := response.Trade{
+	resp = response.Trade{
 		ID:           confirmReq.ID,
 		BuyerID:      req.Buy.ObjectToID,
 		BuyerSerial:  req.Buy.ObjectToSerial,
@@ -364,94 +375,74 @@ func handleTradeRequest(cli *client.Client, req request.Trade, resp *response.Re
 		ItemsBuy:     req.Buy.Items,
 		ItemsSell:    req.Sell.Items,
 	}
-	charResp := charResponse{CharID: seller.ID(), CharSerial: seller.Serial()}
-	charResp.Response.Trade = append(charResp.Response.Trade, tradeResp)
-	sendCharResp := func() { charResponses <- charResp }
-	go sendCharResp()
+	return
 }
 
 // handleTransferItemsRequest handles transfer request.
-func handleTransferItemsRequest(cli *client.Client, req request.TransferItems, resp *response.Response) {
+func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) error {
 	// Retrive objects 'to' and 'from'.
 	ob := game.Module().Object(req.ObjectToID, req.ObjectToSerial)
 	if ob == nil {
-		err := fmt.Sprintf("Object 'to' not found: %s %s", req.ObjectToID,
+		return fmt.Errorf("Object 'to' not found: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	to, ok := ob.(item.Container)
 	if !ok {
-		err := fmt.Sprintf("Object 'to' is not a container: %s %s", req.ObjectToID,
+		return fmt.Errorf("Object 'to' is not a container: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	if !cli.User().Controls(to.ID(), to.Serial()) {
-		err := fmt.Sprintf("Object 'to' is not controlled: %s %s", req.ObjectToID,
+		return fmt.Errorf("Object 'to' is not controlled: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	ob = game.Module().Object(req.ObjectFromID, req.ObjectFromSerial)
 	if ob == nil {
-		err := fmt.Sprintf("Object 'from' not found: %s %s", req.ObjectFromID,
+		return fmt.Errorf("Object 'from' not found: %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	from, ok := ob.(item.Container)
 	if !ok {
-		err := fmt.Sprintf("Object 'from' is not a container: %s %s", req.ObjectFromID,
+		return fmt.Errorf("Object 'from' is not a container: %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
 	// Check range.
 	if !inRange(from, to) {
-		err := fmt.Sprintf("Objects are not in the minimal range")
-		resp.Errors = append(resp.Errors, err)
-		return
+		return fmt.Errorf("Objects are not in the minimal range")
 	}
 	// Transfer items.
 	switch from := from.(type) {
 	case *character.Character:
 		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
-			err := fmt.Sprintf("Can't transfer items from: %s %s", req.ObjectFromID,
+			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectFromID,
 				req.ObjectFromSerial)
-			resp.Errors = append(resp.Errors, err)
-			return
 		}
 		log.Printf("items: %v", from.Inventory().Items())
 		err := transferItems(from, to, req.Items)
 		if err != nil {
-			err := fmt.Sprintf("Unable to transfer items: %v", err)
-			resp.Errors = append(resp.Errors, err)
-			return
+			return fmt.Errorf("Unable to transfer items: %v", err)
 		}
 	default:
-		err := fmt.Sprintf("Unsupported object 'from': %s %s", req.ObjectFromID,
+		return fmt.Errorf("Unsupported object 'from': %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
-		resp.Errors = append(resp.Errors, err)
-		return
 	}
+	return nil
 }
 
 // handleAcceptRequest handles accept request.
-func handleAcceptRequest(cli *client.Client, id int, resp *response.Response) {
+func handleAcceptRequest(cli *client.Client, id int) {
 	confirm := clientConfirm{id, cli}
 	confirmReq := func() { confirmed <- &confirm }
 	go confirmReq()
 }
 
 // handleCommandRequest handles command request.
-func handleCommandRequest(cli *client.Client, cmdText string, resp *response.Response) {
+func handleCommandRequest(cli *client.Client, cmdText string) (resp response.Command, err error) {
 	exp, err := syntax.NewSTDExpression(cmdText)
 	if err != nil {
-		err := fmt.Sprintf("Invalid command syntax: %v", err)
-		resp.Errors = append(resp.Errors, err)
+		err = fmt.Errorf("Invalid command syntax: %v", err)
 		return
 	}
 	res, out := burn.HandleExpression(exp)
-	resp.Command = append(resp.Command, response.Command{res, out})
+	resp = response.Command{res, out}
+	return
 }
