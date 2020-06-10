@@ -1,18 +1,18 @@
-.TH new-chars
+.TH new-char
 .SH NAME
-new-chars - server response with data of new characters for the client to control.
+new-char - server response with data of new characters for the client to control.
 .SH DESCRIPTION
-The new-chars response is sent by the server to inform client about new characters that he can control.
+The new-char response is sent by the server to inform client about new characters that he can control.
 .br
 Usually is send as a response on successful new-char request.
 .br
-The new-chars request contains a list of character's data.
+The new-char request contains a list of character's data.
 .br
 This data can be used by the client to recreate controlled characters on the client-side.
 .SH JSON EXAMPLE
 .nf
 {
-  "new-chars": [
+  "new-char": [
     {
       "id": "char1",
       "serial": "0",

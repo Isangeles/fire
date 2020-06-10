@@ -63,7 +63,7 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 			continue
 		}
-		resp.NewChars = append(resp.NewChars, r)
+		resp.NewChar = append(resp.NewChar, r)
 	}
 	for _, m := range req.Move {
 		err := handleMoveRequest(req.Client, m)
