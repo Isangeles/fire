@@ -46,7 +46,7 @@ func handleRequest(req clientRequest) {
 		err := handleLoginRequest(req.Client, l)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle login request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 		}
 	}
 	if req.Client.User() == nil {
@@ -60,7 +60,7 @@ func handleRequest(req clientRequest) {
 		r, err := handleNewCharRequest(req.Client, nc)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle new-char request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		resp.NewChars = append(resp.NewChars, r)
@@ -69,14 +69,14 @@ func handleRequest(req clientRequest) {
 		err := handleMoveRequest(req.Client, m)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle move request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 		}
 	}
 	for _, d := range req.Dialog {
 		r, err := handleDialogRequest(req.Client, d)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle dialog request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		resp.Dialog = append(resp.Dialog, r)
@@ -85,7 +85,7 @@ func handleRequest(req clientRequest) {
 		r, err := handleDialogAnswerRequest(req.Client, da)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle dialog-answer request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		resp.Dialog = append(resp.Dialog, r)
@@ -94,7 +94,7 @@ func handleRequest(req clientRequest) {
 		r, err := handleTradeRequest(req.Client, t)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle trade request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		// Send response to trade target owner.
@@ -110,7 +110,7 @@ func handleRequest(req clientRequest) {
 		err := handleTransferItemsRequest(req.Client, ti)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle transfer-items request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 		}
 	}
 	for _, a := range req.Accept {
@@ -120,7 +120,7 @@ func handleRequest(req clientRequest) {
 		r, err := handleCommandRequest(req.Client, c)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle command request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		resp.Command = append(resp.Command, r)

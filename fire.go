@@ -181,7 +181,7 @@ func handleConnection(conn net.Conn) {
 			log.Printf("Client: %s: unable to create request: %v",
 				cli.RemoteAddr(), err)
 			resp := response.Response{
-				Errors: []string{"Invalid request syntax"},
+				Error: []string{"Invalid request syntax"},
 			}
 			cli.Out <- resp
 			continue

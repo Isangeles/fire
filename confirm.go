@@ -37,7 +37,7 @@ func handleConfirmedRequest(req charConfirmRequest) {
 		r, err := handleConfirmedTradeRequest(req.Client, t)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle trade request: %v", err)
-			resp.Errors = append(resp.Errors, err)
+			resp.Error = append(resp.Error, err)
 			continue
 		}
 		r.ID = req.ID

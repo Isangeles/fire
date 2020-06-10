@@ -38,7 +38,7 @@ type Response struct {
 	TradeCompleted []TradeCompleted       `json:"trade-completed"`
 	Dialog         []res.ObjectDialogData `json:"dialog"`
 	Command        []Command              `json:"command"`
-	Errors         []string               `json:"errors"`
+	Error          []string               `json:"error"`
 }
 
 // Unmarshal parses specified text data to response struct.
