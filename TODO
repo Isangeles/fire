@@ -2,10 +2,8 @@ MAJOR:
 * Speak request/response
 * Change area request
 * Train request
-* Quest requests
 * Equipment requests
 * Skill request
-* Item requests
 * Spawning user characters on login and removing them on logout
 MINOR:
 * Kicking clients

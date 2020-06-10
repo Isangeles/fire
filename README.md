@@ -14,7 +14,7 @@ Build server executable:
 ```
 $ go build github.com/isangeles/fire
 ```
-Configure host address and port for server and ID of Flame module to load on startup in `.fire`, for example in Bash:
+Configure host address, port, and ID of Flame module for the hosted game in `.fire`, for example in Bash:
 ```
 $ printf "host:[host]\nport:[port]\nmodule:[module ID]" > .fire
 ```
@@ -35,15 +35,15 @@ Server configuration is stored in `.fire` file placed in the server executable d
 ```
 host:[host name]
 ```
-Value for server host address, localhost by default.
+Value for server host address, `localhost` by default.
 ```
 port:[host port]
 ```
-Value for server host port number, 8000 by default.
+Value for server host port number, `8000` by default.
 ```
 module:[module ID]
 ```
-Name of the directory with a Flame module to load on startup.
+Name of the directory with a Flame module for the game hosted on the server.
 
 The module should be placed in the `data/modules` directory in the server executable directory.
 ```
