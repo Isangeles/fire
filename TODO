@@ -3,7 +3,7 @@ MAJOR:
 * Change area request
 * Train request
 * Equipment requests
-* Skill request
+* Use item request
 * Spawning user characters on login and removing them on logout
 MINOR:
 * Kicking clients
@@ -22,3 +22,4 @@ DONE:
 * Burn command request/response
 * Users
 * Transfer items request
+* Skill request
