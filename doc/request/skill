@@ -1,0 +1,21 @@
+.TH skill
+.SH NAME
+skill - client request for skill usage.
+.SH DESCRIPTION
+The skill request is used by the client to trigger skill usage for one of the objects
+controlled by the client.
+.br
+Skill request contains ID and serial value of the object and ID of skill to use.
+.SH JSON EXAMPLE
+.nf
+{
+  "skill": [
+    {
+      "skill-id": "melee1",
+      "object-id": "char1",
+      "object-serial": "0"
+    }
+  ]
+}
+.SH SEE ALSO
+response/error

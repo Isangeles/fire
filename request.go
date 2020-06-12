@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/skill"
 
 	"github.com/isangeles/burn"
 	"github.com/isangeles/burn/syntax"
@@ -113,6 +114,13 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
+	for _, s := range req.Skill {
+		err := handleSkillRequest(req.Client, s)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle skill request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
 	}
@@ -144,7 +152,7 @@ func handleLoginRequest(cli *client.Client, req request.Login) error {
 // handleNewCharRequest handles new character request.
 func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp res.CharacterData, err error) {
 	char, err := game.SpawnChar(charData)
-	if err != nil {	
+	if err != nil {
 		err = fmt.Errorf("Unable to spawn char: %v", err)
 		return
 	}
@@ -317,7 +325,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (re
 }
 
 // handleTradeRequest handles trade request.
-func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Trade, err error)  {
+func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Trade, err error) {
 	// Check if client controls buyer.
 	if !cli.User().Controls(req.Buy.ObjectToID, req.Buy.ObjectToSerial) {
 		err = fmt.Errorf("Object not controlled: %s %s", req.Buy.ObjectToID,
@@ -425,6 +433,34 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) e
 		return fmt.Errorf("Unsupported object 'from': %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
 	}
+	return nil
+}
+
+// handleSkillRequest handles skill request.
+func handleSkillRequest(cli *client.Client, req request.Skill) error {
+	// Retrieve object.
+	ob := game.Module().Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	user, ok := ob.(skill.User)
+	if !ok {
+		return fmt.Errorf("Object is not a skill user: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	// Retrieve skill.
+	var skill *skill.Skill
+	for _, s := range user.Skills() {
+		if s.ID() == req.SkillID {
+			skill = s
+		}
+	}
+	if skill == nil {
+		return fmt.Errorf("Skill not found: %s", req.SkillID)
+	}
+	// Use skill.
+	user.UseSkill(skill)
 	return nil
 }
 

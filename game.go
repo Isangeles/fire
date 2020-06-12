@@ -57,7 +57,7 @@ func newGame() (*Game, error) {
 	return g, nil
 }
 
-// Update handles game update.
+// Update handles game update loop.
 func (g *Game) Update() {
 	update := time.Now()
 	for {
