@@ -8,7 +8,6 @@ MAJOR:
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
-* New character validation
 * Saving state of the game module
 * Permissions for users to use only specific Burn commands(now any client can use any command)
 DONE:

@@ -103,3 +103,31 @@ func (g *Game) AddClientChars(client *client.Client) {
 		area.AddCharacter(char)
 	}
 }
+
+// ValidNewCharacter checks if specified data is valid  for the
+// new character in current chapter.
+func (g *Game) ValidNewCharacter(data flameres.CharacterData) bool {
+	if data.Level > g.Module().Chapter().Conf().StartLevel {
+		return false
+	}
+	attrs := data.Attributes.Str + data.Attributes.Con + data.Attributes.Dex +
+		data.Attributes.Int + data.Attributes.Wis
+	if attrs > g.Module().Chapter().Conf().StartAttrs {
+		return false
+	}
+	for _, i := range data.Inventory.Items {
+		for _, id := range g.Module().Chapter().Conf().StartItems {
+			if i.ID != id {
+				return false
+			}
+		}
+	}
+	for _, s := range data.Skills {
+		for _, id := range g.Module().Chapter().Conf().StartSkills {
+			if s.ID != id {
+				return false
+			}
+		}
+	}
+	return true
+}

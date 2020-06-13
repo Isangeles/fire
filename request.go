@@ -151,6 +151,10 @@ func handleLoginRequest(cli *client.Client, req request.Login) error {
 
 // handleNewCharRequest handles new character request.
 func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp res.CharacterData, err error) {
+	if !game.ValidNewCharacter(charData) {
+		err = fmt.Errorf("Invalid character")
+		return
+	}
 	char, err := game.SpawnChar(charData)
 	if err != nil {
 		err = fmt.Errorf("Unable to spawn char: %v", err)
