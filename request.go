@@ -28,6 +28,7 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/skill"
 
@@ -118,6 +119,13 @@ func handleRequest(req clientRequest) {
 		err := handleSkillRequest(req.Client, s)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle skill request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
+	for _, r := range req.UseObject {
+		err := handleUseObjectRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle use-object request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
 	}
@@ -465,6 +473,42 @@ func handleSkillRequest(cli *client.Client, req request.Skill) error {
 	}
 	// Use skill.
 	user.UseSkill(skill)
+	return nil
+}
+
+// handleUseObjectRequest handles use-object request.
+func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
+	// Retrieve user & object.
+	ob := game.Module().Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	object, ok := ob.(*object.Object)
+	if !ok {
+		return fmt.Errorf("Object is not a area object: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	ob = game.Module().Object(req.UserID, req.UserSerial)
+	if ob == nil {
+		return fmt.Errorf("User not found: %s %s", req.UserID, req.UserSerial)
+	}
+	if !cli.User().Controls(req.UserID, req.UserSerial) {
+		return fmt.Errorf("User is not controled: %s %s", req.UserID,
+			req.UserSerial)
+	}
+	user, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("User is not a character: %s %s", req.UserID,
+			req.UserSerial)
+	}
+	// Check range.
+	if !inRange(user, object) {
+		return fmt.Errorf("Objects are not in the minimal range")
+	}
+	// Handle action modifers.
+	user.TakeModifiers(object, object.Action().UserMods()...)
+	object.TakeModifiers(object, object.Action().SelfMods()...)
 	return nil
 }
 

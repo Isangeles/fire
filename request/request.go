@@ -39,6 +39,7 @@ type Request struct {
 	Trade         []Trade             `json:"trade"`
 	TransferItems []TransferItems     `json:"transfer-items"`
 	Skill         []Skill             `json:"skill"`
+	UseObject     []UseObject         `json:"use-object"`
 	Accept        []int               `json:"accept"`
 	Command       []string            `json:"command"`
 }

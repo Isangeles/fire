@@ -1,0 +1,22 @@
+.TH use-object
+.SH NAME
+use-object - client request for using game objects.
+.SH DESCRIPTION
+The use-object request is used by the client to use one of the game objects
+by another object that is controlled by the client.
+.br
+Object user, need to be under client control.
+.br
+This request contains IDs and serial values of two objects(usable object and user).
+.SH JSON EXAMPLE
+.nf
+{
+  "use-object": [
+    {
+      "object-id": "object1",
+      "object-serial": "0",
+      "user-id": "char1",
+      "user-serial": "0"
+    }
+  ]
+}
