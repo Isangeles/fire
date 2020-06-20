@@ -28,9 +28,9 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/item"
-	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/skill"
+	"github.com/isangeles/flame/module/useaction"
 
 	"github.com/isangeles/burn"
 	"github.com/isangeles/burn/syntax"
@@ -484,9 +484,9 @@ func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
-	object, ok := ob.(*object.Object)
+	usable, ok := ob.(useaction.Usable)
 	if !ok {
-		return fmt.Errorf("Object is not a area object: %s %s", req.ObjectID,
+		return fmt.Errorf("Object is not usable: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
 	ob = game.Module().Object(req.UserID, req.UserSerial)
@@ -503,12 +503,11 @@ func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 			req.UserSerial)
 	}
 	// Check range.
-	if !inRange(user, object) {
+	if !inRange(user, usable) {
 		return fmt.Errorf("Objects are not in the minimal range")
 	}
-	// Handle action modifers.
-	user.TakeModifiers(object, object.Action().UserMods()...)
-	object.TakeModifiers(object, object.Action().SelfMods()...)
+	// Use object.
+	user.Use(usable)
 	return nil
 }
 
