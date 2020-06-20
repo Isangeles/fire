@@ -10,6 +10,7 @@ MINOR:
 * Canceling unaccepted requests
 * Saving state of the game module
 * Permissions for users to use only specific Burn commands(now any client can use any command)
+* Handling usable items in use-object request
 DONE:
 * Handling requests and sending responses
 * Update response
