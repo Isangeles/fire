@@ -15,7 +15,7 @@ User password.
 .br
 List of characters controlled by user.
 .br
-Each value is a concatenated character ID and serial value.
+Each value is a character ID and serial value separated with '#' character.
 .br
 For example for a character with ID char1 and serial value 12: char112
 .br

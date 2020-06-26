@@ -27,6 +27,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/isangeles/flame/data/text"
 
@@ -84,7 +85,12 @@ func loadUser(path string) (*user.User, error) {
 	if len(userConf["pass"]) > 0 {
 		userData.Pass = userConf["pass"][0]
 	}
-	userData.Chars = userConf["chars"]
+	for _, sid := range userConf["chars"] {
+		serialID := strings.Split(sid, "#")
+		if len(serialID) > 1 {
+			userData.Chars[serialID[0]] = serialID[1]
+		}
+	}
 	u := user.New(userData)
 	return u, nil
 }

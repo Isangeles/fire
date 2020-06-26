@@ -39,6 +39,7 @@ import (
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
 	"github.com/isangeles/fire/response"
+	"github.com/isangeles/fire/user"
 )
 
 // handleRequest handles specified client request.
@@ -168,7 +169,7 @@ func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp 
 		err = fmt.Errorf("Unable to spawn char: %v", err)
 		return
 	}
-	cli.User().Chars = append(cli.User().Chars, char.ID()+char.Serial())
+	cli.User().Chars = append(cli.User().Chars, user.Character{char.ID(), char.Serial()})
 	resp = char.Data()
 	return
 }

@@ -24,5 +24,5 @@ package res
 type UserData struct {
 	ID    string
 	Pass  string
-	Chars []string
+	Chars map[string]string
 }

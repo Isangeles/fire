@@ -30,7 +30,12 @@ type User struct {
 	id     string
 	pass   string
 	Logged bool
-	Chars  []string
+	Chars  []Character
+}
+
+// Struct for user character.
+type Character struct {
+	ID, Serial string
 }
 
 // New creates new user.
@@ -38,7 +43,9 @@ func New(data res.UserData) *User {
 	u := new(User)
 	u.id = data.ID
 	u.pass = data.Pass
-	u.Chars = data.Chars
+	for i, s := range data.Chars {
+		u.Chars = append(u.Chars, Character{i, s})
+	}
 	return u
 }
 
@@ -55,8 +62,8 @@ func (u *User) Pass() string {
 // Controls checks if user controls object with
 // specified ID and serial value.
 func (u *User) Controls(id, serial string) bool {
-	for _, sid := range u.Chars {
-		if sid == id + serial {
+	for _, c := range u.Chars {
+		if c.ID + c.Serial == id + serial {
 			return true
 		}
 	}

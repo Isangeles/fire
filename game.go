@@ -86,11 +86,11 @@ func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, err
 
 // AddClientChars adds client characters to game.
 func (g *Game) AddClientChars(client *client.Client) {
-	for _, cid := range client.User().Chars {
-		charData := flameres.Character(cid, "")
+	for _, c := range client.User().Chars {
+		charData := flameres.Character(c.ID, c.Serial)
 		if charData == nil {
-			log.Printf("Client: %s: character not found: %s",
-				client.RemoteAddr(), cid)
+			log.Printf("Client: %s: character not found: %s %s",
+				client.RemoteAddr(), c.ID, c.Serial)
 			return
 		}
 		char := character.New(*charData)
