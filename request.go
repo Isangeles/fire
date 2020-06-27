@@ -28,7 +28,9 @@ import (
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/dialog"
 	"github.com/isangeles/flame/module/item"
+	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/serial"
 	"github.com/isangeles/flame/module/skill"
 	"github.com/isangeles/flame/module/useaction"
 
@@ -479,18 +481,8 @@ func handleSkillRequest(cli *client.Client, req request.Skill) error {
 
 // handleUseObjectRequest handles use-object request.
 func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
-	// Retrieve user & object.
-	ob := game.Module().Object(req.ObjectID, req.ObjectSerial)
-	if ob == nil {
-		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
-			req.ObjectSerial)
-	}
-	usable, ok := ob.(useaction.Usable)
-	if !ok {
-		return fmt.Errorf("Object is not usable: %s %s", req.ObjectID,
-			req.ObjectSerial)
-	}
-	ob = game.Module().Object(req.UserID, req.UserSerial)
+	// Retrieve user.
+	ob := game.Module().Object(req.UserID, req.UserSerial)
 	if ob == nil {
 		return fmt.Errorf("User not found: %s %s", req.UserID, req.UserSerial)
 	}
@@ -503,9 +495,28 @@ func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 		return fmt.Errorf("User is not a character: %s %s", req.UserID,
 			req.UserSerial)
 	}
-	// Check range.
-	if !inRange(user, usable) {
-		return fmt.Errorf("Objects are not in the minimal range")
+	// Retrieve usable object.
+	ob = serial.Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	usable, ok := ob.(useaction.Usable)
+	if !ok {
+		return fmt.Errorf("Object is not usable: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	// Check if usable object can be used.
+	switch usable.(type) {
+	case item.Item:
+		if user.Inventory().Item(usable.ID(), usable.Serial()) == nil {
+			return fmt.Errorf("User doesn't own usable item: %s %s",
+				usable.ID(), usable.Serial())
+		}
+	case *object.Object:
+		if !inRange(user, usable) {
+			return fmt.Errorf("Objects are not in the minimal range")
+		}
 	}
 	// Use object.
 	user.Use(usable)
