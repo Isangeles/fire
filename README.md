@@ -62,7 +62,7 @@ The user configuration file contains a password and list of game characters cont
 Example user configuration:
 ```
 pass:asd123!
-chars:player_asd1;player_asd2
+chars:player_asd#1;player_asd#2
 ```
 Check documentation for a detailed description of the user directory.
 ## Client
@@ -86,7 +86,7 @@ Each logged client is constantly updated with the current state of a Flame modul
 
 Logged clients can use different JSON requests to modify their characters and interact with others on the server.
 
-Check documentation for a detailed description of all client requests and server responses.
+Check documentation for a detailed description of all available requests and server responses.
 ## Documentation
 Source code documentation could be easily browsed with the `go doc` command.
 
