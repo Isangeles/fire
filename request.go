@@ -475,7 +475,7 @@ func handleSkillRequest(cli *client.Client, req request.Skill) error {
 		return fmt.Errorf("Skill not found: %s", req.SkillID)
 	}
 	// Use skill.
-	user.UseSkill(skill)
+	user.Use(skill)
 	return nil
 }
 
@@ -507,7 +507,7 @@ func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 			req.ObjectSerial)
 	}
 	// Check if usable object can be used.
-	switch usable.(type) {
+	switch usable := usable.(type) {
 	case item.Item:
 		if user.Inventory().Item(usable.ID(), usable.Serial()) == nil {
 			return fmt.Errorf("User doesn't own usable item: %s %s",
