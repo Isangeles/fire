@@ -38,7 +38,6 @@ type Request struct {
 	DialogAnswer  []DialogAnswer      `json:"dialog-answer"`
 	Trade         []Trade             `json:"trade"`
 	TransferItems []TransferItems     `json:"transfer-items"`
-	Skill         []Skill             `json:"skill"`
 	Use           []Use               `json:"use"`
 	Accept        []int               `json:"accept"`
 	Command       []string            `json:"command"`
