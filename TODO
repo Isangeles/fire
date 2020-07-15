@@ -1,7 +1,6 @@
 MAJOR:
 * Speak request/response
-* Change area request
-* Train request
+* Training request
 * Equipment requests
 * Spawning user characters on login and removing them on logout
 MINOR:
@@ -20,5 +19,4 @@ DONE:
 * Burn command request/response
 * Users
 * Transfer items request
-* Skill request
-* Use object request
+* Use request
