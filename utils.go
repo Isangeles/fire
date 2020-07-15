@@ -23,8 +23,10 @@ package main
 import (
 	"fmt"
 
+	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/objects"
+	"github.com/isangeles/flame/module/useaction"
 
 	"github.com/isangeles/fire/config"
 )
@@ -45,6 +47,22 @@ func transferItems(from, to item.Container, items map[string][]string) error {
 				return fmt.Errorf("Unable to add item inventory: %v",
 					err)
 			}
+		}
+	}
+	return nil
+}
+
+// charSkillRecipe returns skill or recipe with specified ID from the character,
+// or nil if character does not have skill or recipe with such ID.
+func charSkillRecipe(char *character.Character, id string) useaction.Usable {
+	for _, s := range char.Skills() {
+		if s.ID() == id {
+			return s
+		}
+	}
+	for _, r := range char.Crafting().Recipes() {
+		if r.ID() == id {
+			return r
 		}
 	}
 	return nil

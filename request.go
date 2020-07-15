@@ -482,7 +482,7 @@ func handleSkillRequest(cli *client.Client, req request.Skill) error {
 // handleUseObjectRequest handles use-object request.
 func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 	// Retrieve user.
-	ob := game.Module().Object(req.UserID, req.UserSerial)
+	ob := serial.Object(req.UserID, req.UserSerial)
 	if ob == nil {
 		return fmt.Errorf("User not found: %s %s", req.UserID, req.UserSerial)
 	}
@@ -496,15 +496,20 @@ func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
 			req.UserSerial)
 	}
 	// Retrieve usable object.
-	ob = serial.Object(req.ObjectID, req.ObjectSerial)
-	if ob == nil {
-		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
-			req.ObjectSerial)
-	}
-	usable, ok := ob.(useaction.Usable)
-	if !ok {
-		return fmt.Errorf("Object is not usable: %s %s", req.ObjectID,
-			req.ObjectSerial)
+	usable := charSkillRecipe(user, req.ObjectID)
+	if usable == nil {
+		// Search for item or area object.
+		ob = serial.Object(req.ObjectID, req.ObjectSerial)
+		if ob == nil {
+			return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+				req.ObjectSerial)
+		}
+		u, ok := ob.(useaction.Usable)
+		if !ok {
+			return fmt.Errorf("Object is not usable: %s %s", req.ObjectID,
+				req.ObjectSerial)
+		}
+		usable = u
 	}
 	// Check if usable object can be used.
 	switch usable := usable.(type) {

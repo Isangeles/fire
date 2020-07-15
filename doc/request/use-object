@@ -4,6 +4,8 @@ use-object - client request for using game objects.
 .SH DESCRIPTION
 The use-object request is used by the client to use one of the game objects
 by another object that is controlled by the client.
+This request can be used to use any of user skills, items, crafting recipes
+or any area object in the user range.
 .br
 Object user, need to be under client control.
 .br
