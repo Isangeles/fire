@@ -125,10 +125,10 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
-	for _, r := range req.UseObject {
-		err := handleUseObjectRequest(req.Client, r)
+	for _, r := range req.Use {
+		err := handleUseRequest(req.Client, r)
 		if err != nil {
-			err := fmt.Sprintf("Unable to handle use-object request: %v", err)
+			err := fmt.Sprintf("Unable to handle use request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
 	}
@@ -479,8 +479,8 @@ func handleSkillRequest(cli *client.Client, req request.Skill) error {
 	return nil
 }
 
-// handleUseObjectRequest handles use-object request.
-func handleUseObjectRequest(cli *client.Client, req request.UseObject) error {
+// handleUseRequest handles use request.
+func handleUseRequest(cli *client.Client, req request.Use) error {
 	// Retrieve user.
 	ob := serial.Object(req.UserID, req.UserSerial)
 	if ob == nil {

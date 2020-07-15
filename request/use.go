@@ -1,5 +1,5 @@
 /*
- * useobject.go
+ * use.go
  *
  * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
  *
@@ -20,8 +20,8 @@
 
 package request
 
-// Struct for use object request.
-type UseObject struct {
+// Struct for use request.
+type Use struct {
 	ObjectID     string `json:"object-id"`
 	ObjectSerial string `json:"object-serial"`
 	UserID       string `json:"user-id"`
