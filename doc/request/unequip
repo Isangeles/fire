@@ -1,0 +1,24 @@
+.TH unequip
+.SH NAME
+unequip - client request for unequip item.
+.SH DESCRIPTION
+The unequip request is used by the client to remove an item from the equipment
+of one of the controlled characters.
+.br
+Unequip request contains IDs and serial values of character and item to unequip.
+.br
+The specified item must be stored in the character inventory.
+.SH JSON EXAMPLE
+.nf
+{
+  "unequip": [
+    {
+      "char-id": "char1",
+      "char-serial": "0",
+      "item-id": "iwIronSword",
+      "item-serial": "0"
+    }
+  ]
+}
+.SH SEE ALSO
+request/equip

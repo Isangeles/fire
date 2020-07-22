@@ -124,6 +124,20 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
+	for _, r := range req.Equip {
+		err := handleEquipRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle equip request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
+	for _, r := range req.Unequip {
+		err := handleUnequipRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle unequip request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
 	}
@@ -489,6 +503,75 @@ func handleUseRequest(cli *client.Client, req request.Use) error {
 	}
 	// Use object.
 	user.Use(usable)
+	return nil
+}
+
+// handleEquipRequest handles equip request.
+func handleEquipRequest(cli *client.Client, req request.Equip) error {
+	// Retrieve object.
+	ob := serial.Object(req.CharID, req.CharSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	if !cli.User().Controls(req.CharID, req.CharSerial) {
+		return fmt.Errorf("Object is not controled: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	object, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("Object is not a character: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	// Retrieve item.
+	it := object.Inventory().Item(req.ItemID, req.ItemSerial)
+	if it == nil {
+		return fmt.Errorf("Item not found in object inventory: %s %s",
+			req.ItemID, req.ItemSerial)
+	}
+	// Equip item.
+	eqItem, ok := it.(item.Equiper)
+	if !ok {
+		return fmt.Errorf("Item is not equipable: %s %s", req.ItemID,
+			req.ItemSerial)
+	}
+	err := equip(object.Equipment(), eqItem, req.Slots)
+	if err != nil {
+		return fmt.Errorf("Unable to equip item in slot: %v", err)
+	}
+	return nil
+}
+
+// handleUnequipRequest handles unequip request.
+func handleUnequipRequest(cli *client.Client, req request.Unequip) error {
+	// Retrieve object.
+	ob := serial.Object(req.CharID, req.CharSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	if !cli.User().Controls(req.CharID, req.CharSerial) {
+		return fmt.Errorf("Object is not controled: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	object, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("Object is not a character: %s %s", req.CharID,
+			req.CharSerial)
+	}
+	// Retrieve item.
+	it := object.Inventory().Item(req.ItemID, req.ItemSerial)
+	if it == nil {
+		return fmt.Errorf("Item not found in object inventory: %s %s",
+			req.ItemID, req.ItemSerial)
+	}
+	// Equip item.
+	eqItem, ok := it.(item.Equiper)
+	if !ok {
+		return fmt.Errorf("Item is not equipable: %s %s", req.ItemID,
+			req.ItemSerial)
+	}
+	object.Equipment().Unequip(eqItem)
 	return nil
 }
 

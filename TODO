@@ -1,7 +1,6 @@
 MAJOR:
 * Speak request/response
 * Training request
-* Equipment requests
 * Spawning user characters on login and removing them on logout
 MINOR:
 * Kicking clients

@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame/module/useaction"
 
 	"github.com/isangeles/fire/config"
+	"github.com/isangeles/fire/request"
 )
 
 // transferItems transfer items between specified objects.
@@ -82,4 +83,36 @@ func inRange(ob1, ob2 objects.Object) bool {
 		return true
 	}
 	return objects.Range(pos1, pos2) <= config.ActionMinRange
+}
+
+// equip inserts item to specified slots in character equipment.
+func equip(eq *character.Equipment, it item.Equiper, slots []request.EquipmentSlot) error {
+	for _, slot := range slots {
+		for _, eqSlot := range eq.Slots() {
+			if string(eqSlot.Type()) != slot.Type || eqSlot.ID() != slot.ID {
+				continue
+			}
+			for _, itSlot := range it.Slots() {
+				if itSlot == eqSlot.Type() {
+					eqSlot.SetItem(it)
+				}
+			}
+		}
+	}
+	for _, itSlot := range it.Slots() {
+		equiped := false
+		for _, eqSlot := range eq.Slots() {
+			if eqSlot.Type() != itSlot || eqSlot.Item() != it {
+				continue
+			}
+			equiped = true
+			break
+		}
+		if !equiped {
+			eq.Unequip(it)
+			return fmt.Errorf("Item is was not inserted in all required slots: %s %s: %s",
+				it.ID(), it.Serial(), string(itSlot))
+		}
+	}
+	return nil
 }

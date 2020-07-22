@@ -1,0 +1,33 @@
+.TH equip
+.SH NAME
+equip - client request for equip item.
+.SH DESCRIPTION
+The equip request is used by the client to add an item to the equipment
+of one of the controlled characters.
+.br
+Equip request contains IDs and serial values of character and item, and list
+of slots for an item.
+.br
+List with slots must contain data with type and ID for each slot.
+.br
+The specified item must be stored in the character inventory.
+.SH JSON EXAMPLE
+.nf
+{
+  "equip": [
+    {
+      "char-id": "char1",
+      "char-serial": "0",
+      "item-id": "iwIronSword",
+      "item-serial": "0",
+      "slot": [
+        {
+          "type": "itSlotHand",
+          "id": 0
+        }
+      ]
+    }
+  ]
+}
+.SH SEE ALSO
+request/unequip
