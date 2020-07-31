@@ -1,0 +1,24 @@
+.TH training
+.SH NAME
+training - client request for training.
+.SH DESCRIPTION
+The training request is used by the client to use training from training specified in request
+training user must be controlled by the client.
+.br
+Both user and trainer need to be in the minimal action range.
+.br
+Dialog request contains IDs and serial values of two objects(training user and trainer)
+and ID of training to train.
+.SH JSON EXAMPLE
+.nf
+{
+  "training": [
+    {
+      "training-id": "trainAttrStr1",
+      "trainer-id": "char2",
+      "trainer-serial": "0",
+      "user-id": "char1",
+      "user-serial": "0"
+    }
+  ]
+}

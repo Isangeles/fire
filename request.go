@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
 	"github.com/isangeles/flame/module/serial"
+	"github.com/isangeles/flame/module/training"
 	"github.com/isangeles/flame/module/useaction"
 
 	"github.com/isangeles/burn"
@@ -135,6 +136,13 @@ func handleRequest(req clientRequest) {
 		err := handleUnequipRequest(req.Client, r)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle unequip request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
+	for _, r := range req.Training {
+		err := handleTrainingRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle training request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
 	}
@@ -454,6 +462,52 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) e
 		return fmt.Errorf("Unsupported object 'from': %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
 	}
+	return nil
+}
+
+// handleTrainingRequest handles training request.
+func handleTrainingRequest(cli *client.Client, req request.Training) error {
+	// Retrieve user.
+	ob := serial.Object(req.UserID, req.UserSerial)
+	if ob == nil {
+		return fmt.Errorf("User not found: %s %s", req.UserID, req.UserSerial)
+	}
+	if !cli.User().Controls(req.UserID, req.UserSerial) {
+		return fmt.Errorf("User is not controled: %s %s", req.UserID,
+			req.UserSerial)
+	}
+	user, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("User is not a character: %s %s", req.UserID,
+			req.UserSerial)
+	}
+	// Retrieve trainer.
+	ob = serial.Object(req.TrainerID, req.TrainerSerial)
+	if ob == nil {
+		return fmt.Errorf("Trainer object not found: %s %s", req.TrainerID,
+			req.TrainerSerial)
+	}
+	trainer, ok := ob.(training.Trainer)
+	if !ok {
+		return fmt.Errorf("Trainer object is not a trainer: %s %s", req.TrainerID,
+			req.TrainerSerial)
+	}
+	// Retrive training.
+	var train *training.TrainerTraining
+	for _, t := range trainer.Trainings() {
+		if t.ID() == req.TrainingID {
+			train = t
+			break
+		}
+	}
+	if train == nil {
+		return fmt.Errorf("Training not found: %s", req.TrainingID)
+	}
+	// Check range.
+	if !inRange(user, trainer) {
+		return fmt.Errorf("Objects are not in the minimal range")
+	}
+	user.Use(train)
 	return nil
 }
 
