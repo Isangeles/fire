@@ -42,8 +42,9 @@ type Request struct {
 	Equip         []Equip             `json:"equip"`
 	Unequip       []Unequip           `json:"unequip"`
 	Training      []Training          `json:"training"`
-	Accept        []int               `json:"accept"`
+	Chat          []Chat              `json:"chat"`
 	Command       []string            `json:"command"`
+	Accept        []int               `json:"accept"`
 }
 
 // Unmarshal parses specified text data to action struct.

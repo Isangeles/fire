@@ -146,8 +146,12 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
-	for _, a := range req.Accept {
-		handleAcceptRequest(req.Client, a)
+	for _, r := range req.Chat {
+		err := handleChatRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle chat request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
 	}
 	for _, c := range req.Command {
 		r, err := handleCommandRequest(req.Client, c)
@@ -157,6 +161,9 @@ func handleRequest(req clientRequest) {
 			continue
 		}
 		resp.Command = append(resp.Command, r)
+	}
+	for _, a := range req.Accept {
+		handleAcceptRequest(req.Client, a)
 	}
 	req.Client.Out <- resp
 }
@@ -629,11 +636,25 @@ func handleUnequipRequest(cli *client.Client, req request.Unequip) error {
 	return nil
 }
 
-// handleAcceptRequest handles accept request.
-func handleAcceptRequest(cli *client.Client, id int) {
-	confirm := clientConfirm{id, cli}
-	confirmReq := func() { confirmed <- &confirm }
-	go confirmReq()
+// handleChatRequest handles chat request.
+func handleChatRequest(cli *client.Client, req request.Chat) error {
+	// Retrieve object.
+	ob := serial.Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	if !cli.User().Controls(req.ObjectID, req.ObjectSerial) {
+		return fmt.Errorf("Object is not controled: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	logger, ok := ob.(objects.Logger)
+	if !ok {
+		return fmt.Errorf("Object is has no chat log: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	logger.ChatLog().Add(req.Message)
+	return nil
 }
 
 // handleCommandRequest handles command request.
@@ -646,4 +667,11 @@ func handleCommandRequest(cli *client.Client, cmdText string) (resp response.Com
 	res, out := burn.HandleExpression(exp)
 	resp = response.Command{res, out}
 	return
+}
+
+// handleAcceptRequest handles accept request.
+func handleAcceptRequest(cli *client.Client, id int) {
+	confirm := clientConfirm{id, cli}
+	confirmReq := func() { confirmed <- &confirm }
+	go confirmReq()
 }

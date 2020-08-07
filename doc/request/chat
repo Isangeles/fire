@@ -1,0 +1,22 @@
+.TH chat
+.SH NAME
+chat - client request with chat message.
+.SH DESCRIPTION
+The training request is used by the client to send a new message to the chat
+log of a specified object.
+.br
+The object needs to be controlled by the user.
+.br
+Dialog request contains an ID and serial value of an object with a chat log
+for the message and text of the message.
+.SH JSON EXAMPLE
+.nf
+{
+  "chat": [
+    {
+      "object-id": "char1",
+      "object-serial": "0",
+      "message": "Hey!"
+    }
+  ]
+}

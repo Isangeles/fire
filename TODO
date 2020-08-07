@@ -1,5 +1,4 @@
 MAJOR:
-* Speak request/response
 * Spawning user characters on login and removing them on logout
 MINOR:
 * Kicking clients
@@ -19,3 +18,4 @@ DONE:
 * Transfer items request
 * Use request
 * Training request
+* Chat request
