@@ -196,7 +196,7 @@ func handleConnection(conn net.Conn) {
 // updateClient updates specified client.
 func updateClient(c *client.Client) error {
 	update := response.Update{Module: game.Module().Data()}
-	resp := response.Response{Update: update}
+	resp := response.Response{Logon: c.User() == nil, Update: update}
 	c.Out <- resp
 	return nil
 }
