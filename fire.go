@@ -149,7 +149,7 @@ func update() {
 			delete(pendingReqs, int(con.ID))
 		}
 		for _, c := range clients {
-			if c.User == nil {
+			if c.User() == nil {
 				continue
 			}
 			err := updateClient(c)
