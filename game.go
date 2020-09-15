@@ -66,6 +66,8 @@ func (g *Game) Update() {
 		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
 		// Update.
 		g.Game.Update(delta)
+		update = time.Now()
+		time.Sleep(1 * time.Second)
 	}
 }
 
