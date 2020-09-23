@@ -4,7 +4,7 @@ to connect and play together.
 
 Communication between client and server is realized through a JSON request/response system.
 
-Currently in a very early development stage.
+Currently in a early development stage.
 ## Build & Run
 Get sources from git:
 ```
