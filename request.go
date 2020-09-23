@@ -206,7 +206,7 @@ func handleMoveRequest(cli *client.Client, req request.Move) error {
 		return fmt.Errorf("Object not found: %s %s", req.ID, req.Serial)
 	}
 	// Check if object is under client control.
-	if cli.User().Controls(ob.ID(), ob.Serial()) {
+	if !cli.User().Controls(ob.ID(), ob.Serial()) {
 		return fmt.Errorf("Object not controled: %s %s", req.ID, req.Serial)
 	}
 	// Set position.
