@@ -6,6 +6,8 @@ Udate response contains a marshaled game module.
 .br
 The client can use this data to recreate the current module on the client-side.
 .br
-Update response is sent to all logged clients after each new request processed by a server.
+An update response is included in all responses sent to the authorized clients.
+.br
+Also, a separate update response is sent to all logged clients after each new request processed by a server.
 .SH JSON EXAMPLE
 .nf

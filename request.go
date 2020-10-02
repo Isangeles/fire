@@ -165,6 +165,7 @@ func handleRequest(req clientRequest) {
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
 	}
+	resp.Update = response.Update{Module: game.Module().Data()}
 	req.Client.Out <- resp
 }
 
