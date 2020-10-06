@@ -51,7 +51,8 @@ func newGame() (*Game, error) {
 		return nil, fmt.Errorf("unable to load game module: %v",
 			err)
 	}
-	mod := module.New(modData)
+	mod := module.New()
+	mod.Apply(modData)
 	g := new(Game)
 	g.Game = flame.NewGame(mod)
 	return g, nil
