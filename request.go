@@ -183,7 +183,7 @@ func handleLoginRequest(cli *client.Client, req request.Login) error {
 }
 
 // handleNewCharRequest handles new character request.
-func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp res.CharacterData, err error) {
+func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp response.NewChar, err error) {
 	if !game.ValidNewCharacter(charData) {
 		err = fmt.Errorf("Invalid character")
 		return
@@ -194,7 +194,7 @@ func handleNewCharRequest(cli *client.Client, charData res.CharacterData) (resp 
 		return
 	}
 	cli.User().Chars = append(cli.User().Chars, user.Character{char.ID(), char.Serial()})
-	resp = char.Data()
+	resp = response.NewChar{char.ID(), char.Serial()}
 	return
 }
 

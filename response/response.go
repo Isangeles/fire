@@ -33,7 +33,7 @@ import (
 type Response struct {
 	Logon          bool                   `json:"logon"`
 	Update         Update                 `json:"update"`
-	NewChar        []res.CharacterData    `json:"new-char"`
+	NewChar        []NewChar              `json:"new-char"`
 	Trade          []Trade                `json:"trade"`
 	TradeCompleted []TradeCompleted       `json:"trade-completed"`
 	Dialog         []res.ObjectDialogData `json:"dialog"`

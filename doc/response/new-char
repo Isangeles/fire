@@ -1,14 +1,15 @@
 .TH new-char
 .SH NAME
-new-char - server response with data of new characters for the client to control.
+new-char - server response with IDs and serial values of new characters for the client to control.
 .SH DESCRIPTION
-The new-char response is sent by the server to inform client about new characters that he can control.
+The new-char response is sent by the server to inform client about new characters that he now controls.
 .br
-Usually is send as a response on successful new-char request.
+Is send as a response on successful new-char request.
 .br
-The new-char request contains a list of character's data.
+The new-char request contains a list of IDs and serial values of game module character's.
 .br
-This data can be used by the client to recreate controlled characters on the client-side.
+This ID and serial value can be used by the client to retrieve controlled characters from the module
+on the client-side.
 .SH JSON EXAMPLE
 .nf
 {
