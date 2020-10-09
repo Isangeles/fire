@@ -211,11 +211,11 @@ func handleMoveRequest(cli *client.Client, req request.Move) error {
 		return fmt.Errorf("Object not controled: %s %s", req.ID, req.Serial)
 	}
 	// Set position.
-	posOb, ok := ob.(objects.Positioner)
+	char, ok := ob.(*character.Character)
 	if !ok {
-		return fmt.Errorf("Object without position: %s %s", req.ID, req.Serial)
+		return fmt.Errorf("Object is not a character: %s %s", req.ID, req.Serial)
 	}
-	posOb.SetPosition(req.PosX, req.PosY)
+	char.SetDestPoint(req.PosX, req.PosY)
 	return nil
 }
 
