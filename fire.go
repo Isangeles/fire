@@ -28,6 +28,8 @@ import (
 	"log"
 	"net"
 
+	flamelog "github.com/isangeles/flame/log"
+
 	"github.com/isangeles/burn"
 
 	"github.com/isangeles/fire/client"
@@ -79,6 +81,7 @@ type charResponse struct {
 
 // Main function.
 func main() {
+	flamelog.PrintStdOut = true
 	err := config.Load()
 	if err != nil {
 		log.Printf("Unable to load config: %v", err)
@@ -140,7 +143,7 @@ func update() {
 			}
 		case req := <-confirmRequests:
 			pendingReqs[req.ID] = req
-		case con := <- confirmed:
+		case con := <-confirmed:
 			req := pendingReqs[con.ID]
 			if !con.Client.User().Controls(req.CharID, req.CharSerial) {
 				continue
