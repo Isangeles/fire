@@ -41,6 +41,7 @@ var (
 	Host           = ""
 	Port           = "8000"
 	Module         = ""
+	UpdateBreak    = 16
 	ActionMinRange = 50.0
 )
 
@@ -66,6 +67,12 @@ func Load() error {
 	if len(conf["module"]) > 0 {
 		Module = conf["module"][0]
 	}
+	if len(conf["update-break"]) > 0 {
+		updateBreak, err := strconv.Atoi(conf["update-break"][0])
+		if err == nil {
+			UpdateBreak = updateBreak
+		}
+	}
 	if len(conf["action-min-range"]) > 0 {
 		minRange, err := strconv.ParseFloat(conf["action-min-range"][0], 64)
 		if err == nil {
@@ -87,6 +94,7 @@ func Save() error {
 	conf["host"] = []string{Host}
 	conf["port"] = []string{Port}
 	conf["module"] = []string{Module}
+	conf["update-break"] = []string{fmt.Sprintf("%d", UpdateBreak)}
 	conf["action-min-range"] = []string{fmt.Sprintf("%f", ActionMinRange)}
 	text := text.MarshalConfig(conf)
 	// Write config to file.

@@ -47,6 +47,12 @@ Name of the directory with a Flame module for the game hosted on the server.
 
 The module should be placed in the `data/modules` directory in the server executable directory.
 ```
+update-break:[duration in milliseconds]
+```
+Duration of update break after each game update in milliseconds.
+
+If not set, the default value is 16 milliseconds(which should match the client's GUI running on 60 FPS).
+```
 action-min-range:[range value]
 ```
 The minimum range required for game objects to interact with each other.

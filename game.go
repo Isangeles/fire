@@ -68,7 +68,7 @@ func (g *Game) Update() {
 		// Update.
 		g.Game.Update(delta)
 		update = time.Now()
-		time.Sleep(1 * time.Second)
+		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
 	}
 }
 
