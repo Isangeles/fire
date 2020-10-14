@@ -1,0 +1,13 @@
+.TH Game
+.SH DESCRIPTION
+Fire hosts a game started on the server startup using a module specified in the config file.
+.SH PLAYERS
+Player characters can be spawned using a new-char request.
+.br
+New characters are placed in the current chapter starting area and on starting position(values configurated in .chapter file).
+.SH UPDATE
+Game hosted on the server is updated by default every 16 milliseconds, which should match the speed of the client's graphical interface working on 60 FPS.
+.br
+A different value can be configurated in the .fire config file.
+.SH SEE ALSO
+responses, response/update, request/new-char, config/.fire
