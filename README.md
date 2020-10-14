@@ -71,7 +71,7 @@ pass:asd123!
 chars:player_asd#1;player_asd#2
 ```
 Check documentation for a detailed description of the user directory.
-## Client
+## Clients
 Any program able to send data through a TCP connection could serve as a Fire client.
 
 For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
