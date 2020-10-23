@@ -111,6 +111,8 @@ If you looking for things to do, then check the TODO file or contact maintainer(
 
 When you find something to do, create a new branch for your feature.
 After you finish, open a pull request to merge your changes with master branch.
+## Contact
+* Isangeles <<dev@isangeles.pl>>
 ## License
 Copyright (C) 2020 Dariusz Sikora <<dev@isangeles.pl>>
 
