@@ -43,6 +43,7 @@ type Request struct {
 	Unequip       []Unequip           `json:"unequip"`
 	Training      []Training          `json:"training"`
 	Chat          []Chat              `json:"chat"`
+	Target        []Target            `json:"target"`
 	Command       []string            `json:"command"`
 	Accept        []int               `json:"accept"`
 }

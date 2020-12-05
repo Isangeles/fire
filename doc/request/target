@@ -1,0 +1,23 @@
+.TH training
+.SH NAME
+training - client request for selecting target.
+.SH DESCRIPTION
+The target request is used by the client to set target for object specified in request.
+.br
+Object must be controlled by the client.
+.br
+Both object and target need to be in the minimal action range.
+.br
+Target request contains IDs and serial values of object and target.
+.SH JSON EXAMPLE
+.nf
+{
+  "target": [
+    {
+      "object-id": "char1",
+      "object-serial": "0",
+      "target-id": "char2",
+      "object-serial": "0"
+    }
+  ]
+}

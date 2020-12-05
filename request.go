@@ -27,6 +27,7 @@ import (
 	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/module/character"
 	"github.com/isangeles/flame/module/dialog"
+	"github.com/isangeles/flame/module/effect"
 	"github.com/isangeles/flame/module/item"
 	"github.com/isangeles/flame/module/object"
 	"github.com/isangeles/flame/module/objects"
@@ -143,6 +144,13 @@ func handleRequest(req clientRequest) {
 		err := handleTrainingRequest(req.Client, r)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle training request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
+	for _, r := range req.Target {
+		err := handleTargetRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle target request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
 	}
@@ -655,6 +663,43 @@ func handleChatRequest(cli *client.Client, req request.Chat) error {
 			req.ObjectSerial)
 	}
 	logger.ChatLog().Add(req.Message)
+	return nil
+}
+
+// handleTargetRequest handles target request.
+func handleTargetRequest(cli *client.Client, req request.Target) error {
+	// Retrieve object.
+	ob := serial.Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	if !cli.User().Controls(req.ObjectID, req.ObjectSerial) {
+		return fmt.Errorf("Object is not controled: %s %s", ob.ID(),
+			ob.Serial())
+	}
+	char, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("Object is not a character: %s %s", ob.ID(),
+			ob.Serial())
+	}
+	// Retrieve target.
+	ob = serial.Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.TargetID,
+			req.TargetSerial)
+	}
+	tar, ok := ob.(effect.Target)
+	if !ok {
+		return fmt.Errorf("Object is not targetable: %s %s", ob.ID(),
+			ob.Serial())
+	}
+	// Chack range.
+	if !inRange(char, tar) {
+		return fmt.Errorf("Objects are not in the minimal range")
+	}
+	// Set target.
+	char.SetTarget(tar)
 	return nil
 }
 
