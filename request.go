@@ -684,7 +684,11 @@ func handleTargetRequest(cli *client.Client, req request.Target) error {
 			ob.Serial())
 	}
 	// Retrieve target.
-	ob = serial.Object(req.ObjectID, req.ObjectSerial)
+	if len(req.TargetID+req.TargetSerial) < 1 {
+		char.SetTarget(nil)
+		return nil
+	}
+	ob = serial.Object(req.TargetID, req.TargetSerial)
 	if ob == nil {
 		return fmt.Errorf("Object not found: %s %s", req.TargetID,
 			req.TargetSerial)
@@ -693,10 +697,6 @@ func handleTargetRequest(cli *client.Client, req request.Target) error {
 	if !ok {
 		return fmt.Errorf("Object is not targetable: %s %s", ob.ID(),
 			ob.Serial())
-	}
-	// Chack range.
-	if !inRange(char, tar) {
-		return fmt.Errorf("Objects are not in the minimal range")
 	}
 	// Set target.
 	char.SetTarget(tar)
