@@ -33,7 +33,7 @@ import (
 )
 
 const (
-	Name, Version  = "Fire", "0.0.0"
+	Name, Version  = "Fire", "0.1.0-dev"
 	ConfigFileName = ".fire"
 )
 
