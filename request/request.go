@@ -25,14 +25,12 @@ package request
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/isangeles/flame/data/res"
 )
 
 // Struct for client request.
 type Request struct {
 	Login         []Login             `json:"login"`
-	NewChar       []res.CharacterData `json:"new-char"`
+	NewChar       []NewChar           `json:"new-char"`
 	Move          []Move              `json:"move"`
 	Dialog        []Dialog            `json:"dialog"`
 	DialogAnswer  []DialogAnswer      `json:"dialog-answer"`

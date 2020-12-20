@@ -24,7 +24,8 @@ import (
 	flameres "github.com/isangeles/flame/data/res"
 )
 
-// Sturuct for new character action.
+// Sturuct for new character request.
 type NewChar struct {
-	Char flameres.CharacterData `json:"char"`
+	Name string                 `json:"name"`
+	Data flameres.CharacterData `json:"char"`
 }

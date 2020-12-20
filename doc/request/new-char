@@ -1,14 +1,14 @@
 .TH new-char
 .SH NAME
-new-char - a client request with data for new game characters to create.
+new-char - a client request with data for new game character to create.
 .SH DESCRIPTION
-The new-char request is sent by the client to create new characters and place
+The new-char request is sent by the client to create new character and place
 them in the start area of the current game module on the server-side.
 .br
 After this the character is assigned to a client user to controll it.
 .br
-This request contains a list of game character data that stores all data needed
-to create a game character in a game module.
+This request contains a name of the character and character data needed
+to create a character in a game module.
 .br
 Character data from the request need to match configuration for new characters
 from the game module.
@@ -18,7 +18,9 @@ In case of an error, the server sends a proper error response to the client.
 .nf
 {
   "new-char": [
-      {
+    {
+      "name": "Char Name",
+      "data": {
         "id": "char1",
         "serial": "",
         "name": "charName",
@@ -66,6 +68,7 @@ In case of an error, the server sends a proper error response to the client.
         "memory": null,
         "dialogs": null
       }
+    }
   ]
 }
 .SH SEE ALSO
