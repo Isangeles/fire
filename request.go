@@ -201,6 +201,7 @@ func handleNewCharRequest(cli *client.Client, req request.NewChar) (resp respons
 		err = fmt.Errorf("Unable to spawn char: %v", err)
 		return
 	}
+	game.AddTranslationAll(res.TranslationData{req.Data.ID, []string{req.Name}})
 	cli.User().Chars = append(cli.User().Chars, user.Character{char.ID(), char.Serial()})
 	resp = response.NewChar{char.ID(), char.Serial()}
 	return

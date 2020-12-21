@@ -10,6 +10,9 @@ After this the character is assigned to a client user to controll it.
 This request contains a name of the character and character data needed
 to create a character in a game module.
 .br
+The name from a request is saved as translation data for character ID in the
+game module.
+.br
 Character data from the request need to match configuration for new characters
 from the game module.
 .br
@@ -38,7 +41,7 @@ In case of an error, the server sends a proper error response to the client.
         "hp": 0,
         "mana": 0,
         "exp": 0,
-        "resore": false,
+        "restore": false,
         "attributes": {
           "str": 0,
           "con": 0,

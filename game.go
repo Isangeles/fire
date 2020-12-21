@@ -134,3 +134,11 @@ func (g *Game) ValidNewCharacter(data flameres.CharacterData) bool {
 	}
 	return true
 }
+
+// AddTranslationAll adds specified translation to all
+// existing translation bases in the game module.
+func (g *Game) AddTranslationAll(data flameres.TranslationData) {
+	for i, _ := range g.Module().Res.TranslationBases {
+		g.Module().Res.TranslationBases[i].Translations = append(g.Module().Res.TranslationBases[i].Translations, data)
+	}
+}
