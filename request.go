@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -470,7 +470,15 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) e
 			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectFromID,
 				req.ObjectFromSerial)
 		}
-		log.Printf("items: %v", from.Inventory().Items())
+		err := transferItems(from, to, req.Items)
+		if err != nil {
+			return fmt.Errorf("Unable to transfer items: %v", err)
+		}
+	case *object.Object:
+		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
+			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectFromID,
+				req.ObjectFromSerial)
+		}
 		err := transferItems(from, to, req.Items)
 		if err != nil {
 			return fmt.Errorf("Unable to transfer items: %v", err)
