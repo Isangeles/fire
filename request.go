@@ -581,7 +581,10 @@ func handleUseRequest(cli *client.Client, req request.Use) error {
 		}
 	}
 	// Use object.
-	user.Use(usable)
+	err := user.Use(usable)
+	if err != nil {
+		return fmt.Errorf("Unable to use object: %v", err)
+	}
 	return nil
 }
 
