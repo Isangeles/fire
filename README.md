@@ -2,21 +2,26 @@
 Fire is a TCP game server for [Flame](https://github.com/Isangeles/flame) RPG engine, which enables multiple users
 to connect and play together.
 
+The server serves as a simple interface that handles connected users and offers them a set of requests to control
+their characters and interact with the game world hosted on the server.
+
 Communication between client and server is realized through a JSON request/response system.
 
 Currently in a early development stage.
 ## Build & Run
 Get sources from git:
 ```
-$ go get -u github.com/isangeles/fire
+go get -u github.com/isangeles/fire
 ```
 Build server executable:
 ```
-$ go build github.com/isangeles/fire
+go build github.com/isangeles/fire
 ```
-Configure host address, port, and ID of Flame module for the hosted game in `.fire`, for example in Bash:
+Configure host address, port, and ID of Flame module for the hosted game in `.fire` file(create if it doesn't already exist):
 ```
-$ printf "host:[host]\nport:[port]\nmodule:[module ID]" > .fire
+host:[host]
+port:[port]
+module:[module ID]
 ```
 Without address and host configuration, the server will use `localhost:8000` by default.
 
@@ -26,9 +31,48 @@ Flame modules are available to download [here](http://flame.isangeles.pl/mods).
 
 Run server:
 ```
-$ ./fire
+./fire
 ```
-After this, the server is ready to handle incoming connections.
+After this, the server is ready to handle incoming connections from the client programs.
+## Clients
+Any program able to send data through a TCP connection could serve as a Fire client.
+
+For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
+Of course, interpreting server responses with just Ncat will be difficult, that's why some kind of specialized program is recommended.
+[Burn Shell](https:/github.com/isangeles/burnsh) is an example of a simple interface that enables the user to connect to the Fire server.
+
+For each new connection, server sends a logon response to client, which is JSON in following format:
+```
+{"logon":true}
+```
+First thing that server client need to do, is to send valid login request in following format:
+```
+{"login":[{"id":"[user ID]","pass":"[user password]"}]}
+```
+After successful login, server will answer:
+```
+{"logon":false}
+```
+Each logged client is constantly updated with the current state of a Flame module through an update response.
+
+Logged clients can use different JSON requests to modify their characters and interact with others on the server.
+
+Check documentation for a detailed description of all available requests and server responses.
+## Users
+Users are stored in the `data/users` directory in the server executable directory.
+
+Each user has its own directory with `.user` configuration file.
+
+The name of a user directory is used as a unique user ID.
+
+The user configuration file contains a password and list of game characters controlled by the user.
+
+Example user configuration:
+```
+pass:asd123!
+chars:player_asd#1;player_asd#2
+```
+Check documentation for a detailed description of the user directory.
 ## Configuration
 Server configuration is stored in `.fire` file placed in the server executable directory.
 ### Configuration values:
@@ -56,43 +100,6 @@ If not set, the default value is 16 milliseconds(which should match the client's
 action-min-range:[range value]
 ```
 The minimum range required for game objects to interact with each other.
-## Users
-Users are stored in the `data/users` directory in the server executable directory.
-
-Each user has its own directory with `.user` configuration file.
-
-The name of a user directory is used as a unique user ID.
-
-The user configuration file contains a password and list of game characters controlled by the user.
-
-Example user configuration:
-```
-pass:asd123!
-chars:player_asd#1;player_asd#2
-```
-Check documentation for a detailed description of the user directory.
-## Clients
-Any program able to send data through a TCP connection could serve as a Fire client.
-
-For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
-
-For each new connection, server sends a logon response to client, which is JSON in following format:
-```
-{"logon":true}
-```
-First thing that server client need to do, is to send valid login request in following format:
-```
-{"login":[{"id":"[user ID]","pass":"[user password]"}]}
-```
-After successful login, server will answer:
-```
-{"logon":false}
-```
-Each logged client is constantly updated with the current state of a Flame module through an update response.
-
-Logged clients can use different JSON requests to modify their characters and interact with others on the server.
-
-Check documentation for a detailed description of all available requests and server responses.
 ## Documentation
 Source code documentation could be easily browsed with the `go doc` command.
 
