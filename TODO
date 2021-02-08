@@ -6,6 +6,7 @@ MINOR:
 * Saving state of the game module
 * Permissions for users to use only specific Burn commands(now any client can use any command)
 * Updating user data in the server directory
+* Handling module Ash scripts
 DONE:
 * Handling requests and sending responses
 * Update response
