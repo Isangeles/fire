@@ -59,6 +59,7 @@ func handleRequest(req clientRequest) {
 		// Request login.
 		log.Printf("Authorization requested: %s", req.Client.RemoteAddr())
 		resp.Logon = true
+		resp.Error = append(resp.Error, fmt.Sprintf("Unauthorized client"))
 		req.Client.Out <- resp
 		return
 	}
