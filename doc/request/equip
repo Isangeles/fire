@@ -20,7 +20,7 @@ The specified item must be stored in the character inventory.
       "char-serial": "0",
       "item-id": "iwIronSword",
       "item-serial": "0",
-      "slot": [
+      "slots": [
         {
           "type": "itSlotHand",
           "id": 0
