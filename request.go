@@ -615,8 +615,12 @@ func handleEquipRequest(cli *client.Client, req request.Equip) error {
 	// Equip item.
 	eqItem, ok := it.(item.Equiper)
 	if !ok {
-		return fmt.Errorf("Item is not equipable: %s %s", req.ItemID,
-			req.ItemSerial)
+		return fmt.Errorf("Item is not equipable: %s %s", it.ID(),
+			it.Serial())
+	}
+	if object.Equipment().Equiped(eqItem) {
+		return fmt.Errorf("Item is already equiped: %s %s", it.ID(),
+			it.Serial())
 	}
 	err := equip(object.Equipment(), eqItem, req.Slots)
 	if err != nil {
