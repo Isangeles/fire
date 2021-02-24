@@ -1,7 +1,7 @@
 /*
  * fire.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -139,13 +139,18 @@ func update() {
 			for _, c := range clients {
 				if c.User().Controls(resp.CharID, resp.CharSerial) {
 					c.Out <- resp.Response
+					break
 				}
+			}
+			char := game.Module().Chapter().Character(resp.CharID, resp.CharSerial)
+			if char != nil && char.AI() {
+				handleAICharResponse(resp)
 			}
 		case req := <-confirmRequests:
 			pendingReqs[req.ID] = req
 		case con := <-confirmed:
 			req := pendingReqs[con.ID]
-			if !con.Client.User().Controls(req.CharID, req.CharSerial) {
+			if con.Client != nil && !con.Client.User().Controls(req.CharID, req.CharSerial) {
 				continue
 			}
 			handleConfirmedRequest(req)
