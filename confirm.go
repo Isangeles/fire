@@ -1,7 +1,7 @@
 /*
  * confirm.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,6 +52,7 @@ func handleConfirmedRequest(req charConfirmRequest) {
 		sendCharResp := func() { charResponses <- charResp }
 		go sendCharResp()
 	}
+	resp.Update = response.Update{Module: game.Module().Data()}
 	req.Client.Out <- resp
 }
 
