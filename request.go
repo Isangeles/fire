@@ -278,6 +278,10 @@ func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.Objec
 		err = fmt.Errorf("Dialog not found: %s", req.DialogID)
 		return
 	}
+	if dialog.Target() != nil {
+		err = fmt.Errorf("Dialog already in progress: %s", req.DialogID)
+		return
+	}
 	dialog.Restart()
 	// Set dialog target.
 	dialog.SetTarget(target)
