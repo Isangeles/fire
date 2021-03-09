@@ -1,7 +1,7 @@
 /*
  * data.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -84,6 +84,9 @@ func loadUser(path string) (*user.User, error) {
 	userData := res.UserData{ID: filepath.Base(path)}
 	if len(userConf["pass"]) > 0 {
 		userData.Pass = userConf["pass"][0]
+	}
+	if len(userConf["admin"]) > 0 {
+		userData.Admin = userConf["admin"][0] == "true"
 	}
 	for _, sid := range userConf["chars"] {
 		serialID := strings.Split(sid, "#")

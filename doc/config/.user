@@ -11,6 +11,12 @@ The user configuration file for each user is loaded by the server on startup.
 .br
 User password.
 .P
+* admin
+.br
+Value for administrative privileges.
+.br
+If the value is set to 'true' the user is treated as the server admin.
+.P
 * chars
 .br
 List of characters controlled by user.
@@ -23,6 +29,7 @@ Values are separated by semicolons.
 .SH EXAMPLE
 .nf
 pass:asd
+admin:false
 chars:char13;char240
 .SH SEE ALSO
 data/users

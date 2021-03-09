@@ -1,7 +1,7 @@
 /*
  * user.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ import (
 type User struct {
 	id     string
 	pass   string
+	admin  bool
 	Logged bool
 	Chars  []Character
 }
@@ -43,6 +44,7 @@ func New(data res.UserData) *User {
 	u := new(User)
 	u.id = data.ID
 	u.pass = data.Pass
+	u.admin = data.Admin
 	for i, s := range data.Chars {
 		u.Chars = append(u.Chars, Character{i, s})
 	}
@@ -57,6 +59,11 @@ func (u *User) ID() string {
 // Pass returns user password.
 func (u *User) Pass() string {
 	return u.pass
+}
+
+// Admin checks if user is the admin.
+func (u *User) Admin() bool {
+	return u.admin
 }
 
 // Controls checks if user controls object with

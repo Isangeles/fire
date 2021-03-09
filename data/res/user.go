@@ -1,7 +1,7 @@
 /*
  * user.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,5 +24,6 @@ package res
 type UserData struct {
 	ID    string
 	Pass  string
+	Admin bool
 	Chars map[string]string
 }
