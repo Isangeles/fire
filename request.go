@@ -723,6 +723,10 @@ func handleTargetRequest(cli *client.Client, req request.Target) error {
 
 // handleCommandRequest handles command request.
 func handleCommandRequest(cli *client.Client, cmdText string) (resp response.Command, err error) {
+	if !cli.User().Admin() {
+		err = fmt.Errorf("You are not the admin")
+		return
+	}
 	exp, err := syntax.NewSTDExpression(cmdText)
 	if err != nil {
 		err = fmt.Errorf("Invalid command syntax: %v", err)
