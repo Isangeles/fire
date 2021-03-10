@@ -81,7 +81,10 @@ func loadUser(path string) (*user.User, error) {
 		return nil, fmt.Errorf("unable to unmarshal user config: %v",
 			err)
 	}
-	userData := res.UserData{ID: filepath.Base(path)}
+	userData := res.UserData{
+		ID:    filepath.Base(path),
+		Chars: make(map[string]string),
+	}
 	if len(userConf["pass"]) > 0 {
 		userData.Pass = userConf["pass"][0]
 	}
