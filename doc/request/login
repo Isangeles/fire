@@ -13,6 +13,9 @@ All new connections need to send a valid login request.
 .br
 The server would ignore any other request from an unauthorized client and answer with
 logon response.
+.br
+After a successful login, the server response will contain information about controlled
+characters in form of the new-char responses.
 .SH JSON EXAMPLE
 .nf
 {
@@ -24,4 +27,4 @@ logon response.
   ]
 }
 .SH SEE ALSO
-response/logon
+response/logon, response/new-char

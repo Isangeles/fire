@@ -54,6 +54,11 @@ func handleRequest(req clientRequest) {
 			err := fmt.Sprintf("Unable to handle login request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
+		// Add info about controlled characters.
+		for _, c := range req.Client.User().Chars {
+			r := response.NewChar{c.ID, c.Serial}
+			resp.NewChar = append(resp.NewChar, r)
+		}
 	}
 	if req.Client.User() == nil {
 		// Request login.
