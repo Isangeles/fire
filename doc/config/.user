@@ -23,13 +23,13 @@ List of characters controlled by user.
 .br
 Each value is a character ID and serial value separated with '#' character.
 .br
-For example for a character with ID char1 and serial value 12: char112
+For example for a character with ID char1 and serial value 12: char1#12
 .br
 Values are separated by semicolons.
 .SH EXAMPLE
 .nf
 pass:asd
 admin:false
-chars:char13;char240
+chars:char1#3;char2#40
 .SH SEE ALSO
 data/users
