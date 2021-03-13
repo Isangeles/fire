@@ -685,7 +685,7 @@ func handleChatRequest(cli *client.Client, req request.Chat) error {
 		return fmt.Errorf("Object is has no chat log: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
-	logger.ChatLog().Add(objects.Message{Translated: true, Text: req.Message})
+	logger.ChatLog().Add(objects.Message{Translated: req.Translated, Text: req.Message})
 	return nil
 }
 

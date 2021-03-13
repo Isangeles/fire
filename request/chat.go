@@ -1,7 +1,7 @@
 /*
  * chat.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,4 +25,5 @@ type Chat struct {
 	ObjectID     string `json:"object-id"`
 	ObjectSerial string `json:"object-serial"`
 	Message      string `json:"message"`
+	Translated   bool   `json:"translated"`
 }

@@ -7,8 +7,11 @@ log of a specified object.
 .br
 The object needs to be controlled by the user.
 .br
-Dialog request contains an ID and serial value of an object with a chat log
+Chat request contains an ID and serial value of an object with a chat log
 for the message and text of the message.
+.br
+By default message will be marked as not translated, to mark a message as
+translated set translated value to true.
 .SH JSON EXAMPLE
 .nf
 {
@@ -16,7 +19,8 @@ for the message and text of the message.
     {
       "object-id": "char1",
       "object-serial": "0",
-      "message": "Hey!"
+      "message": "Hey!",
+      "translated": true
     }
   ]
 }
