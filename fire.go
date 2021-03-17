@@ -137,10 +137,12 @@ func update() {
 			handleRequest(req)
 		case resp := <-charResponses:
 			for _, c := range clients {
-				if c.User().Controls(resp.CharID, resp.CharSerial) {
-					c.Out <- resp.Response
-					break
+				if !c.User().Controls(resp.CharID, resp.CharSerial) {
+					continue
 				}
+				resp.Response.Update = response.Update{Module: game.Module().Data()}
+				c.Out <- resp.Response
+				break
 			}
 			char := game.Module().Chapter().Character(resp.CharID, resp.CharSerial)
 			if char != nil && char.AI() {
