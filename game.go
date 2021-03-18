@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/isangeles/flame"
@@ -31,7 +30,6 @@ import (
 	"github.com/isangeles/flame/module"
 	"github.com/isangeles/flame/module/character"
 
-	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/config"
 )
 
@@ -85,26 +83,6 @@ func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, err
 	area.AddCharacter(char)
 	char.SetPosition(chapter.Conf().StartPosX, chapter.Conf().StartPosY)
 	return char, nil
-}
-
-// AddClientChars adds client characters to game.
-func (g *Game) AddClientChars(client *client.Client) {
-	for _, c := range client.User().Chars {
-		charData := flameres.Character(c.ID, c.Serial)
-		if charData == nil {
-			log.Printf("Client: %s: character not found: %s %s",
-				client.RemoteAddr(), c.ID, c.Serial)
-			return
-		}
-		char := character.New(*charData)
-		area := game.Module().Chapter().Area(char.AreaID())
-		if area == nil {
-			log.Printf("Client: %s: character: %s: area not found: %s",
-				client.RemoteAddr(), char.ID(), char.AreaID())
-			return
-		}
-		area.AddCharacter(char)
-	}
 }
 
 // ValidNewCharacter checks if specified data is valid  for the
