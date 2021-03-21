@@ -1,11 +1,13 @@
 MAJOR:
 * Spawning user characters on login and removing them on logout
+* Saving state of the game module
+* Handling module Ash scripts
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
-* Saving state of the game module
 * Updating user data in the server directory
-* Handling module Ash scripts
+* Rename new-char response to chars(characters?) and send it as a list of
+  controlled characters on each client update
 DONE:
 * Handling requests and sending responses
 * Update response
