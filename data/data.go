@@ -97,6 +97,6 @@ func loadUser(path string) (*user.User, error) {
 			userData.Chars[serialID[0]] = serialID[1]
 		}
 	}
-	u := user.New(userData)
-	return u, nil
+	userData.CharFlags = userConf["char-flags"]
+	return user.New(userData), nil
 }

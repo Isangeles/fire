@@ -22,16 +22,19 @@
 package user
 
 import (
+	"github.com/isangeles/flame/module/flag"
+
 	"github.com/isangeles/fire/data/res"
 )
 
 // Struct for user.
 type User struct {
-	id     string
-	pass   string
-	admin  bool
-	Logged bool
-	Chars  []Character
+	id        string
+	pass      string
+	admin     bool
+	charFlags []flag.Flag
+	Logged    bool
+	Chars     []Character
 }
 
 // Struct for user character.
@@ -47,6 +50,9 @@ func New(data res.UserData) *User {
 	u.admin = data.Admin
 	for i, s := range data.Chars {
 		u.Chars = append(u.Chars, Character{i, s})
+	}
+	for _, f := range data.CharFlags {
+		u.charFlags = append(u.charFlags, flag.Flag(f))
 	}
 	return u
 }
@@ -66,11 +72,17 @@ func (u *User) Admin() bool {
 	return u.admin
 }
 
+// CharFlags returns a list of flags that identifies
+// the game character as a user character.
+func (u *User) CharFlags() []flag.Flag {
+	return u.charFlags
+}
+
 // Controls checks if user controls object with
 // specified ID and serial value.
 func (u *User) Controls(id, serial string) bool {
 	for _, c := range u.Chars {
-		if c.ID + c.Serial == id + serial {
+		if c.ID+c.Serial == id+serial {
 			return true
 		}
 	}

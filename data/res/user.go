@@ -22,8 +22,9 @@ package res
 
 // Struct for user data.
 type UserData struct {
-	ID    string
-	Pass  string
-	Admin bool
-	Chars map[string]string
+	ID        string
+	Pass      string
+	Admin     bool
+	Chars     map[string]string
+	CharFlags []string
 }
