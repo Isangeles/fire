@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame/module/character"
 
 	"github.com/isangeles/fire/config"
+	"github.com/isangeles/fire/user"
 )
 
 // Server-side wrapper for game.
@@ -42,7 +43,7 @@ type Game struct {
 // starts a game.
 func newGame() (*Game, error) {
 	if len(config.Module) < 1 {
-		return nil, fmt.Errorf("no Flame module configurated")
+		return nil, fmt.Errorf("no game module configurated")
 	}
 	modData, err := flamedata.ImportModule(config.ModulePath())
 	if err != nil {
@@ -111,6 +112,23 @@ func (g *Game) ValidNewCharacter(data flameres.CharacterData) bool {
 		}
 	}
 	return true
+}
+
+// AddUserChars add game characters to the specified user according to the
+// user configuration.
+func (g *Game) AddUserChars(usr *user.User) {
+	if len(usr.CharFlags()) < 1 {
+		return
+	}
+outer:
+	for _, c := range g.Module().Chapter().Characters() {
+		for _, f := range usr.CharFlags() {
+			if !c.HasFlag(f) {
+				break outer
+			}
+		}
+		usr.Chars = append(usr.Chars, user.Character{c.ID(), c.Serial()})
+	}
 }
 
 // AddTranslationAll adds specified translation to all
