@@ -122,6 +122,9 @@ func (g *Game) AddUserChars(usr *user.User) {
 	}
 outer:
 	for _, c := range g.Module().Chapter().Characters() {
+		if usr.Controls(c.ID(), c.Serial()) {
+			continue
+		}
 		for _, f := range usr.CharFlags() {
 			if !c.HasFlag(f) {
 				break outer
