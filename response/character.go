@@ -1,7 +1,7 @@
 /*
- * newchar.go
+ * character.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
 
 package response
 
-// Struct for newchar response.
-type NewChar struct {
+// Struct for characters response.
+type Character struct {
 	ID     string `json:"id"`
 	Serial string `json:"serial"`
 }

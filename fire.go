@@ -213,6 +213,10 @@ func updateClient(c *client.Client) error {
 	// Send update response.
 	update := response.Update{Module: game.Module().Data()}
 	resp := response.Response{Logon: c.User() == nil, Update: update}
+	for _, c := range c.User().Chars {
+		charResp := response.Character{c.ID, c.Serial}
+		resp.Character = append(resp.Character, charResp)
+	}
 	c.Out <- resp
 	return nil
 }

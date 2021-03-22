@@ -56,11 +56,6 @@ func handleRequest(req clientRequest) {
 		}
 		// Add user characters.
 		game.AddUserChars(req.Client.User())
-		// Add info about controlled characters.
-		for _, c := range req.Client.User().Chars {
-			r := response.NewChar{c.ID, c.Serial}
-			resp.NewChar = append(resp.NewChar, r)
-		}
 	}
 	if req.Client.User() == nil {
 		// Request login.
@@ -70,14 +65,13 @@ func handleRequest(req clientRequest) {
 		req.Client.Out <- resp
 		return
 	}
-	for _, nc := range req.NewChar {
-		r, err := handleNewCharRequest(req.Client, nc)
+	for _, r := range req.NewChar {
+		err := handleNewCharRequest(req.Client, r)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle new-char request: %v", err)
 			resp.Error = append(resp.Error, err)
 			continue
 		}
-		resp.NewChar = append(resp.NewChar, r)
 	}
 	for _, m := range req.Move {
 		err := handleMoveRequest(req.Client, m)
@@ -181,7 +175,13 @@ func handleRequest(req clientRequest) {
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
 	}
+	// Add module data.
 	resp.Update = response.Update{Module: game.Module().Data()}
+	// Add info about controlled characters.
+	for _, c := range req.Client.User().Chars {
+		r := response.Character{c.ID, c.Serial}
+		resp.Character = append(resp.Character, r)
+	}
 	req.Client.Out <- resp
 }
 
@@ -199,20 +199,17 @@ func handleLoginRequest(cli *client.Client, req request.Login) error {
 }
 
 // handleNewCharRequest handles new character request.
-func handleNewCharRequest(cli *client.Client, req request.NewChar) (resp response.NewChar, err error) {
+func handleNewCharRequest(cli *client.Client, req request.NewChar) error {
 	if !game.ValidNewCharacter(req.Data) {
-		err = fmt.Errorf("Invalid character")
-		return
+		return fmt.Errorf("Invalid character")
 	}
 	char, err := game.SpawnChar(req.Data)
 	if err != nil {
-		err = fmt.Errorf("Unable to spawn char: %v", err)
-		return
+		return fmt.Errorf("Unable to spawn char: %v", err)
 	}
 	game.AddTranslationAll(res.TranslationData{req.Data.ID, []string{req.Name}})
 	cli.User().Chars = append(cli.User().Chars, user.Character{char.ID(), char.Serial()})
-	resp = response.NewChar{char.ID(), char.Serial()}
-	return
+	return nil
 }
 
 // handleMoveRequest handles move request.
