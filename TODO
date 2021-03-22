@@ -6,14 +6,14 @@ MINOR:
 * Kicking clients
 * Canceling unaccepted requests
 * Updating user data in the server directory
-* Rename new-char response to chars(characters?) and send it as a list of
-  controlled characters on each client update
 DONE:
 * Handling requests and sending responses
 * Update response
 * Trade request/response
 * Dialog request/response
 * Login request/response
+* New character request
+* Character response
 * Move request
 * Error request
 * Burn command request/response
