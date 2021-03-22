@@ -75,4 +75,4 @@ In case of an error, the server sends a proper error response to the client.
   ]
 }
 .SH SEE ALSO
-response/error
+response/error, response/character

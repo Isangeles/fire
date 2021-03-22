@@ -15,7 +15,7 @@ The server would ignore any other request from an unauthorized client and answer
 logon response.
 .br
 After a successful login, the server response will contain information about controlled
-characters in form of the new-char responses.
+characters in form of the character responses.
 .SH JSON EXAMPLE
 .nf
 {
@@ -27,4 +27,4 @@ characters in form of the new-char responses.
   ]
 }
 .SH SEE ALSO
-response/logon, response/new-char
+response/logon, response/character
