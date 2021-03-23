@@ -41,6 +41,8 @@ For example, you can use [Ncat](https://nmap.org/ncat) utility to receive respon
 Of course, interpreting server responses with just Ncat will be difficult, that's why some kind of specialized program is recommended.
 [Burn Shell](https://github.com/isangeles/burnsh) is an example of a simple interface that enables the user to play the game hosted on the Fire server.
 
+Client programs use JSON based interface to communicate with the server via a set of requests and responses.
+
 For each new connection, server sends a logon response to client, which is JSON in following format:
 ```
 {"logon":true}
