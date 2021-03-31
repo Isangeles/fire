@@ -144,10 +144,6 @@ func update() {
 				c.Out <- resp.Response
 				break
 			}
-			char := game.Module().Chapter().Character(resp.CharID, resp.CharSerial)
-			if char != nil && char.AI() {
-				handleAICharResponse(resp)
-			}
 		case req := <-confirmRequests:
 			pendingReqs[req.ID] = req
 		case con := <-confirmed:
