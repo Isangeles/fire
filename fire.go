@@ -97,7 +97,6 @@ func main() {
 		panic(fmt.Errorf("Unable to start game: %v", err))
 	}
 	go game.Update()
-	burn.Game = game.Game
 	burn.Module = game.Module()
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	server, err := net.Listen("tcp", addr)
