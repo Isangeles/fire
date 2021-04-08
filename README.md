@@ -23,7 +23,7 @@ go install github.com/isangeles/fire
 ```
 After that, you can find the server executable in your GOBIN directory(eg. ~/go/bin).
 ## Run
-Before starting server executable configure host address, port, and ID of Flame module for the hosted game in `.fire` file placed in executable directory(create if it doesn't already exist):
+Before starting server executable configure host address, port, and ID of Flame module in `.fire` file placed in the executable directory(create if it doesn't already exist):
 ```
 host:[host]
 port:[port]
