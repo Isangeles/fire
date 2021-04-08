@@ -8,16 +8,22 @@ their characters and interact with the game world hosted on the server.
 Communication between client and server is realized through a JSON request/response system.
 
 Currently in a early development stage.
-## Build & Run
+## Build
 Get sources from git:
 ```
 go get -u github.com/isangeles/fire
 ```
-Build server executable:
+Install server executable:
 ```
-go build github.com/isangeles/fire
+go install github.com/isangeles/fire@latest
 ```
-Configure host address, port, and ID of Flame module for the hosted game in `.fire` file(create if it doesn't already exist):
+Or with GOPATH mode simply:
+```
+go install github.com/isangeles/fire
+```
+After that, you can find the server executable in your GOBIN directory(eg. ~/go/bin).
+## Run
+Before starting server executable configure host address, port, and ID of Flame module for the hosted game in `.fire` file placed in executable directory(create if it doesn't already exist):
 ```
 host:[host]
 port:[port]
