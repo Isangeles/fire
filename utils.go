@@ -1,7 +1,7 @@
 /*
  * utils.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/module/character"
-	"github.com/isangeles/flame/module/item"
-	"github.com/isangeles/flame/module/objects"
-	"github.com/isangeles/flame/module/useaction"
+	"github.com/isangeles/flame/character"
+	"github.com/isangeles/flame/item"
+	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/useaction"
 
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/request"

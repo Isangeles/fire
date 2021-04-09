@@ -27,8 +27,7 @@ import (
 	"github.com/isangeles/flame"
 	flamedata "github.com/isangeles/flame/data"
 	flameres "github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module"
-	"github.com/isangeles/flame/module/character"
+	"github.com/isangeles/flame/character"
 
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/user"
@@ -36,7 +35,7 @@ import (
 
 // Server-side wrapper for game.
 type Game struct {
-	*flame.Game
+	*flame.Module
 }
 
 // newGame loads module with ID set in config and
@@ -50,11 +49,10 @@ func newGame() (*Game, error) {
 		return nil, fmt.Errorf("unable to load game module: %v",
 			err)
 	}
-	mod := module.New()
+	mod := flame.NewModule()
 	mod.Apply(modData)
-	g := new(Game)
-	g.Game = flame.NewGame(mod)
-	return g, nil
+	g := Game{Module: mod}
+	return &g, nil
 }
 
 // Update handles game update loop.
@@ -65,7 +63,7 @@ func (g *Game) Update() {
 		dtNano := time.Since(update).Nanoseconds()
 		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
 		// Update.
-		g.Game.Update(delta)
+		g.Module.Update(delta)
 		update = time.Now()
 		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
 	}
@@ -75,7 +73,7 @@ func (g *Game) Update() {
 // spawns it in game start area.
 func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, error) {
 	char := character.New(data)
-	chapter := g.Module().Chapter()
+	chapter := g.Chapter()
 	area := chapter.Area(chapter.Conf().StartArea)
 	if area == nil {
 		return nil, fmt.Errorf("start area not found: %s",
@@ -89,23 +87,23 @@ func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, err
 // ValidNewCharacter checks if specified data is valid  for the
 // new character in current chapter.
 func (g *Game) ValidNewCharacter(data flameres.CharacterData) bool {
-	if data.Level > g.Module().Chapter().Conf().StartLevel {
+	if data.Level > g.Chapter().Conf().StartLevel {
 		return false
 	}
 	attrs := data.Attributes.Str + data.Attributes.Con + data.Attributes.Dex +
 		data.Attributes.Int + data.Attributes.Wis
-	if attrs > g.Module().Chapter().Conf().StartAttrs {
+	if attrs > g.Chapter().Conf().StartAttrs {
 		return false
 	}
 	for _, i := range data.Inventory.Items {
-		for _, id := range g.Module().Chapter().Conf().StartItems {
+		for _, id := range g.Chapter().Conf().StartItems {
 			if i.ID != id {
 				return false
 			}
 		}
 	}
 	for _, s := range data.Skills {
-		for _, id := range g.Module().Chapter().Conf().StartSkills {
+		for _, id := range g.Chapter().Conf().StartSkills {
 			if s.ID != id {
 				return false
 			}
@@ -121,7 +119,7 @@ func (g *Game) AddUserChars(usr *user.User) {
 		return
 	}
 outer:
-	for _, c := range g.Module().Chapter().Characters() {
+	for _, c := range g.Chapter().Characters() {
 		if usr.Controls(c.ID(), c.Serial()) {
 			continue
 		}
@@ -137,7 +135,7 @@ outer:
 // AddTranslationAll adds specified translation to all
 // existing translation bases in the game module.
 func (g *Game) AddTranslationAll(data flameres.TranslationData) {
-	res := g.Module().Resources()
+	res := g.Resources()
 	for i, _ := range res.TranslationBases {
 		res.TranslationBases[i].Translations = append(res.TranslationBases[i].Translations, data)
 	}

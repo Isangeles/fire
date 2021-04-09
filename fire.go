@@ -97,7 +97,7 @@ func main() {
 		panic(fmt.Errorf("Unable to start game: %v", err))
 	}
 	go game.Update()
-	burn.Module = game.Module()
+	burn.Module = game.Module
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	server, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -139,7 +139,7 @@ func update() {
 				if !c.User().Controls(resp.CharID, resp.CharSerial) {
 					continue
 				}
-				resp.Response.Update = response.Update{Module: game.Module().Data()}
+				resp.Response.Update = response.Update{Module: game.Data()}
 				c.Out <- resp.Response
 				break
 			}
@@ -206,7 +206,7 @@ func updateClient(c *client.Client) error {
 		game.AddUserChars(c.User())
 	}
 	// Send update response.
-	update := response.Update{Module: game.Module().Data()}
+	update := response.Update{Module: game.Data()}
 	resp := response.Response{Logon: c.User() == nil, Update: update}
 	for _, c := range c.User().Chars {
 		charResp := response.Character{c.ID, c.Serial}

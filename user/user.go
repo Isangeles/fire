@@ -22,7 +22,7 @@
 package user
 
 import (
-	"github.com/isangeles/flame/module/flag"
+	"github.com/isangeles/flame/flag"
 
 	"github.com/isangeles/fire/data/res"
 )

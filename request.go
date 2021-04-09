@@ -25,15 +25,15 @@ import (
 	"log"
 
 	"github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/module/character"
-	"github.com/isangeles/flame/module/dialog"
-	"github.com/isangeles/flame/module/effect"
-	"github.com/isangeles/flame/module/item"
-	"github.com/isangeles/flame/module/object"
-	"github.com/isangeles/flame/module/objects"
-	"github.com/isangeles/flame/module/serial"
-	"github.com/isangeles/flame/module/training"
-	"github.com/isangeles/flame/module/useaction"
+	"github.com/isangeles/flame/character"
+	"github.com/isangeles/flame/dialog"
+	"github.com/isangeles/flame/effect"
+	"github.com/isangeles/flame/item"
+	"github.com/isangeles/flame/object"
+	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
+	"github.com/isangeles/flame/training"
+	"github.com/isangeles/flame/useaction"
 
 	"github.com/isangeles/burn"
 	"github.com/isangeles/burn/syntax"
@@ -176,7 +176,7 @@ func handleRequest(req clientRequest) {
 		handleAcceptRequest(req.Client, a)
 	}
 	// Add module data.
-	resp.Update = response.Update{Module: game.Module().Data()}
+	resp.Update = response.Update{Module: game.Data()}
 	// Add info about controlled characters.
 	for _, c := range req.Client.User().Chars {
 		r := response.Character{c.ID, c.Serial}
@@ -215,7 +215,7 @@ func handleNewCharRequest(cli *client.Client, req request.NewChar) error {
 // handleMoveRequest handles move request.
 func handleMoveRequest(cli *client.Client, req request.Move) error {
 	// Retrieve object.
-	chapter := game.Module().Chapter()
+	chapter := game.Chapter()
 	ob := chapter.Object(req.ID, req.Serial)
 	if ob == nil {
 		return fmt.Errorf("Object not found: %s %s", req.ID, req.Serial)
@@ -242,7 +242,7 @@ func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.Objec
 		return
 	}
 	// Retrieve dialog onwer & target.
-	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
+	object := game.Object(req.OwnerID, req.OwnerSerial)
 	if object == nil {
 		err = fmt.Errorf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
@@ -254,7 +254,7 @@ func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.Objec
 			req.OwnerSerial)
 		return
 	}
-	object = game.Module().Object(req.TargetID, req.TargetSerial)
+	object = game.Object(req.TargetID, req.TargetSerial)
 	if object == nil {
 		err = fmt.Errorf("Dialog target not found: %s %s", req.TargetID,
 			req.TargetSerial)
@@ -303,7 +303,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (re
 		return
 	}
 	// Retrieve dialog onwer & target.
-	object := game.Module().Object(req.OwnerID, req.OwnerSerial)
+	object := game.Object(req.OwnerID, req.OwnerSerial)
 	if object == nil {
 		err = fmt.Errorf("Dialog owner not found: %s %s", req.OwnerID,
 			req.OwnerSerial)
@@ -315,7 +315,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (re
 			req.OwnerSerial)
 		return
 	}
-	object = game.Module().Object(req.TargetID, req.TargetSerial)
+	object = game.Object(req.TargetID, req.TargetSerial)
 	if object == nil {
 		err = fmt.Errorf("Dialog target not found: %s %s", req.TargetID,
 			req.TargetSerial)
@@ -385,7 +385,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Tr
 		return
 	}
 	// Find seller & buyer.
-	object := game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
+	object := game.Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
 		err = fmt.Errorf("Seller not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
@@ -397,7 +397,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Tr
 			req.Sell.ObjectToSerial)
 		return
 	}
-	object = game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
+	object = game.Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {
 		err = fmt.Errorf("Buyer not found: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
@@ -441,7 +441,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Tr
 // handleTransferItemsRequest handles transfer request.
 func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) error {
 	// Retrive objects 'to' and 'from'.
-	ob := game.Module().Object(req.ObjectToID, req.ObjectToSerial)
+	ob := game.Object(req.ObjectToID, req.ObjectToSerial)
 	if ob == nil {
 		return fmt.Errorf("Object 'to' not found: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
@@ -455,7 +455,7 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) e
 		return fmt.Errorf("Object 'to' is not controlled: %s %s", req.ObjectToID,
 			req.ObjectToSerial)
 	}
-	ob = game.Module().Object(req.ObjectFromID, req.ObjectFromSerial)
+	ob = game.Object(req.ObjectFromID, req.ObjectFromSerial)
 	if ob == nil {
 		return fmt.Errorf("Object 'from' not found: %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)

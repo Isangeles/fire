@@ -23,7 +23,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/isangeles/flame/module/character"
+	"github.com/isangeles/flame/character"
 
 	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/request"
@@ -52,14 +52,14 @@ func handleConfirmedRequest(req charConfirmRequest) {
 		sendCharResp := func() { charResponses <- charResp }
 		go sendCharResp()
 	}
-	resp.Update = response.Update{Module: game.Module().Data()}
+	resp.Update = response.Update{Module: game.Data()}
 	req.Client.Out <- resp
 }
 
 // handleConfirmedTradeRequest handles specified trade request as confirmed.
 func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) (resp response.TradeCompleted, err error) {
 	// Find buyer.
-	object := game.Module().Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
+	object := game.Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {
 		err = fmt.Errorf("Object not found: %s %s", req.Buy.ObjectToID,
 			req.Buy.ObjectToSerial)
@@ -72,7 +72,7 @@ func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) (resp re
 		return
 	}
 	// Find seller.
-	object = game.Module().Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
+	object = game.Object(req.Sell.ObjectToID, req.Sell.ObjectToSerial)
 	if object == nil {
 		err = fmt.Errorf("Object not found: %s %s", req.Sell.ObjectToID,
 			req.Sell.ObjectToSerial)
