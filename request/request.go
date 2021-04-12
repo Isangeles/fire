@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,21 +29,22 @@ import (
 
 // Struct for client request.
 type Request struct {
-	Login         []Login             `json:"login"`
-	NewChar       []NewChar           `json:"new-char"`
-	Move          []Move              `json:"move"`
-	Dialog        []Dialog            `json:"dialog"`
-	DialogAnswer  []DialogAnswer      `json:"dialog-answer"`
-	Trade         []Trade             `json:"trade"`
-	TransferItems []TransferItems     `json:"transfer-items"`
-	Use           []Use               `json:"use"`
-	Equip         []Equip             `json:"equip"`
-	Unequip       []Unequip           `json:"unequip"`
-	Training      []Training          `json:"training"`
-	Chat          []Chat              `json:"chat"`
-	Target        []Target            `json:"target"`
-	Command       []string            `json:"command"`
-	Accept        []int               `json:"accept"`
+	Login         []Login         `json:"login"`
+	NewChar       []NewChar       `json:"new-char"`
+	Move          []Move          `json:"move"`
+	Dialog        []Dialog        `json:"dialog"`
+	DialogAnswer  []DialogAnswer  `json:"dialog-answer"`
+	Trade         []Trade         `json:"trade"`
+	TransferItems []TransferItems `json:"transfer-items"`
+	Use           []Use           `json:"use"`
+	Equip         []Equip         `json:"equip"`
+	Unequip       []Unequip       `json:"unequip"`
+	Training      []Training      `json:"training"`
+	Chat          []Chat          `json:"chat"`
+	Target        []Target        `json:"target"`
+	Save          []string        `json:"save"`
+	Command       []string        `json:"command"`
+	Accept        []int           `json:"accept"`
 }
 
 // Unmarshal parses specified text data to action struct.

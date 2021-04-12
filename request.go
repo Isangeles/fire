@@ -23,9 +23,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"path/filepath"
 
-	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/character"
+	flamedata "github.com/isangeles/flame/data"
+	"github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/item"
@@ -160,6 +162,13 @@ func handleRequest(req clientRequest) {
 		err := handleChatRequest(req.Client, r)
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle chat request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
+	for _, r := range req.Save {
+		err := handleSaveRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle save request: %v", err)
 			resp.Error = append(resp.Error, err)
 		}
 	}
@@ -722,6 +731,19 @@ func handleTargetRequest(cli *client.Client, req request.Target) error {
 	}
 	// Set target.
 	char.SetTarget(tar)
+	return nil
+}
+
+// handleSaveRequest handles save request.
+func handleSaveRequest(cli *client.Client, saveName string) error {
+	if !cli.User().Admin() {
+		return fmt.Errorf("You are not the admin")
+	}
+	path := filepath.Join(game.Conf().SavesPath(), saveName)
+	err := flamedata.ExportModuleFile(path, game.Data())
+	if err != nil {
+		return fmt.Errorf("Unable to export module file: %v", err)
+	}
 	return nil
 }
 

@@ -1,0 +1,18 @@
+.TH save
+.SH NAME
+save - client request for saving the game.
+.SH DESCRIPTION
+The save request is used by the client to save the current state of the game module.
+.br
+Save request contains the name of the save.
+.br
+The client user needs to be an admin, otherwise, the server will ignore this request and send a proper error response.
+.SH JSON EXAMPLE
+.nf
+{
+  "save": [
+    "save1"
+  ]
+}
+.SH SEE ALSO
+response/error
