@@ -6,6 +6,7 @@ MINOR:
 * Kicking clients
 * Canceling unaccepted requests
 * Updating user data in the server directory
+* Load request/response
 DONE:
 * Handling requests and sending responses
 * Update response
@@ -23,3 +24,4 @@ DONE:
 * Training request
 * Chat request
 * Target request
+* Save request
