@@ -7,6 +7,8 @@ The command request can be sent by a client to execute Burn command on the serve
 This request contains the text of the Burn command to execute.
 .br
 It is also possible to send commands joined into expression.
+.br
+The client user needs to be an admin, otherwise, the server will ignore this request and send a proper error response.
 .SH JSON EXAMPLE
 .nf
 {
@@ -15,4 +17,4 @@ It is also possible to send commands joined into expression.
   ]
 }
 .SH SEE ALSO
-response/command
+response/command, response/error
