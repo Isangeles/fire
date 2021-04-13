@@ -740,7 +740,7 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 	if !cli.User().Admin() {
 		return fmt.Errorf("You are not the admin")
 	}
-	path := filepath.Join(game.Conf().SavesPath(), saveName)
+	path := filepath.Join(config.ModulesPath(), saveName)
 	err := flamedata.ExportModuleFile(path, game.Data())
 	if err != nil {
 		return fmt.Errorf("Unable to export module file: %v", err)

@@ -1,7 +1,7 @@
 /*
  * config.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,12 +104,17 @@ func Save() error {
 	return nil
 }
 
-// ModulePath returns path to current module directory.
-func ModulePath() string {
-	return filepath.Join("data/modules", Module)
+// ModulesPath returns path to the modules directory.
+func ModulesPath() string {
+	return filepath.FromSlash("data/modules")
 }
 
-// UsersPath returns path to directory with users.
+// ModulePath returns path to the current module directory.
+func ModulePath() string {
+	return filepath.Join(ModulesPath(), Module)
+}
+
+// UsersPath returns path to the directory with users.
 func UsersPath() string {
 	return filepath.FromSlash("data/users")
 }
