@@ -22,6 +22,7 @@
 package data
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -33,6 +34,10 @@ import (
 
 	"github.com/isangeles/fire/data/res"
 	"github.com/isangeles/fire/user"
+)
+
+const (
+	userConfFile = ".user"
 )
 
 var (
@@ -68,10 +73,23 @@ func LoadUsers(path string) error {
 	return nil
 }
 
+// SaveUsers saves all loaded users under directory
+// with specified path.
+func SaveUsers(path string) error {
+	for _, u := range users {
+		err := saveUser(path, u)
+		if err != nil {
+			return fmt.Errorf("unable to save user: %v",
+				err)
+		}
+	}
+	return nil
+}
+
 // loadUser loads user from directory with
 // specified path.
 func loadUser(path string) (*user.User, error) {
-	userFile, err := os.Open(filepath.Join(path, ".user"))
+	userFile, err := os.Open(filepath.Join(path, userConfFile))
 	if err != nil {
 		return nil, fmt.Errorf("unable to open user file: %v",
 			err)
@@ -99,4 +117,33 @@ func loadUser(path string) (*user.User, error) {
 	}
 	userData.CharFlags = userConf["char-flags"]
 	return user.New(userData), nil
+}
+
+// saveUser saves user under specified path.
+func saveUser(path string, user *user.User) error {
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		return fmt.Errorf("unable to create user directory: %v", err)
+	}
+	conf := make(map[string][]string)
+	conf["pass"] = []string{user.Pass()}
+	conf["admin"] = []string{fmt.Sprintf("%v", user.Admin())}
+	for _, c := range user.Chars {
+		serialID := fmt.Sprintf("%s#%s", c.ID, c.Serial)
+		conf["chars"] = append(conf["chars"], serialID)
+	}
+	for _, f := range user.CharFlags() {
+		conf["char-flags"] = append(conf["char-flags"], string(f))
+	}
+	confText := text.MarshalConfig(conf)
+	confPath := filepath.Join(path, userConfFile)
+	confFile, err := os.Create(confPath)
+	if err != nil {
+		return fmt.Errorf("unable to create user config file: %v", err)
+	}
+	defer confFile.Close()
+	writer := bufio.NewWriter(confFile)
+	writer.WriteString(confText)
+	writer.Flush()
+	return nil
 }

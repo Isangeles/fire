@@ -41,6 +41,7 @@ import (
 	"github.com/isangeles/burn/syntax"
 
 	"github.com/isangeles/fire/client"
+	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
 	"github.com/isangeles/fire/response"
@@ -743,6 +744,10 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 	err := flamedata.ExportModuleFile(path, game.Data())
 	if err != nil {
 		return fmt.Errorf("Unable to export module file: %v", err)
+	}
+	err = data.SaveUsers(config.UsersDir())
+	if err != nil {
+		return fmt.Errorf("Unable to save users: %v", err)
 	}
 	return nil
 }
