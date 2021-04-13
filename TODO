@@ -1,12 +1,11 @@
 MAJOR:
 * Spawning user characters on login and removing them on logout
-* Saving state of the game module
 * Handling module Ash scripts
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
-* Updating user data in the server directory
 * Load request/response
+* Close server request
 DONE:
 * Handling requests and sending responses
 * Update response
