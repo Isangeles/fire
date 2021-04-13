@@ -109,7 +109,7 @@ func ModulePath() string {
 	return filepath.Join("data/modules", Module)
 }
 
-// UsersDir returns path to directory with users.
-func UsersDir() string {
+// UsersPath returns path to directory with users.
+func UsersPath() string {
 	return filepath.FromSlash("data/users")
 }

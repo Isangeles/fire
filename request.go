@@ -745,7 +745,7 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 	if err != nil {
 		return fmt.Errorf("Unable to export module file: %v", err)
 	}
-	err = data.SaveUsers(config.UsersDir())
+	err = data.SaveUsers(config.UsersPath())
 	if err != nil {
 		return fmt.Errorf("Unable to save users: %v", err)
 	}

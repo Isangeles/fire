@@ -88,7 +88,7 @@ func main() {
 		log.Printf("Saving default config")
 		config.Save()
 	}
-	err = data.LoadUsers(config.UsersDir())
+	err = data.LoadUsers(config.UsersPath())
 	if err != nil {
 		log.Printf("Unable to load users: %v", err)
 	}
