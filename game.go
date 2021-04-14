@@ -22,12 +22,13 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/character"
 	flamedata "github.com/isangeles/flame/data"
 	flameres "github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/character"
 
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/user"
@@ -44,7 +45,7 @@ func newGame() (*Game, error) {
 	if len(config.Module) < 1 {
 		return nil, fmt.Errorf("no game module configurated")
 	}
-	modData, err := flamedata.ImportModule(config.ModulePath())
+	modData, err := importModule(config.ModulePath())
 	if err != nil {
 		return nil, fmt.Errorf("unable to load game module: %v",
 			err)
@@ -139,4 +140,12 @@ func (g *Game) AddTranslationAll(data flameres.TranslationData) {
 	for i, _ := range res.TranslationBases {
 		res.TranslationBases[i].Translations = append(res.TranslationBases[i].Translations, data)
 	}
+}
+
+// importModule imports module data from module directory or module file.
+func importModule(path string) (flameres.ModuleData, error) {
+	if strings.HasSuffix(path, flamedata.ModuleFileExt) {
+		return flamedata.ImportModuleFile(path)
+	}
+	return flamedata.ImportModule(path)
 }
