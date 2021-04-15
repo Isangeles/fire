@@ -45,6 +45,7 @@ type Request struct {
 	Save          []string        `json:"save"`
 	Command       []string        `json:"command"`
 	Accept        []int           `json:"accept"`
+	Close         int64           `json:"close"`
 }
 
 // Unmarshal parses specified text data to action struct.

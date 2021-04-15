@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"time"
 
 	"github.com/isangeles/flame/character"
 	flamedata "github.com/isangeles/flame/data"
@@ -184,6 +185,13 @@ func handleRequest(req clientRequest) {
 	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
+	}
+	if req.Close > 0 {
+		err := handleCloseRequest(req.Client, req.Close)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle close request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
 	}
 	// Add module data.
 	resp.Update = response.Update{Module: game.Data()}
@@ -774,4 +782,15 @@ func handleAcceptRequest(cli *client.Client, id int) {
 	confirm := clientConfirm{id, cli}
 	confirmReq := func() { confirmed <- &confirm }
 	go confirmReq()
+}
+
+// handleCloseRequest handles close request.
+func handleCloseRequest(cli *client.Client, timeNano int64) error {
+	if !cli.User().Admin() {
+		return fmt.Errorf("You are not the admin")
+	}
+	closeTime := time.Unix(0, timeNano)
+	log.Printf("Server going down at: %v", closeTime)
+	time.AfterFunc(time.Until(closeTime), closeServer)
+	return nil
 }

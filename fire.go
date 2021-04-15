@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	flamelog "github.com/isangeles/flame/log"
 
@@ -231,4 +232,13 @@ func clientWriter(c *client.Client) {
 				c.RemoteAddr(), err)
 		}
 	}
+}
+
+// closeServer saves current server configuration and terminates the program.
+func closeServer() {
+	err := config.Save()
+	if err != nil {
+		log.Printf("Unable to save config: %v", err)
+	}
+	os.Exit(0)
 }

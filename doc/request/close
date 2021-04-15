@@ -1,0 +1,22 @@
+.TH close
+.SH NAME
+close - client request for closing the server.
+.SH DESCRIPTION
+The close request can be sent by a client to terminate the server process.
+.br
+This request contains the time for the server to go offline.
+.br
+Time needs to be in the format of nanoseconds since the Unix epoch.
+.br
+The time value needs to be greater than 0, otherwise, the request will be ignored.
+.br
+If the time from request equals or is lower than the current server time, then the server will be closed immediately.
+.br
+The client user needs to be an admin, otherwise, the server will ignore this request and send a proper error response.
+.SH JSON EXAMPLE
+.nf
+{
+  "close": 1257894000000000000
+}
+.SH SEE ALSO
+response/error
