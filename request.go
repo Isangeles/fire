@@ -57,6 +57,7 @@ func handleRequest(req clientRequest) {
 		if err != nil {
 			err := fmt.Sprintf("Unable to handle login request: %v", err)
 			resp.Error = append(resp.Error, err)
+			continue
 		}
 		// Add user characters.
 		game.AddUserChars(req.Client.User())
