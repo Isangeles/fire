@@ -1,8 +1,8 @@
 .TH responses
 .SH DESCRIPTION
-Responses are used by the server to inform clients about required acctions, current state of game module, errors, etc.
+Responses are used by the server to inform clients about required actions, the current state of the game module, errors, etc.
 .br
-The server sends response to the client after each of request made by the client.
+The server sends a response to the client after each request made by the client.
 .br
 Update response is sent to every logged client after any response made by one of the logged clients.
 .br
@@ -10,3 +10,5 @@ Besides that, the server can send a response to a client at any time(not only af
 .br
 For example as a result of a request from another client that needs confirmation from the owner
 of the specific module object.
+.SH SEE ALSO
+requests

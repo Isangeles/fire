@@ -1,0 +1,9 @@
+.TH requests
+.SH DESCRIPTION
+Requests are used by the server clients to perform actions using controlled objects, like moving around the area, using other objects, etc.
+.br
+The server sends a response to the client after each request made by the client.
+.br
+All requests are validated to check if the client user can perform a specific action, e.g. if the user controls objects from the request have permission to use such request.
+.SH SEE ALSO
+responses
