@@ -43,6 +43,7 @@ type Request struct {
 	Chat          []Chat          `json:"chat"`
 	Target        []Target        `json:"target"`
 	Save          []string        `json:"save"`
+	Load          string          `json:"load"`
 	Command       []string        `json:"command"`
 	Accept        []int           `json:"accept"`
 	Close         int64           `json:"close"`
@@ -50,13 +51,13 @@ type Request struct {
 
 // Unmarshal parses specified text data to action struct.
 func Unmarshal(data string) (*Request, error) {
-	a := new(Request)
-	err := json.Unmarshal([]byte(data), a)
+	req := new(Request)
+	err := json.Unmarshal([]byte(data), req)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal request: %v",
 			err)
 	}
-	return a, nil
+	return req, nil
 }
 
 // Marshal parses specified action to text data.

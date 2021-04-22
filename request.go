@@ -175,6 +175,13 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
+	if len(req.Load) > 0 {
+		err := handleLoadRequest(req.Client, req.Load)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle load request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
 	for _, c := range req.Command {
 		r, err := handleCommandRequest(req.Client, c)
 		if err != nil {
@@ -759,6 +766,26 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 	if err != nil {
 		return fmt.Errorf("Unable to save users: %v", err)
 	}
+	return nil
+}
+
+// handleLoadRequest handles load request.
+func handleLoadRequest(cli *client.Client, saveName string) error {
+	if !cli.User().Admin() {
+		return fmt.Errorf("You are not the admin")
+	}
+	// Import module.
+	path := filepath.Join(config.ModulesPath(), saveName + flamedata.ModuleFileExt)
+	data, err := flamedata.ImportModuleFile(path)
+	if err != nil {
+		return fmt.Errorf("Unable to import module file: %v", err)
+	}
+	// Set config to new loaded module.
+	config.Module = filepath.Base(path)
+	// Send load data on load channel.
+	loadResp := response.Load{saveName, data}
+	loadGame := func() { load <- loadResp }
+	go loadGame()
 	return nil
 }
 

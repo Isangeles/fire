@@ -20,4 +20,4 @@ The client user needs to be an admin, otherwise, the server will ignore this req
   ]
 }
 .SH SEE ALSO
-response/error
+request/load, response/error

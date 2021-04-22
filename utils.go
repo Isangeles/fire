@@ -22,8 +22,11 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/isangeles/flame/character"
+	flamedata "github.com/isangeles/flame/data"
+	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/useaction"
@@ -115,4 +118,12 @@ func equip(eq *character.Equipment, it item.Equiper, slots []request.EquipmentSl
 		}
 	}
 	return nil
+}
+
+// importModule imports module data from module directory or module file.
+func importModule(path string) (flameres.ModuleData, error) {
+	if strings.HasSuffix(path, flamedata.ModuleFileExt) {
+		return flamedata.ImportModuleFile(path)
+	}
+	return flamedata.ImportModule(path)
 }

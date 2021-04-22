@@ -29,7 +29,9 @@ import (
 	"net"
 	"os"
 
+	flameres "github.com/isangeles/flame/data/res"
 	flamelog "github.com/isangeles/flame/log"
+	"github.com/isangeles/flame/serial"
 
 	"github.com/isangeles/burn"
 
@@ -48,6 +50,7 @@ var (
 	charResponses   = make(chan charResponse)
 	confirmRequests = make(chan charConfirmRequest)
 	confirmed       = make(chan *clientConfirm)
+	load            = make(chan response.Load)
 	pendingReqs     = make(map[int]charConfirmRequest)
 )
 
@@ -93,10 +96,14 @@ func main() {
 	if err != nil {
 		log.Printf("Unable to load users: %v", err)
 	}
-	game, err = newGame()
-	if err != nil {
-		panic(fmt.Errorf("Unable to start game: %v", err))
+	if len(config.Module) < 1 {
+		panic(fmt.Errorf("no game module configurated"))
 	}
+	modData, err := importModule(config.ModulePath())
+	if err != nil {
+		panic(fmt.Errorf("unable to load game module: %v", err))
+	}
+	game = newGame(modData)
 	go game.Update()
 	burn.Module = game.Module
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
@@ -153,6 +160,16 @@ func update() {
 			}
 			handleConfirmedRequest(req)
 			delete(pendingReqs, int(con.ID))
+		case resp := <-load:
+			flameres.Clear()
+			serial.Reset()
+			game = newGame(resp.Module)
+			for _, c := range clients {
+				if c.User() == nil {
+					continue
+				}
+				c.Out <- response.Response{Load: resp}
+			}
 		}
 		for _, c := range clients {
 			if c.User() == nil {

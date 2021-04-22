@@ -4,7 +4,6 @@ MAJOR:
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
-* Load request/response
 DONE:
 * Handling requests and sending responses
 * Update response
@@ -24,3 +23,4 @@ DONE:
 * Target request
 * Save request
 * Close server request
+* Load request/response

@@ -1,0 +1,21 @@
+.TH load
+.SH NAME
+load - server response with game load data.
+.SH DESCRIPTION
+The dialog response is sent to the client to inform about the game loaded from save.
+.br
+This response contains the name of the save, and the module data for the loaded game.
+.br
+The server sends this response to all logged-in clients after loading the saved game specified in the load request.
+.SH JSON EXAMPLE
+.nf
+{
+  "load": [
+    {
+      "save": "save1",
+      "module": {...}
+    }
+  ]
+}
+.SH SEE ALSO
+request/load
