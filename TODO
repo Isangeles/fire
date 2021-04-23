@@ -13,7 +13,7 @@ DONE:
 * New character request
 * Character response
 * Move request
-* Error request
+* Error response
 * Burn command request/response
 * Users
 * Transfer items request
