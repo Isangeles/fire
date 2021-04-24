@@ -38,25 +38,14 @@ type Game struct {
 }
 
 // newGame creates game for specified module data.
+// Created game is automatically updated with the frequency
+// specified in the config package.
 func newGame(data flameres.ModuleData) *Game {
 	mod := flame.NewModule()
 	mod.Apply(data)
 	g := Game{Module: mod}
+	go g.update()
 	return &g
-}
-
-// Update handles game update loop.
-func (g *Game) Update() {
-	update := time.Now()
-	for {
-		// Delta.
-		dtNano := time.Since(update).Nanoseconds()
-		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
-		// Update.
-		g.Module.Update(delta)
-		update = time.Now()
-		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
-	}
 }
 
 // SpawnChar creates new character for specified data and
@@ -128,5 +117,19 @@ func (g *Game) AddTranslationAll(data flameres.TranslationData) {
 	res := g.Resources()
 	for i, _ := range res.TranslationBases {
 		res.TranslationBases[i].Translations = append(res.TranslationBases[i].Translations, data)
+	}
+}
+
+// update handles game update loop.
+func (g *Game) update() {
+	update := time.Now()
+	for {
+		// Delta.
+		dtNano := time.Since(update).Nanoseconds()
+		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
+		// Update.
+		g.Module.Update(delta)
+		update = time.Now()
+		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
 	}
 }

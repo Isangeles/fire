@@ -104,7 +104,6 @@ func main() {
 		panic(fmt.Errorf("unable to load game module: %v", err))
 	}
 	game = newGame(modData)
-	go game.Update()
 	burn.Module = game.Module
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	server, err := net.Listen("tcp", addr)
