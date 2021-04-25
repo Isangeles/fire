@@ -77,7 +77,8 @@ func LoadUsers(path string) error {
 // with specified path.
 func SaveUsers(path string) error {
 	for _, u := range users {
-		err := saveUser(path, u)
+		userPath := filepath.Join(path, u.ID())
+		err := saveUser(userPath, u)
 		if err != nil {
 			return fmt.Errorf("unable to save user: %v",
 				err)
