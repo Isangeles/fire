@@ -818,7 +818,8 @@ func handleCloseRequest(cli *client.Client, timeNano int64) error {
 		return fmt.Errorf("You are not the admin")
 	}
 	closeTime := time.Unix(0, timeNano)
+	closeFunc := func() {close = true}
 	log.Printf("Server going down at: %v", closeTime)
-	time.AfterFunc(time.Until(closeTime), closeServer)
+	time.AfterFunc(time.Until(closeTime), closeFunc)
 	return nil
 }

@@ -23,4 +23,5 @@ DONE:
 * Target request
 * Save request
 * Close server request
+* Closed response
 * Load request/response

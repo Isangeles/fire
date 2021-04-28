@@ -40,6 +40,7 @@ type Response struct {
 	Command        []Command              `json:"command"`
 	Load           Load                   `json:"load"`
 	Error          []string               `json:"error"`
+	Closed         bool                   `json:"closed"`
 }
 
 // Unmarshal parses specified text data to response struct.

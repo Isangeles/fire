@@ -1,0 +1,16 @@
+.TH closed
+.SH NAME
+closed - server response to inform the client about server close.
+.SH DESCRIPTION
+The closed response is sent to a client to inform whether the server is closed.
+.br
+Response contains boolean value, true or false.
+.br
+It is sent to all connected clients along with an update response.
+.SH JSON EXAMPLE
+.nf
+{
+  "closed": "false"
+}
+.SH SEE ALSO
+responses, response/update, request/close

@@ -28,6 +28,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 
 	flameres "github.com/isangeles/flame/data/res"
 	flamelog "github.com/isangeles/flame/log"
@@ -52,6 +53,7 @@ var (
 	confirmed       = make(chan *clientConfirm)
 	load            = make(chan response.Load)
 	pendingReqs     = make(map[int]charConfirmRequest)
+	close           bool
 )
 
 // Server-side wrapper for client request.
@@ -180,6 +182,11 @@ func update() {
 					c.RemoteAddr(), err)
 			}
 		}
+		if close {
+			// Wait some time before closing the server to ensure that
+			// all clients will receive closed response.
+			time.AfterFunc(time.Duration(2) * time.Second, closeServer)
+		}
 	}
 }
 
@@ -224,7 +231,11 @@ func updateClient(c *client.Client) error {
 	}
 	// Send update response.
 	update := response.Update{Module: game.Data()}
-	resp := response.Response{Logon: c.User() == nil, Update: update}
+	resp := response.Response{
+		Logon: c.User() == nil,
+		Closed: close,
+		Update: update,
+	}
 	for _, c := range c.User().Chars {
 		charResp := response.Character{c.ID, c.Serial}
 		resp.Character = append(resp.Character, charResp)
