@@ -35,6 +35,8 @@ import (
 const (
 	Name, Version  = "Fire", "0.1.0-dev"
 	ConfigFileName = ".fire"
+	ModulesPath    = "data/modules"
+	UsersPath      = "data/users"
 )
 
 var (
@@ -104,17 +106,7 @@ func Save() error {
 	return nil
 }
 
-// ModulesPath returns path to the modules directory.
-func ModulesPath() string {
-	return filepath.FromSlash("data/modules")
-}
-
 // ModulePath returns path to the current module directory.
 func ModulePath() string {
-	return filepath.Join(ModulesPath(), Module)
-}
-
-// UsersPath returns path to the directory with users.
-func UsersPath() string {
-	return filepath.FromSlash("data/users")
+	return filepath.Join(ModulesPath, Module)
 }

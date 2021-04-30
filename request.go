@@ -756,13 +756,13 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 	if !cli.User().Admin() {
 		return fmt.Errorf("You are not the admin")
 	}
-	path := filepath.Join(config.ModulesPath(), saveName)
+	path := filepath.Join(config.ModulesPath, saveName)
 	err := flamedata.ExportModuleFile(path, game.Data())
 	if err != nil {
 		return fmt.Errorf("Unable to export module file: %v", err)
 	}
 	config.Module = saveName + flamedata.ModuleFileExt
-	err = data.SaveUsers(config.UsersPath())
+	err = data.SaveUsers(config.UsersPath)
 	if err != nil {
 		return fmt.Errorf("Unable to save users: %v", err)
 	}
@@ -775,7 +775,7 @@ func handleLoadRequest(cli *client.Client, saveName string) error {
 		return fmt.Errorf("You are not the admin")
 	}
 	// Import module.
-	path := filepath.Join(config.ModulesPath(), saveName + flamedata.ModuleFileExt)
+	path := filepath.Join(config.ModulesPath, saveName + flamedata.ModuleFileExt)
 	data, err := flamedata.ImportModuleFile(path)
 	if err != nil {
 		return fmt.Errorf("Unable to import module file: %v", err)
