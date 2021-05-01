@@ -164,6 +164,7 @@ func update() {
 		case resp := <-load:
 			flameres.Clear()
 			serial.Reset()
+			game.StopScripts()
 			game = newGame(resp.Module)
 			for _, c := range clients {
 				if c.User() == nil {

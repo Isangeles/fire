@@ -33,10 +33,11 @@ import (
 )
 
 const (
-	Name, Version  = "Fire", "0.1.0-dev"
-	ConfigFileName = ".fire"
-	ModulesPath    = "data/modules"
-	UsersPath      = "data/users"
+	Name, Version    = "Fire", "0.1.0-dev"
+	ConfigFileName   = ".fire"
+	ModulesPath      = "data/modules"
+	UsersPath        = "data/users"
+	ModuleServerPath = "fire" // path to the server directory inside module directory
 )
 
 var (
@@ -47,7 +48,7 @@ var (
 	ActionMinRange = 50.0
 )
 
-// LoadConfig load server configuration file.
+// Load load server configuration file.
 func Load() error {
 	// Open config file.
 	file, err := os.Open(ConfigFileName)
@@ -84,7 +85,7 @@ func Load() error {
 	return nil
 }
 
-// SaveConfig saves server configuration file.
+// Save saves server configuration file.
 func Save() error {
 	// Create config file.
 	file, err := os.Create(ConfigFileName)

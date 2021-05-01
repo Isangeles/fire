@@ -1,6 +1,5 @@
 MAJOR:
 * Spawning user characters on login and removing them on logout
-* Handling module Ash scripts
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
@@ -25,3 +24,4 @@ DONE:
 * Close server request
 * Closed response
 * Load request/response
+* Handling module Ash scripts

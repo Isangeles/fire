@@ -22,19 +22,25 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"path/filepath"
 	"time"
 
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
 
+	"github.com/isangeles/burn/ash"
+
 	"github.com/isangeles/fire/config"
+	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/user"
 )
 
 // Server-side wrapper for game.
 type Game struct {
 	*flame.Module
+	scripts map[string]*ash.Script
 }
 
 // newGame creates game for specified module data.
@@ -43,8 +49,16 @@ type Game struct {
 func newGame(data flameres.ModuleData) *Game {
 	mod := flame.NewModule()
 	mod.Apply(data)
-	g := Game{Module: mod}
+	g := Game{
+		Module:  mod,
+		scripts: make(map[string]*ash.Script),
+	}
 	go g.update()
+	err := g.runChapterScripts()
+	if err != nil {
+		log.Printf("Game: unable to run chapter scripts: %v",
+			err)
+	}
 	return &g
 }
 
@@ -120,6 +134,13 @@ func (g *Game) AddTranslationAll(data flameres.TranslationData) {
 	}
 }
 
+// StopScripts stops all currently running scripts.
+func (g *Game) StopScripts() {
+	for _, s := range g.scripts {
+		s.Stop(true)
+	}
+}
+
 // update handles game update loop.
 func (g *Game) update() {
 	update := time.Now()
@@ -132,4 +153,29 @@ func (g *Game) update() {
 		update = time.Now()
 		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
 	}
+}
+
+// runChapterScripts starts all ash scripts for
+// current chapter.
+func (g *Game) runChapterScripts() error {
+	path := filepath.Join(g.Conf().Path, config.ModuleServerPath, "chapters",
+		g.Chapter().Conf().ID, "scripts")
+	scripts, err := data.ImportScripts(path)
+	if err != nil {
+		return fmt.Errorf("unable to import scripts: %v", err)
+	}
+	for _, s := range scripts {
+		go g.runScript(s)
+	}
+	return nil
+}
+
+// runScript runs specified ash script.
+func (g *Game) runScript(script *ash.Script) {
+	g.scripts[script.Name()] = script
+	err := ash.Run(script)
+	if err != nil {
+		log.Printf("Game: unable to run ash script: %v", err)
+	}
+	delete(g.scripts, script.Name())
 }

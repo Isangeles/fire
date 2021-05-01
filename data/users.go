@@ -1,5 +1,5 @@
 /*
- * data.go
+ * users.go
  *
  * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
  *
