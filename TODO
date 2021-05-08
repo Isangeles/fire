@@ -1,5 +1,7 @@
 MAJOR:
 * Spawning user characters on login and removing them on logout
+* Instead of loading/saving user characters to user config, use only
+  char flags to mark characters as owned by the specific user
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
