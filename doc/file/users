@@ -21,4 +21,4 @@ Users are loaded by the server on startup.
 	/user5
 		.user
 .SH SEE ALSO
-config/.user
+file/.user

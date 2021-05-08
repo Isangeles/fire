@@ -41,4 +41,4 @@ admin:false
 chars:char1#3;char2#40
 char-flags:charFlag1;charFlag2
 .SH SEE ALSO
-data/users
+file/users
