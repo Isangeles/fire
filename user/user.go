@@ -22,6 +22,7 @@
 package user
 
 import (
+	"github.com/isangeles/flame/character"
 	"github.com/isangeles/flame/flag"
 
 	"github.com/isangeles/fire/data/res"
@@ -29,12 +30,12 @@ import (
 
 // Struct for user.
 type User struct {
+	Logged    bool
+	admin     bool
 	id        string
 	pass      string
-	admin     bool
 	charFlags []flag.Flag
-	Logged    bool
-	Chars     []Character
+	chars     []Character
 }
 
 // Struct for user character.
@@ -49,7 +50,7 @@ func New(data res.UserData) *User {
 	u.pass = data.Pass
 	u.admin = data.Admin
 	for i, s := range data.Chars {
-		u.Chars = append(u.Chars, Character{i, s})
+		u.chars = append(u.chars, Character{i, s})
 	}
 	for _, f := range data.CharFlags {
 		u.charFlags = append(u.charFlags, flag.Flag(f))
@@ -72,6 +73,20 @@ func (u *User) Admin() bool {
 	return u.admin
 }
 
+// Chars returns user characters.
+func (u *User) Chars() []Character {
+	return u.chars
+}
+
+// AddChar adds user's flags to specified character and adds
+// this character to the user characters list.
+func (u *User) AddChar(c *character.Character) {
+	for _, f := range u.charFlags {
+		c.AddFlag(f)
+	}
+	u.chars = append(u.chars, Character{c.ID(), c.Serial()})
+}
+
 // CharFlags returns a list of flags that identifies
 // the game character as a user character.
 func (u *User) CharFlags() []flag.Flag {
@@ -81,7 +96,7 @@ func (u *User) CharFlags() []flag.Flag {
 // Controls checks if user controls object with
 // specified ID and serial value.
 func (u *User) Controls(id, serial string) bool {
-	for _, c := range u.Chars {
+	for _, c := range u.Chars() {
 		if c.ID+c.Serial == id+serial {
 			return true
 		}

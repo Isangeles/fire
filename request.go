@@ -46,7 +46,6 @@ import (
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
 	"github.com/isangeles/fire/response"
-	"github.com/isangeles/fire/user"
 )
 
 // handleRequest handles specified client request.
@@ -204,7 +203,7 @@ func handleRequest(req clientRequest) {
 	// Add module data.
 	resp.Update = response.Update{Module: game.Data()}
 	// Add info about controlled characters.
-	for _, c := range req.Client.User().Chars {
+	for _, c := range req.Client.User().Chars() {
 		r := response.Character{c.ID, c.Serial}
 		resp.Character = append(resp.Character, r)
 	}
@@ -234,7 +233,7 @@ func handleNewCharRequest(cli *client.Client, req request.NewChar) error {
 		return fmt.Errorf("Unable to spawn char: %v", err)
 	}
 	game.AddTranslationAll(res.TranslationData{req.Data.ID, []string{req.Name}})
-	cli.User().Chars = append(cli.User().Chars, user.Character{char.ID(), char.Serial()})
+	cli.User().AddChar(char)
 	return nil
 }
 

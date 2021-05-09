@@ -237,7 +237,7 @@ func updateClient(c *client.Client) error {
 		Closed: close,
 		Update: update,
 	}
-	for _, c := range c.User().Chars {
+	for _, c := range c.User().Chars() {
 		charResp := response.Character{c.ID, c.Serial}
 		resp.Character = append(resp.Character, charResp)
 	}

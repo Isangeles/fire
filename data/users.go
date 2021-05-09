@@ -129,7 +129,7 @@ func saveUser(path string, user *user.User) error {
 	conf := make(map[string][]string)
 	conf["pass"] = []string{user.Pass()}
 	conf["admin"] = []string{fmt.Sprintf("%v", user.Admin())}
-	for _, c := range user.Chars {
+	for _, c := range user.Chars() {
 		serialID := fmt.Sprintf("%s#%s", c.ID, c.Serial)
 		conf["chars"] = append(conf["chars"], serialID)
 	}

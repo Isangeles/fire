@@ -121,7 +121,7 @@ outer:
 				break outer
 			}
 		}
-		usr.Chars = append(usr.Chars, user.Character{c.ID(), c.Serial()})
+		usr.AddChar(c)
 	}
 }
 
