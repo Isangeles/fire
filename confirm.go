@@ -25,7 +25,6 @@ import (
 
 	"github.com/isangeles/flame/character"
 
-	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/request"
 	"github.com/isangeles/fire/response"
 )
@@ -57,7 +56,7 @@ func handleConfirmedRequest(req charConfirmRequest) {
 }
 
 // handleConfirmedTradeRequest handles specified trade request as confirmed.
-func handleConfirmedTradeRequest(cli *client.Client, req request.Trade) (resp response.TradeCompleted, err error) {
+func handleConfirmedTradeRequest(cli *Client, req request.Trade) (resp response.TradeCompleted, err error) {
 	// Find buyer.
 	object := game.Object(req.Buy.ObjectToID, req.Buy.ObjectToSerial)
 	if object == nil {

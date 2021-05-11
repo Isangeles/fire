@@ -1,7 +1,7 @@
 /*
  * client.go
  *
- * Copyright (C) 2020 Dariusz Sikora <<dev@isangeles.pl>>
+ * Copyright (C) 2020-2021 Dariusz Sikora <<dev@isangeles.pl>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +19,7 @@
  *
  */
 
-package client
+package main
 
 import (
 	"net"
@@ -28,16 +28,16 @@ import (
 	"github.com/isangeles/fire/user"
 )
 
-// Struct for client.
+// Struct for the server client.
 type Client struct {
 	net.Conn
 	user *user.User
 	Out  chan response.Response
 }
 
-// New makes new client from
+// newClient makes new client from
 // specified connection.
-func New(conn net.Conn) *Client {
+func newClient(conn net.Conn) *Client {
 	c := new(Client)
 	c.Conn = conn
 	c.Out = make(chan response.Response, 2)

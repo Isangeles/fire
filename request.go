@@ -41,7 +41,6 @@ import (
 	"github.com/isangeles/burn"
 	"github.com/isangeles/burn/syntax"
 
-	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
@@ -211,7 +210,7 @@ func handleRequest(req clientRequest) {
 }
 
 // handleLoginReqest handles login request.
-func handleLoginRequest(cli *client.Client, req request.Login) error {
+func handleLoginRequest(cli *Client, req request.Login) error {
 	user := data.User(req.ID)
 	if user == nil || user.Pass() != req.Pass {
 		return fmt.Errorf("Invalid ID/password")
@@ -224,7 +223,7 @@ func handleLoginRequest(cli *client.Client, req request.Login) error {
 }
 
 // handleNewCharRequest handles new character request.
-func handleNewCharRequest(cli *client.Client, req request.NewChar) error {
+func handleNewCharRequest(cli *Client, req request.NewChar) error {
 	if !game.ValidNewCharacter(req.Data) {
 		return fmt.Errorf("Invalid character")
 	}
@@ -238,7 +237,7 @@ func handleNewCharRequest(cli *client.Client, req request.NewChar) error {
 }
 
 // handleMoveRequest handles move request.
-func handleMoveRequest(cli *client.Client, req request.Move) error {
+func handleMoveRequest(cli *Client, req request.Move) error {
 	// Retrieve object.
 	chapter := game.Chapter()
 	ob := chapter.Object(req.ID, req.Serial)
@@ -259,7 +258,7 @@ func handleMoveRequest(cli *client.Client, req request.Move) error {
 }
 
 // handleDialogRequest handles dialog request.
-func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.ObjectDialogData, err error) {
+func handleDialogRequest(cli *Client, req request.Dialog) (resp res.ObjectDialogData, err error) {
 	// Check if client controls dialog target.
 	if !cli.User().Controls(req.TargetID, req.TargetSerial) {
 		err = fmt.Errorf("Object not controlled: %s %s", req.TargetID,
@@ -320,7 +319,7 @@ func handleDialogRequest(cli *client.Client, req request.Dialog) (resp res.Objec
 }
 
 // handleDialogAnswerRequest handles dialog answer request.
-func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (resp res.ObjectDialogData, err error) {
+func handleDialogAnswerRequest(cli *Client, req request.DialogAnswer) (resp res.ObjectDialogData, err error) {
 	// Check if client controls dialog target.
 	if !cli.User().Controls(req.Dialog.TargetID, req.Dialog.TargetSerial) {
 		err = fmt.Errorf("Object not controlled: %s %s", req.TargetID,
@@ -402,7 +401,7 @@ func handleDialogAnswerRequest(cli *client.Client, req request.DialogAnswer) (re
 }
 
 // handleTradeRequest handles trade request.
-func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Trade, err error) {
+func handleTradeRequest(cli *Client, req request.Trade) (resp response.Trade, err error) {
 	// Check if client controls buyer.
 	if !cli.User().Controls(req.Buy.ObjectToID, req.Buy.ObjectToSerial) {
 		err = fmt.Errorf("Object not controlled: %s %s", req.Buy.ObjectToID,
@@ -464,7 +463,7 @@ func handleTradeRequest(cli *client.Client, req request.Trade) (resp response.Tr
 }
 
 // handleTransferItemsRequest handles transfer request.
-func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) error {
+func handleTransferItemsRequest(cli *Client, req request.TransferItems) error {
 	// Retrive objects 'to' and 'from'.
 	ob := game.Object(req.ObjectToID, req.ObjectToSerial)
 	if ob == nil {
@@ -522,7 +521,7 @@ func handleTransferItemsRequest(cli *client.Client, req request.TransferItems) e
 }
 
 // handleTrainingRequest handles training request.
-func handleTrainingRequest(cli *client.Client, req request.Training) error {
+func handleTrainingRequest(cli *Client, req request.Training) error {
 	// Retrieve user.
 	ob := serial.Object(req.UserID, req.UserSerial)
 	if ob == nil {
@@ -568,7 +567,7 @@ func handleTrainingRequest(cli *client.Client, req request.Training) error {
 }
 
 // handleUseRequest handles use request.
-func handleUseRequest(cli *client.Client, req request.Use) error {
+func handleUseRequest(cli *Client, req request.Use) error {
 	// Retrieve user.
 	ob := serial.Object(req.UserID, req.UserSerial)
 	if ob == nil {
@@ -620,7 +619,7 @@ func handleUseRequest(cli *client.Client, req request.Use) error {
 }
 
 // handleEquipRequest handles equip request.
-func handleEquipRequest(cli *client.Client, req request.Equip) error {
+func handleEquipRequest(cli *Client, req request.Equip) error {
 	// Retrieve object.
 	ob := serial.Object(req.CharID, req.CharSerial)
 	if ob == nil {
@@ -660,7 +659,7 @@ func handleEquipRequest(cli *client.Client, req request.Equip) error {
 }
 
 // handleUnequipRequest handles unequip request.
-func handleUnequipRequest(cli *client.Client, req request.Unequip) error {
+func handleUnequipRequest(cli *Client, req request.Unequip) error {
 	// Retrieve object.
 	ob := serial.Object(req.CharID, req.CharSerial)
 	if ob == nil {
@@ -693,7 +692,7 @@ func handleUnequipRequest(cli *client.Client, req request.Unequip) error {
 }
 
 // handleChatRequest handles chat request.
-func handleChatRequest(cli *client.Client, req request.Chat) error {
+func handleChatRequest(cli *Client, req request.Chat) error {
 	// Retrieve object.
 	ob := serial.Object(req.ObjectID, req.ObjectSerial)
 	if ob == nil {
@@ -714,7 +713,7 @@ func handleChatRequest(cli *client.Client, req request.Chat) error {
 }
 
 // handleTargetRequest handles target request.
-func handleTargetRequest(cli *client.Client, req request.Target) error {
+func handleTargetRequest(cli *Client, req request.Target) error {
 	// Retrieve object.
 	ob := serial.Object(req.ObjectID, req.ObjectSerial)
 	if ob == nil {
@@ -751,7 +750,7 @@ func handleTargetRequest(cli *client.Client, req request.Target) error {
 }
 
 // handleSaveRequest handles save request.
-func handleSaveRequest(cli *client.Client, saveName string) error {
+func handleSaveRequest(cli *Client, saveName string) error {
 	if !cli.User().Admin() {
 		return fmt.Errorf("You are not the admin")
 	}
@@ -769,7 +768,7 @@ func handleSaveRequest(cli *client.Client, saveName string) error {
 }
 
 // handleLoadRequest handles load request.
-func handleLoadRequest(cli *client.Client, saveName string) error {
+func handleLoadRequest(cli *Client, saveName string) error {
 	if !cli.User().Admin() {
 		return fmt.Errorf("You are not the admin")
 	}
@@ -789,7 +788,7 @@ func handleLoadRequest(cli *client.Client, saveName string) error {
 }
 
 // handleCommandRequest handles command request.
-func handleCommandRequest(cli *client.Client, cmdText string) (resp response.Command, err error) {
+func handleCommandRequest(cli *Client, cmdText string) (resp response.Command, err error) {
 	if !cli.User().Admin() {
 		err = fmt.Errorf("You are not the admin")
 		return
@@ -805,14 +804,14 @@ func handleCommandRequest(cli *client.Client, cmdText string) (resp response.Com
 }
 
 // handleAcceptRequest handles accept request.
-func handleAcceptRequest(cli *client.Client, id int) {
+func handleAcceptRequest(cli *Client, id int) {
 	confirm := clientConfirm{id, cli}
 	confirmReq := func() { confirmed <- &confirm }
 	go confirmReq()
 }
 
 // handleCloseRequest handles close request.
-func handleCloseRequest(cli *client.Client, timeNano int64) error {
+func handleCloseRequest(cli *Client, timeNano int64) error {
 	if !cli.User().Admin() {
 		return fmt.Errorf("You are not the admin")
 	}

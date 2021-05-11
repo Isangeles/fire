@@ -36,7 +36,6 @@ import (
 
 	"github.com/isangeles/burn"
 
-	"github.com/isangeles/fire/client"
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/request"
@@ -45,7 +44,7 @@ import (
 
 var (
 	game            *Game
-	enter           = make(chan *client.Client)
+	enter           = make(chan *Client)
 	leave           = make(chan string)
 	requests        = make(chan clientRequest)
 	charResponses   = make(chan charResponse)
@@ -59,7 +58,7 @@ var (
 // Server-side wrapper for client request.
 type clientRequest struct {
 	*request.Request
-	Client *client.Client
+	Client *Client
 }
 
 // Struct with request for character to
@@ -74,7 +73,7 @@ type charConfirmRequest struct {
 // Struct for client confirmation.
 type clientConfirm struct {
 	ID     int
-	Client *client.Client
+	Client *Client
 }
 
 // Struct with request for owner of game
@@ -126,7 +125,7 @@ func main() {
 // update handles client enter/leave, requests and
 // communication between clients.
 func update() {
-	clients := make(map[string]*client.Client)
+	clients := make(map[string]*Client)
 	for {
 		select {
 		case user := <-enter:
@@ -194,7 +193,7 @@ func update() {
 // handleConnection handles client connection.
 func handleConnection(conn net.Conn) {
 	// Create client.
-	cli := client.New(conn)
+	cli := newClient(conn)
 	defer cli.Close()
 	// Start client writer.
 	go clientWriter(cli)
@@ -225,7 +224,7 @@ func handleConnection(conn net.Conn) {
 }
 
 // updateClient updates specified client.
-func updateClient(c *client.Client) error {
+func updateClient(c *Client) error {
 	// Update user characters.
 	if c.User() != nil {
 		game.AddUserChars(c.User())
@@ -246,7 +245,7 @@ func updateClient(c *client.Client) error {
 }
 
 // clientWriter handles writing on client out channel.
-func clientWriter(c *client.Client) {
+func clientWriter(c *Client) {
 	for r := range c.Out {
 		respData, err := response.Marshal(r)
 		if err != nil {
