@@ -25,6 +25,5 @@ type UserData struct {
 	ID        string
 	Pass      string
 	Admin     bool
-	Chars     map[string]string
 	CharFlags []string
 }

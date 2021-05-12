@@ -28,7 +28,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/isangeles/flame/data/text"
 
@@ -100,21 +99,12 @@ func loadUser(path string) (*user.User, error) {
 		return nil, fmt.Errorf("unable to unmarshal user config: %v",
 			err)
 	}
-	userData := res.UserData{
-		ID:    filepath.Base(path),
-		Chars: make(map[string]string),
-	}
+	userData := res.UserData{ID: filepath.Base(path)}
 	if len(userConf["pass"]) > 0 {
 		userData.Pass = userConf["pass"][0]
 	}
 	if len(userConf["admin"]) > 0 {
 		userData.Admin = userConf["admin"][0] == "true"
-	}
-	for _, sid := range userConf["chars"] {
-		serialID := strings.Split(sid, "#")
-		if len(serialID) > 1 {
-			userData.Chars[serialID[0]] = serialID[1]
-		}
 	}
 	userData.CharFlags = userConf["char-flags"]
 	return user.New(userData), nil
@@ -129,10 +119,6 @@ func saveUser(path string, user *user.User) error {
 	conf := make(map[string][]string)
 	conf["pass"] = []string{user.Pass()}
 	conf["admin"] = []string{fmt.Sprintf("%v", user.Admin())}
-	for _, c := range user.Chars() {
-		serialID := fmt.Sprintf("%s#%s", c.ID, c.Serial)
-		conf["chars"] = append(conf["chars"], serialID)
-	}
 	for _, f := range user.CharFlags() {
 		conf["char-flags"] = append(conf["char-flags"], string(f))
 	}

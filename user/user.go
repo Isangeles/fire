@@ -49,9 +49,6 @@ func New(data res.UserData) *User {
 	u.id = data.ID
 	u.pass = data.Pass
 	u.admin = data.Admin
-	for i, s := range data.Chars {
-		u.chars = append(u.chars, Character{i, s})
-	}
 	for _, f := range data.CharFlags {
 		u.charFlags = append(u.charFlags, flag.Flag(f))
 	}

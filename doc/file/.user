@@ -17,16 +17,6 @@ Value for administrative privileges.
 .br
 If the value is set to 'true' the user is treated as the server admin.
 .P
-* chars
-.br
-List of characters controlled by user.
-.br
-Each value is a character ID and serial value separated with '#' character.
-.br
-For example for a character with ID char1 and serial value 12: char1#12
-.br
-Values are separated by semicolons.
-.P
 * char-flags
 .br
 List of flags that indicates that a specific game character should be under the control of this user.
@@ -40,7 +30,6 @@ Values are separated by semicolons.
 .nf
 pass:asd
 admin:false
-chars:char1#3;char2#40
 char-flags:charFlag1;charFlag2
 .SH SEE ALSO
 file/users, request/new-char
