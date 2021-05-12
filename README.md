@@ -21,7 +21,7 @@ Or with GOPATH mode simply:
 ```
 go install github.com/isangeles/fire
 ```
-After that, you can find the server executable in your GOBIN directory(eg. ~/go/bin).
+After that, the server executable will be placed in your GOBIN directory(eg. ~/go/bin).
 ## Run
 Before starting server executable configure host address, port, and ID of Flame module in `.fire` file placed in the executable directory(create if it doesn't already exist):
 ```
@@ -73,12 +73,12 @@ Each user has its own directory with `.user` configuration file.
 
 The name of a user directory is used as a unique user ID.
 
-The user configuration file contains a password and list of game characters controlled by the user.
+The user configuration file contains a password and list of flags for game characters controlled by the user.
 
 Example user configuration:
 ```
 pass:asd123!
-chars:player_asd#1;player_asd#2
+char-flags:userAsdChar1;userAsdChar2
 ```
 Check documentation for a detailed description of the user directory.
 ## Configuration
