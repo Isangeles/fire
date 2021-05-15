@@ -760,10 +760,6 @@ func handleSaveRequest(cli *Client, saveName string) error {
 		return fmt.Errorf("Unable to export module file: %v", err)
 	}
 	config.Module = saveName + flamedata.ModuleFileExt
-	err = data.SaveUsers(config.UsersPath)
-	if err != nil {
-		return fmt.Errorf("Unable to save users: %v", err)
-	}
 	return nil
 }
 
