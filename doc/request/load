@@ -4,7 +4,7 @@ load - client request for loading the game.
 .SH DESCRIPTION
 The load request is used by the client to load the saved game state.
 .br
-The current hosted game on the will be replaced with new game created from saved game state.
+The currently hosted game will be replaced with new game created from saved game state.
 .br
 Load request contains the name of the saved game state.
 .br

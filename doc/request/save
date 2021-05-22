@@ -4,8 +4,7 @@ save - client request for saving the game.
 .SH DESCRIPTION
 The save request is used by the client to save the current state of the game module.
 .br
-The current state of the game module will be exported to a new module file in the modules directory and the server
-configuration value for the module will be set to this newly exported module.
+The current state of the game module will be exported to a new module file in the modules directory.
 .br
 Save request contains the name of the save.
 .br

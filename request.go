@@ -759,7 +759,6 @@ func handleSaveRequest(cli *Client, saveName string) error {
 	if err != nil {
 		return fmt.Errorf("Unable to export module file: %v", err)
 	}
-	config.Module = saveName + flamedata.ModuleFileExt
 	return nil
 }
 
@@ -774,8 +773,6 @@ func handleLoadRequest(cli *Client, saveName string) error {
 	if err != nil {
 		return fmt.Errorf("Unable to import module file: %v", err)
 	}
-	// Set config to new loaded module.
-	config.Module = filepath.Base(path)
 	// Send load data on load channel.
 	loadResp := response.Load{saveName, data}
 	loadGame := func() { load <- loadResp }
