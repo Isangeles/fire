@@ -45,7 +45,7 @@ Any program able to send data through a TCP connection could serve as a Fire cli
 
 For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
 Of course, interpreting server responses with just Ncat will be difficult, that's why some kind of specialized program is recommended.
-[Burn Shell](https://github.com/isangeles/burnsh) is an example of a simple interface that enables the user to play the game hosted on the Fire server.
+[Burn Shell](https://github.com/isangeles/burnsh) and [Mural](https://github.com/isangeles/mural) are examples of interfaces that enable the user to play the game hosted on the Fire server.
 
 Client programs use JSON based interface to communicate with the server via a set of requests and responses.
 
@@ -117,7 +117,7 @@ Documentation pages are in Troff format and could be easily displayed with `man`
 
 For example to display documentation page for login request:
 ```
-$ man doc/request/login
+man doc/request/login
 ```
 ## Contributing
 You are welcome to contribute to project development.
