@@ -47,10 +47,8 @@ type Game struct {
 // Created game is automatically updated with the frequency
 // specified in the config package.
 func newGame(data flameres.ModuleData) *Game {
-	mod := flame.NewModule()
-	mod.Apply(data)
 	g := Game{
-		Module:  mod,
+		Module:  flame.NewModule(data),
 		scripts: make(map[string]*ash.Script),
 	}
 	go g.update()
