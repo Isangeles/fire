@@ -199,14 +199,7 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
-	// Add module data.
-	resp.Update = response.Update{Module: game.Data()}
-	// Add info about controlled characters.
-	for _, c := range req.Client.User().Chars() {
-		r := response.Character{c.ID, c.Serial}
-		resp.Character = append(resp.Character, r)
-	}
-	req.Client.Out <- resp
+	updateClient(req.Client, response.Response{})
 }
 
 // handleLoginReqest handles login request.

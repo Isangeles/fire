@@ -147,8 +147,7 @@ func update() {
 				if !c.User().Controls(resp.CharID, resp.CharSerial) {
 					continue
 				}
-				resp.Response.Update = response.Update{Module: game.Data()}
-				c.Out <- resp.Response
+				updateClient(c, resp.Response)
 				break
 			}
 		case req := <-confirmRequests:
@@ -169,14 +168,14 @@ func update() {
 				if c.User() == nil {
 					continue
 				}
-				c.Out <- response.Response{Load: resp}
+				updateClient(c, response.Response{Load: resp})
 			}
 		}
 		for _, c := range clients {
 			if c.User() == nil {
 				continue
 			}
-			err := updateClient(c)
+			err := updateClient(c, response.Response{})
 			if err != nil {
 				log.Printf("Unable to update client: %s: %v",
 					c.RemoteAddr(), err)
@@ -223,24 +222,22 @@ func handleConnection(conn net.Conn) {
 	leave <- cli.RemoteAddr().String()
 }
 
-// updateClient updates specified client.
-func updateClient(c *Client) error {
+// updateClient adds update, logon, closed, and charcter responses to specified
+// response and sends this response to the specified client.
+func updateClient(client *Client, resp response.Response) error {
 	// Update user characters.
-	if c.User() != nil {
-		game.AddUserChars(c.User())
+	if client.User() != nil {
+		game.AddUserChars(client.User())
 	}
 	// Send update response.
-	update := response.Update{Module: game.Data()}
-	resp := response.Response{
-		Logon: c.User() == nil,
-		Closed: close,
-		Update: update,
-	}
-	for _, c := range c.User().Chars() {
+	resp.Update = response.Update{Module: game.Data()}
+	resp.Logon = client.User() == nil
+	resp.Closed = close
+	for _, c := range client.User().Chars() {
 		charResp := response.Character{c.ID, c.Serial}
 		resp.Character = append(resp.Character, charResp)
 	}
-	c.Out <- resp
+	client.Out <- resp
 	return nil
 }
 
