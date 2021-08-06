@@ -64,14 +64,14 @@ func newGame(data flameres.ModuleData) *Game {
 // spawns it in game start area.
 func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, error) {
 	char := character.New(data)
-	chapter := g.Chapter()
-	area := chapter.Area(chapter.Conf().StartArea)
+	g.Chapter().Resources().Characters = append(g.Chapter().Resources().Characters, data)
+	area := g.Chapter().Area(g.Chapter().Conf().StartArea)
 	if area == nil {
 		return nil, fmt.Errorf("start area not found: %s",
-			chapter.Conf().StartArea)
+			g.Chapter().Conf().StartArea)
 	}
 	area.AddCharacter(char)
-	char.SetPosition(chapter.Conf().StartPosX, chapter.Conf().StartPosY)
+	char.SetPosition(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
 	return char, nil
 }
 
