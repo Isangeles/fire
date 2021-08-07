@@ -199,7 +199,7 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
-	updateClient(req.Client, response.Response{})
+	updateClient(req.Client, resp)
 }
 
 // handleLoginReqest handles login request.
