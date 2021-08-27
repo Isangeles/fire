@@ -227,7 +227,7 @@ func handleConnection(conn net.Conn) {
 func updateClient(client *Client, resp response.Response) error {
 	// Update user characters.
 	if client.User() != nil {
-		game.AddUserChars(client.User())
+		game.UpdateUserChars(client.User())
 	}
 	// Send update response.
 	resp.Update = response.Update{Module: game.Data()}

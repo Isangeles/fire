@@ -103,12 +103,13 @@ func (g *Game) ValidNewCharacter(data flameres.CharacterData) bool {
 	return true
 }
 
-// AddUserChars add game characters to the specified user according to the
-// user configuration.
-func (g *Game) AddUserChars(usr *user.User) {
+// UpdateUserChars adds game characters to the specified user according to the
+// user configuration and removes characters that don't exists anymore.
+func (g *Game) UpdateUserChars(usr *user.User) {
 	if len(usr.CharFlags()) < 1 {
 		return
 	}
+	// Add new characters.
 outer:
 	for _, c := range g.Chapter().Characters() {
 		if usr.Controls(c.ID(), c.Serial()) {
@@ -116,10 +117,16 @@ outer:
 		}
 		for _, f := range usr.CharFlags() {
 			if !c.HasFlag(f) {
-				break outer
+				continue outer
 			}
 		}
 		usr.AddChar(c)
+	}
+	// Remove not existing characters.
+	for _, char := range usr.Chars() {
+		if g.Chapter().Character(char.ID, char.Serial) == nil {
+			usr.RemoveChar(char)
+		}
 	}
 }
 

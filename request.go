@@ -58,7 +58,7 @@ func handleRequest(req clientRequest) {
 			continue
 		}
 		// Add user characters.
-		game.AddUserChars(req.Client.User())
+		game.UpdateUserChars(req.Client.User())
 	}
 	if req.Client.User() == nil {
 		// Request login.

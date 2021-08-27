@@ -35,7 +35,7 @@ type User struct {
 	id        string
 	pass      string
 	charFlags []flag.Flag
-	chars     []Character
+	chars     map[string]Character
 }
 
 // Struct for user character.
@@ -45,14 +45,16 @@ type Character struct {
 
 // New creates new user.
 func New(data res.UserData) *User {
-	u := new(User)
-	u.id = data.ID
-	u.pass = data.Pass
-	u.admin = data.Admin
+	u := User{
+		id:    data.ID,
+		pass:  data.Pass,
+		admin: data.Admin,
+		chars: make(map[string]Character),
+	}
 	for _, f := range data.CharFlags {
 		u.charFlags = append(u.charFlags, flag.Flag(f))
 	}
-	return u
+	return &u
 }
 
 // ID returns user ID.
@@ -71,17 +73,25 @@ func (u *User) Admin() bool {
 }
 
 // Chars returns user characters.
-func (u *User) Chars() []Character {
-	return u.chars
+func (u *User) Chars() (chars []Character) {
+	for _, char := range u.chars {
+		chars = append(chars, char)
+	}
+	return
 }
 
 // AddChar adds user's flags to specified character and adds
 // this character to the user characters list.
-func (u *User) AddChar(c *character.Character) {
+func (u *User) AddChar(char *character.Character) {
 	for _, f := range u.charFlags {
-		c.AddFlag(f)
+		char.AddFlag(f)
 	}
-	u.chars = append(u.chars, Character{c.ID(), c.Serial()})
+	u.chars[char.ID()+char.Serial()] = Character{char.ID(), char.Serial()}
+}
+
+// RemoveChar removes character from user characters list.
+func (u *User) RemoveChar(char Character) {
+	delete(u.chars, char.ID+char.Serial)
 }
 
 // CharFlags returns a list of flags that identifies
