@@ -1,5 +1,5 @@
 github.com/isangeles/burn v0.0.0-20210812173120-fb9ce1f8d0fa h1:i8dZ7Etl4Yrkch2GQuBDkhytKL+75ZZbLmyVuw7mdwQ=
 github.com/isangeles/burn v0.0.0-20210812173120-fb9ce1f8d0fa/go.mod h1:BpVs9O4/4No/Euyy/09wWAgvnA2kGjSLcNlMWvEwz8w=
 github.com/isangeles/flame v0.0.0-20210808105931-775af127aa02/go.mod h1:SnqHiRyVIg6hdDObByPdi8C8Fy2TdF5F0bbYQ9/PWLs=
-github.com/isangeles/flame v0.0.0-20210830174252-5d168df67ced h1:2MT3RTU8SpNVBRJAtI9DzsGIe2w0iEhmQhIzHz8XM+U=
-github.com/isangeles/flame v0.0.0-20210830174252-5d168df67ced/go.mod h1:SnqHiRyVIg6hdDObByPdi8C8Fy2TdF5F0bbYQ9/PWLs=
+github.com/isangeles/flame v0.0.0-20210901182358-107f22c6b99b h1:k78RBY33ic+X6NRU5oGG0JgObUponWaNH9HZrGA+j+I=
+github.com/isangeles/flame v0.0.0-20210901182358-107f22c6b99b/go.mod h1:SnqHiRyVIg6hdDObByPdi8C8Fy2TdF5F0bbYQ9/PWLs=
