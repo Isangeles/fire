@@ -123,7 +123,7 @@ func equip(eq *character.Equipment, it item.Equiper, slots []request.EquipmentSl
 // importModule imports module data from module directory or module file.
 func importModule(path string) (flameres.ModuleData, error) {
 	if strings.HasSuffix(path, flamedata.ModuleFileExt) {
-		return flamedata.ImportModuleFile(path)
+		return flamedata.ImportModule(path)
 	}
-	return flamedata.ImportModule(path)
+	return flamedata.ImportModuleDir(path)
 }
