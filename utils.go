@@ -29,6 +29,7 @@ import (
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/objects"
+	"github.com/isangeles/flame/serial"
 	"github.com/isangeles/flame/useaction"
 
 	"github.com/isangeles/fire/config"
@@ -76,7 +77,7 @@ func charSkillRecipe(char *character.Character, id string) useaction.Usable {
 // The minimum range value is specified in config package.
 // The function always returns true if at least one of the specified objects have
 // no position.
-func inRange(ob1, ob2 objects.Object) bool {
+func inRange(ob1, ob2 serial.Serialer) bool {
 	pos1, ok := ob1.(objects.Positioner)
 	if !ok {
 		return true
