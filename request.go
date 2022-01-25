@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -388,6 +388,10 @@ func handleDialogAnswerRequest(cli *Client, req request.DialogAnswer) (resp res.
 		return
 	}
 	reqDialog.Next(answer)
+	if reqDialog.Stage() == nil {
+		err = fmt.Errorf("No suitable dialog phase found")
+		return
+	}
 	// Make response for the client.
 	resp = res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
 	return
