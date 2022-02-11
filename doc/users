@@ -1,0 +1,29 @@
+.TH Users
+.SH DESCRIPTION
+Server users are used by clients for authentication and to allow controlling of assigned game characters.
+.br
+After connecting to the server clients need to authenticate with valid credentials of the existing user via the login request.
+.SH CHARACTERS
+Through the user, client can control characters that are marked with a special flag specified in the user configuration file.
+.br
+Characters created via new-char request will have this flag automatically assigned to them.
+.SH ADMINISTRATORS
+Users can have administrator privileges.
+.br
+This allows clients logged as admin users to send the following requests:
+.br
+* command request
+.br
+* close request
+.SH CREATING USER
+To create a user go to data/users and create a new directory with a name that will be used as user login.
+.br
+After that create a .user configuration file inside the user directory and specify a password and unique flag for user characters.
+.br
+Example .user file:
+.nf
+pass:asd
+admin:false
+char-flags:charFlag1
+.SH SEE ALSO
+requests, request/login, request/new-char, request/command, request/close, file/users, file/.user
