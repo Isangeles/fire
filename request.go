@@ -211,6 +211,7 @@ func handleLoginRequest(cli *Client, req request.Login) error {
 	if user.Logged {
 		return fmt.Errorf("Already logged")
 	}
+	game.ActivateUserChars(user)
 	cli.SetUser(user)
 	return nil
 }

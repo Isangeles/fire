@@ -7,6 +7,10 @@ After connecting to the server clients need to authenticate with valid credentia
 Through the user, client can control characters that are marked with a special flag specified in the user configuration file.
 .br
 Characters created via new-char request will have this flag automatically assigned to them.
+.br
+After the user logout, the characters are marked with an inactive flag(flagFireInactive) and excluded from update request data sent to other connected clients.
+.br
+This way characters of offline users are not visible to online users.
 .SH ADMINISTRATORS
 Users can have administrator privileges.
 .br
@@ -26,4 +30,4 @@ pass:asd
 admin:false
 char-flags:charFlag1
 .SH SEE ALSO
-requests, request/login, request/new-char, request/command, request/close, file/users, file/.user
+requests, request/login, request/new-char, request/command, request/close, response/update, file/users, file/.user

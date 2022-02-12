@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/flag"
 
 	"github.com/isangeles/burn/ash"
 
@@ -36,6 +37,8 @@ import (
 	"github.com/isangeles/fire/data"
 	"github.com/isangeles/fire/user"
 )
+
+const inactiveCharFlag = flag.Flag("flagFireInactive")
 
 // Server-side wrapper for game.
 type Game struct {
@@ -120,6 +123,7 @@ outer:
 				continue outer
 			}
 		}
+		c.RemoveFlag(inactiveCharFlag)
 		usr.AddChar(c)
 	}
 	// Remove not existing characters.
@@ -144,6 +148,63 @@ func (g *Game) StopScripts() {
 	for _, s := range g.scripts {
 		s.Stop(true)
 	}
+}
+
+// ActivateUserChars removes deactivated char flag from
+// all characters of the specified user.
+func (g *Game) ActivateUserChars(usr *user.User) {
+	for _, c := range g.Chapter().Characters() {
+		if usr.Controls(c.ID(), c.Serial()) {
+			c.RemoveFlag(inactiveCharFlag)
+		}
+	}
+}
+
+// DeactivatesUserChars add deactivated char flag to all
+// characters of the specified user.
+func (g *Game) DeactivateUserChars(usr *user.User) {
+	for _, c := range g.Chapter().Characters() {
+		if usr.Controls(c.ID(), c.Serial()) {
+			c.AddFlag(inactiveCharFlag)
+		}
+	}
+}
+
+// ClientData returns game data for server clients.
+// Data like characers of incative(offline) users
+// will be excluded.
+func (g *Game) ClientData() flameres.ModuleData {
+	data := g.Data()
+	// Search for inactive characters.
+	inactiveChars := make(map[string]flameres.CharacterData)
+	for _, char := range data.Resources.Characters {
+		for _, flag := range char.Flags {
+			if flag.ID == inactiveCharFlag.ID() {
+				inactiveChars[char.ID+char.Serial] = char
+				break
+			}
+		}
+	}
+	for _, char := range data.Chapter.Resources.Characters {
+		for _, flag := range char.Flags {
+			if flag.ID == inactiveCharFlag.ID() {
+				inactiveChars[char.ID+char.Serial] = char
+				break
+			}
+		}
+	}
+	// Exclude invactive characters.
+	for id, area := range data.Chapter.Resources.Areas {
+		var chars []flameres.AreaCharData
+		for _, char := range area.Characters {
+			_, inactive := inactiveChars[char.ID+char.Serial]
+			if !inactive {
+				chars = append(chars, char)
+			}
+		}
+		data.Chapter.Resources.Areas[id].Characters = chars
+	}
+	return data
 }
 
 // update handles game update loop.

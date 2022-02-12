@@ -2,7 +2,11 @@
 .SH NAME
 update - server response with current game module data.
 .SH DESCRIPTION
-Udate response contains a marshaled game module.
+Update response contains a marshaled game module data for the client.
+.br
+This response may not contain all module data, but only data that should be visible for the client.
+.br
+For example, data of inactive characters(controlled by users that are currently offline) will be excluded.
 .br
 The client can use this data to recreate the current module on the client-side.
 .br

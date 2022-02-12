@@ -1,7 +1,7 @@
 /*
  * fire.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -137,6 +137,7 @@ func update() {
 			if client == nil {
 				continue
 			}
+			game.DeactivateUserChars(client.User())
 			client.Close()
 			delete(clients, addr)
 			log.Printf("Leaves: %s", addr)
@@ -230,7 +231,7 @@ func updateClient(client *Client, resp response.Response) error {
 		game.UpdateUserChars(client.User())
 	}
 	// Send update response.
-	resp.Update = response.Update{Module: game.Data()}
+	resp.Update = response.Update{Module: game.ClientData()}
 	resp.Logon = client.User() == nil
 	resp.Closed = close
 	for _, c := range client.User().Chars() {
