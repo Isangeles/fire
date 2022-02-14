@@ -6,8 +6,6 @@ The server serves as a simple interface that handles connected users and offers 
 their characters and interact with the game world hosted on the server.
 
 Communication between client and server is realized through a JSON request/response system.
-
-Currently in a early development stage.
 ## Build
 Get sources from git:
 ```
@@ -65,7 +63,7 @@ Each logged client is constantly updated with the current state of a Flame modul
 
 Logged clients can use different JSON requests to modify their characters and interact with others on the server.
 
-Check documentation for a detailed description of all available requests and server responses.
+Check documentation for a detailed description of all available client requests and server responses.
 ## Users
 Users are stored in the `data/users` directory in the server executable directory.
 
