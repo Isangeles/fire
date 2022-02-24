@@ -3,6 +3,7 @@ MAJOR:
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
+* Configurable message to display to each user after login
 DONE:
 * Handling requests and sending responses
 * Update response
@@ -25,4 +26,4 @@ DONE:
 * Closed response
 * Load request/response
 * Handling module Ash scripts
-* Spawning user characters on login and removing them on logout
+* Excluding user characters from update response after user logout
