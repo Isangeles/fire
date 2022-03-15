@@ -212,8 +212,7 @@ func (g *Game) update() {
 	update := time.Now()
 	for {
 		// Delta.
-		dtNano := time.Since(update).Nanoseconds()
-		delta := dtNano / int64(time.Millisecond) // delta to milliseconds
+		delta := time.Since(update).Milliseconds()
 		// Update.
 		g.Module.Update(delta)
 		update = time.Now()
