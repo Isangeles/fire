@@ -89,9 +89,10 @@ func main() {
 	flamelog.PrintStdOut = true
 	err := config.Load()
 	if err != nil {
-		log.Printf("Unable to load config: %v", err)
-		log.Printf("Saving default config")
-		config.Save()
+		err := config.Save()
+		if err != nil {
+			log.Printf("Unable to save defualt config: %v", err)
+		}
 	}
 	err = data.LoadUsers(config.UsersPath)
 	if err != nil {
