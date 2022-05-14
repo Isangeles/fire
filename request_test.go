@@ -113,3 +113,52 @@ func TestHandleTransferItemsRequest(t *testing.T) {
 			item2.ID(), item2.Serial())
 	}
 }
+
+// TestHandleThrowItemsRequest tests handling throw items request.
+func TestHandleThrowItemsRequest(t *testing.T) {
+	// Create game & character.
+	game = newGame(modData)
+	char := character.New(charData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddCharacter(char)
+	// Add items.
+	game.Update(1)
+	item1 := item.NewMisc(itemData)
+	item2 := item.NewMisc(itemData)
+	err := char.Inventory().AddItem(item1)
+	if err != nil {
+		t.Fatalf("Unable to add item 1 to character inventory: %v", err)
+	}
+	err = char.Inventory().AddItem(item2)
+	if err != nil {
+		t.Fatalf("Unable to add item 2 to character inventory: %v", err)
+	}
+	// Create user & client.
+	user := user.New(userData)
+	user.AddChar(char)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request.
+	req := request.ThrowItems{
+		ObjectID:     char.ID(),
+		ObjectSerial: char.Serial(),
+		Items:        make(map[string][]string),
+	}
+	req.Items[item1.ID()] = []string{item1.Serial(), item2.Serial()}
+	// Test.
+	err = handleThrowItemsRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handing error: %v", err)
+	}
+	if char.Inventory().Item(item1.ID(), item1.Serial()) != nil {
+		t.Errorf("Item should be removed from %s inventory: %s %s", char.ID(),
+			item1.ID(), item1.Serial())
+	}
+	if char.Inventory().Item(item2.ID(), item2.Serial()) != nil {
+		t.Errorf("Item should be removed from %s inventory: %s %s", char.ID(),
+			item2.ID(), item2.Serial())
+	}
+}

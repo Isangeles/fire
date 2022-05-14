@@ -57,6 +57,22 @@ func transferItems(from, to item.Container, items map[string][]string) error {
 	return nil
 }
 
+// removeItems removes items from specified container.
+// Items are in the form of a map with IDs as keys and serial values as values.
+func removeItems(container item.Container, items map[string][]string) error {
+	for id, serials := range items {
+		for _, serial := range serials {
+			item := container.Inventory().Item(id, serial)
+			if item == nil {
+				return fmt.Errorf("Item not found: %s %s",
+					id, serial)
+			}
+			container.Inventory().RemoveItem(item)
+		}
+	}
+	return nil
+}
+
 // charSkillRecipe returns skill or recipe with specified ID from the character,
 // or nil if character does not have skill or recipe with such ID.
 func charSkillRecipe(char *character.Character, id string) useaction.Usable {

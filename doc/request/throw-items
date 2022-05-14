@@ -1,0 +1,24 @@
+.TH throw-items
+.SH NAME
+throw-items - client request for removing items from the object inventory.
+.SH DESCRIPTION
+The throw-items request is used by the client to remove items from the object inventory.
+.br
+Object to remove items from, need to be under client control.
+.br
+This request contains ID and serial value of object and list of items to remove.
+.SH JSON EXAMPLE
+.nf
+{
+  "throw-items": [
+    {
+      "object": "char1",
+      "object-serial": "0",
+      "items": {
+        "item1": [
+          "0"
+        ]
+      }
+    }
+  ]
+}

@@ -124,6 +124,13 @@ func handleRequest(req clientRequest) {
 			resp.Error = append(resp.Error, err)
 		}
 	}
+	for _, ti := range req.ThrowItems {
+		err := handleThrowItemsRequest(req.Client, ti)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle throw-items request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
 	for _, r := range req.Use {
 		err := handleUseRequest(req.Client, r)
 		if err != nil {
@@ -518,6 +525,50 @@ func handleTransferItemsRequest(cli *Client, req request.TransferItems) error {
 	return nil
 }
 
+// handleThrowItemRequest handles throw items request.
+func handleThrowItemsRequest(cli *Client, req request.ThrowItems) error {
+	// Retrive object.
+	ob := game.Object(req.ObjectID, req.ObjectSerial)
+	if ob == nil {
+		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	container, ok := ob.(item.Container)
+	if !ok {
+		return fmt.Errorf("Object is not a container: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	if !cli.User().Controls(container.ID(), container.Serial()) {
+		return fmt.Errorf("Object is not controlled: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	// Remove items.
+	switch container := container.(type) {
+	case *character.Character:
+		if !cli.User().Controls(container.ID(), container.Serial()) && container.Live() {
+			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectID,
+				req.ObjectSerial)
+		}
+		err := removeItems(container, req.Items)
+		if err != nil {
+			return fmt.Errorf("Unable to remove items: %v", err)
+		}
+	case *object.Object:
+		if !cli.User().Controls(container.ID(), container.Serial()) && container.Live() {
+			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectID,
+				req.ObjectSerial)
+		}
+		err := removeItems(container, req.Items)
+		if err != nil {
+			return fmt.Errorf("Unable to remove items: %v", err)
+		}
+	default:
+		return fmt.Errorf("Unsupported object: %s %s", req.ObjectID,
+			req.ObjectSerial)
+	}
+	return nil
+}
+
 // handleTrainingRequest handles training request.
 func handleTrainingRequest(cli *Client, req request.Training) error {
 	// Retrieve user.
@@ -766,7 +817,7 @@ func handleLoadRequest(cli *Client, saveName string) error {
 		return fmt.Errorf("You are not the admin")
 	}
 	// Import module.
-	path := filepath.Join(config.ModulesPath, saveName + flamedata.ModuleFileExt)
+	path := filepath.Join(config.ModulesPath, saveName+flamedata.ModuleFileExt)
 	data, err := flamedata.ImportModule(path)
 	if err != nil {
 		return fmt.Errorf("Unable to import module file: %v", err)
@@ -807,7 +858,7 @@ func handleCloseRequest(cli *Client, timeNano int64) error {
 		return fmt.Errorf("You are not the admin")
 	}
 	closeTime := time.Unix(0, timeNano)
-	closeFunc := func() {close = true}
+	closeFunc := func() { close = true }
 	log.Printf("Server going down at: %v", closeTime)
 	time.AfterFunc(time.Until(closeTime), closeFunc)
 	return nil
