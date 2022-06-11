@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,8 +21,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -225,6 +227,9 @@ func (g *Game) update() {
 func (g *Game) runChapterScripts() error {
 	path := filepath.Join(g.Conf().Path, config.ModuleServerPath, "chapters",
 		g.Chapter().Conf().ID, "scripts")
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
 	scripts, err := data.ImportScripts(path)
 	if err != nil {
 		return fmt.Errorf("unable to import scripts: %v", err)
