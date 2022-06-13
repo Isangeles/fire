@@ -7,17 +7,9 @@ their characters and interact with the game world hosted on the server.
 
 Communication between client and server is realized through a JSON request/response system.
 ## Build
-Get sources from git:
-```
-go get -u github.com/isangeles/fire
-```
-Install server executable:
+Use go install:
 ```
 go install github.com/isangeles/fire@latest
-```
-Or with GOPATH mode simply:
-```
-go install github.com/isangeles/fire
 ```
 After that, the server executable will be placed in your GOBIN directory(eg. ~/go/bin).
 ## Run
@@ -39,7 +31,7 @@ Run server:
 ```
 After this, the server is ready to handle incoming connections from the client programs.
 ## Clients
-Any program able to send data through a TCP connection could serve as a Fire client.
+Any program able to send data through a TCP connection can serve as a Fire client.
 
 For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
 Of course, interpreting server responses with just Ncat will be difficult, that's why some kind of specialized program is recommended.
@@ -120,14 +112,14 @@ man doc/request/login
 ## Contributing
 You are welcome to contribute to project development.
 
-If you looking for things to do, then check the TODO file or contact maintainer(dev@isangeles.pl).
+If you looking for things to do, then check the TODO file or contact maintainer(ds@isangeles.dev).
 
 When you find something to do, create a new branch for your feature.
 After you finish, open a pull request to merge your changes with master branch.
 ## Contact
-* Isangeles <<dev@isangeles.pl>>
+* Isangeles <<ds@isangeles.dev>>
 ## License
-Copyright (C) 2020-2022 Dariusz Sikora <<dev@isangeles.pl>>
+Copyright (C) 2020-2022 Dariusz Sikora <<ds@isangeles.dev>>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
