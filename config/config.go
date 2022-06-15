@@ -1,7 +1,7 @@
 /*
  * config.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,7 @@ var (
 	Host           = ""
 	Port           = "8000"
 	Module         = ""
-	UpdateBreak    = 16
+	UpdateBreak    = 1
 	ActionMinRange = 50.0
 )
 
