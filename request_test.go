@@ -26,6 +26,7 @@ import (
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/item"
+	"github.com/isangeles/flame/skill"
 
 	"github.com/isangeles/fire/data/res"
 	"github.com/isangeles/fire/request"
@@ -33,8 +34,9 @@ import (
 )
 
 var (
-	itemData = flameres.MiscItemData{ID: "item"}
-	charData = flameres.CharacterData{
+	skillData = flameres.SkillData{ID: "skill"}
+	itemData  = flameres.MiscItemData{ID: "item"}
+	charData  = flameres.CharacterData{
 		ID:         "char",
 		Level:      1,
 		Attributes: flameres.AttributesData{5, 5, 5, 5, 5},
@@ -160,5 +162,41 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 	if char.Inventory().Item(item2.ID(), item2.Serial()) != nil {
 		t.Errorf("Item should be removed from %s inventory: %s %s", char.ID(),
 			item2.ID(), item2.Serial())
+	}
+}
+
+// TestHandleUseRequest tests handling use request.
+func TestHandleUseRequest(t *testing.T) {
+	// Create game & character.
+	game = newGame(modData)
+	char := character.New(charData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddCharacter(char)
+	// Add skills.
+	skill := skill.New(skillData)
+	char.AddSkill(skill)
+	// Create user & client.
+	user := user.New(userData)
+	user.AddChar(char)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request.
+	req := request.Use{
+		ObjectID:     skill.ID(),
+		ObjectSerial: "",
+		UserID:       char.ID(),
+		UserSerial:   char.Serial(),
+	}
+	// Test.
+	err := handleUseRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handing error: %v", err)
+	}
+	game.Update(1)
+	if char.Cooldown() <= 0 {
+		t.Fatalf("Skill was not used: character cooldown: %d", char.Cooldown())
 	}
 }
