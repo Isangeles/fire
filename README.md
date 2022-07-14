@@ -7,11 +7,10 @@ their characters and interact with the game world hosted on the server.
 
 Communication between client and server is realized through a JSON request/response system.
 ## Build
-Use go install:
+Pull sources from the repository and use go build:
 ```
-go install github.com/isangeles/fire@latest
+go build
 ```
-After that, the server executable will be placed in your GOBIN directory(eg. ~/go/bin).
 ## Run
 Before starting server executable configure host address, port, and ID of Flame module in `.fire` file placed in the executable directory(create if it doesn't already exist):
 ```
