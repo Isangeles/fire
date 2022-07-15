@@ -37,6 +37,7 @@ import (
 
 	"github.com/isangeles/fire/config"
 	"github.com/isangeles/fire/data"
+	"github.com/isangeles/fire/response"
 	"github.com/isangeles/fire/user"
 )
 
@@ -170,6 +171,25 @@ func (g *Game) DeactivateUserChars(usr *user.User) {
 			c.AddFlag(inactiveCharFlag)
 		}
 	}
+}
+
+// NotifyNearChars sends response to all characters that
+// can see(have in sight range) specified character.
+func (g *Game) NotifyNearChars(char *character.Character, resp response.Response) {
+	area := g.Chapter().CharacterArea(char)
+	if area == nil {
+		return
+	}
+	charX, charY := char.Position()
+	for _, ob := range area.SightRangeObjects(charX, charY) {
+		charResp:= charResponse{
+			Response:   resp,
+			CharID:     ob.ID(),
+			CharSerial: ob.Serial(),
+		}
+		charResponses <- charResp
+	}
+
 }
 
 // ClientData returns game data for server clients.

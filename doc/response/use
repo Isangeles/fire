@@ -1,0 +1,25 @@
+.TH use
+.SH NAME
+use - server response to inform client about near useage of game object.
+.SH DESCRIPTION
+The use response is sent to the client afer after use request sent by any object in sightrange
+of any object controlled by the client.
+.br
+This response inform about usage of any of user skills, items, crafting recipes
+or any area object in the user range.
+.br
+This response contains IDs and serial values of two objects(usable object and user).
+.SH JSON EXAMPLE
+.nf
+{
+  "use": [
+    {
+      "object-id": "object1",
+      "object-serial": "0",
+      "user-id": "char1",
+      "user-serial": "0"
+    }
+  ]
+}
+.SH SEE ALSO
+responses, request/use

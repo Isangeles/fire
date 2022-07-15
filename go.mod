@@ -3,6 +3,6 @@ module github.com/isangeles/fire
 go 1.18
 
 require (
-	github.com/isangeles/burn v0.0.0-20220610203850-5e8487e0963b
-	github.com/isangeles/flame v0.0.0-20220622165434-aeac5710c02b
+	github.com/isangeles/burn v0.0.0-20220709215202-5e758a003945
+	github.com/isangeles/flame v0.0.0-20220713155305-4f203e65a8dc
 )
