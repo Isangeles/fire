@@ -672,7 +672,7 @@ func handleUseRequest(cli *Client, req request.Use) error {
 		UserSerial:   req.UserSerial,
 	}
 	resp := response.Response{Use: []response.Use{useResp}}
-	game.NotifyNearChars(user, resp)
+	go game.NotifyNearChars(user, resp)
 	return nil
 }
 
