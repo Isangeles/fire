@@ -5,5 +5,36 @@ Requests are used by the server clients to perform actions using controlled obje
 The server sends a response to the client after each request made by the client.
 .br
 All requests are validated to check if the client user can perform a specific action, e.g. if the user controls objects from the request have permission to use such request.
+.SH STRUCTURE
+Single request can consist of multiple subrequests, i.e. client can send one request containing multiple use, move, target, and other requests.
+.br
+List request directory for all available requests.
+.br
+The request needs to be in form of a JSON string.
+.SH JSON EXAMPLE
+{
+  "use": [
+    {
+      "object-id": "object1",
+      "object-serial": "0",
+      "user-id": "char1",
+      "user-serial": "0"
+    },
+    {
+      "object-id": "object2",
+      "object-serial": "0",
+      "user-id": "char1",
+      "user-serial": "0"
+    }
+  ],
+  "move": [
+    {
+      "id": "char1",
+      "serial": "0",
+      "pos-x": 10,
+      "pos-y": 20
+    }
+  ]
+}
 .SH SEE ALSO
 responses
