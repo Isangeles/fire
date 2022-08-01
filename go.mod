@@ -4,5 +4,5 @@ go 1.18
 
 require (
 	github.com/isangeles/burn v0.0.0-20220709215202-5e758a003945
-	github.com/isangeles/flame v0.0.0-20220713155305-4f203e65a8dc
+	github.com/isangeles/flame v0.0.0-20220725163241-d9eaaadae5ce
 )
