@@ -10,5 +10,57 @@ Besides that, the server can send a response to a client at any time(not only af
 .br
 For example as a result of a request from another client that needs confirmation from the owner
 of the specific module object.
+.SH STRUCTURE
+Single response can consist of multiple subresponses, i.e. server can send one response containing multiple character, dialog, trade, and other responses.
+.br
+List response directory for all available responses.
+.br
+The responses are in form of a JSON string.
+.SH JSON EXAMPLE
+.nf
+{
+  "character": [
+    {
+      "id": "char1",
+      "serial": "0",
+      "name": "charName",
+      "ai": true,
+      "level": 2,
+      "sex": "",
+      "race": "",
+      "attitude": "",
+      "guild": "",
+      "alignment": "",
+      "pos-x": 0,
+      "pos-y": 0,
+      "def-pos-x": 0,
+      "def-pos-y": 0,
+      "hp": 300,
+      "mana": 20,
+      "exp": 1000,
+      "resore": true,
+      "attributes": {
+        "str": 0,
+        "con": 0,
+        "dex": 0,
+        "int": 0,
+        "wis": 0
+      },
+      "trainings": {
+        "AttrTrainings": null
+      }
+    }
+  ],
+  "dialog": [
+    {
+      "id": "dialog1",
+      "stage": "dialog1_s0_2"
+    },
+    {
+      "id": "dialog2",
+      "stage": "dialogw_s0_2"
+    }
+  ]
+}
 .SH SEE ALSO
 requests
