@@ -1,7 +1,7 @@
 /*
  * response.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,6 +37,7 @@ type Response struct {
 	Trade          []Trade                `json:"trade"`
 	TradeCompleted []TradeCompleted       `json:"trade-completed"`
 	Dialog         []res.ObjectDialogData `json:"dialog"`
+	Use            []Use                  `json:"use"`
 	Command        []Command              `json:"command"`
 	Load           Load                   `json:"load"`
 	Error          []string               `json:"error"`

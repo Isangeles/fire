@@ -664,6 +664,15 @@ func handleUseRequest(cli *Client, req request.Use) error {
 	if err != nil {
 		return fmt.Errorf("Unable to use object: %v", err)
 	}
+	// Notify near chars.
+	useResp := response.Use{
+		ObjectID:     req.ObjectID,
+		ObjectSerial: req.ObjectSerial,
+		UserID:       req.UserID,
+		UserSerial:   req.UserSerial,
+	}
+	resp := response.Response{Use: []response.Use{useResp}}
+	go game.NotifyNearChars(user, resp)
 	return nil
 }
 

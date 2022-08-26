@@ -12,6 +12,7 @@ List request directory for all available requests.
 .br
 The request needs to be in form of a JSON string.
 .SH JSON EXAMPLE
+.nf
 {
   "use": [
     {

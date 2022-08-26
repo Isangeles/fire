@@ -22,3 +22,5 @@ This request contains IDs and serial values of two objects(usable object and use
     }
   ]
 }
+.SH SEE ALSO
+requests, response/use
