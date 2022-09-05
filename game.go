@@ -76,7 +76,7 @@ func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, err
 		return nil, fmt.Errorf("start area not found: %s",
 			g.Chapter().Conf().StartArea)
 	}
-	area.AddCharacter(char)
+	area.AddObject(char)
 	char.SetPosition(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
 	return char, nil
 }
