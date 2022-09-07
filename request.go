@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -672,7 +672,7 @@ func handleUseRequest(cli *Client, req request.Use) error {
 		UserSerial:   req.UserSerial,
 	}
 	resp := response.Response{Use: []response.Use{useResp}}
-	go game.NotifyNearChars(user, resp)
+	go game.NotifyNearObjects(user, resp)
 	return nil
 }
 

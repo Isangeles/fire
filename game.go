@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/isangeles/flame"
+	"github.com/isangeles/flame/area"
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/flag"
@@ -173,16 +174,16 @@ func (g *Game) DeactivateUserChars(usr *user.User) {
 	}
 }
 
-// NotifyNearChars sends response to all characters that
-// can see(have in sight range) specified character.
-func (g *Game) NotifyNearChars(char *character.Character, resp response.Response) {
-	area := g.Chapter().CharacterArea(char)
+// NotifyNearChars sends response to all objects that can
+// see(have it in sight range) specified area object.
+func (g *Game) NotifyNearObjects(ob area.Object, resp response.Response) {
+	area := g.Chapter().ObjectArea(ob)
 	if area == nil {
 		return
 	}
-	charX, charY := char.Position()
-	for _, ob := range area.SightRangeObjects(charX, charY) {
-		charResp:= charResponse{
+	obX, obY := ob.Position()
+	for _, ob := range area.SightRangeObjects(obX, obY) {
+		charResp := charResponse{
 			Response:   resp,
 			CharID:     ob.ID(),
 			CharSerial: ob.Serial(),
