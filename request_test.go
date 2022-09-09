@@ -1,7 +1,7 @@
 /*
  * request_test.go
  *
- * Copyright (C) 2022 Dariusz Sikora <<dev@isangeles.pl>>
+ * Copyright (C) 2022 Dariusz Sikora <<ds@isangeles.dev>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,12 @@ import (
 )
 
 var (
-	skillData = flameres.SkillData{ID: "skill"}
+	skillData = flameres.SkillData{
+		ID: "skill",
+		UseAction: flameres.UseActionData{
+			TargetEffects: []flameres.UseActionEffectData{flameres.UseActionEffectData{}},
+		},
+	}
 	itemData  = flameres.MiscItemData{ID: "item"}
 	charData  = flameres.CharacterData{
 		ID:         "char",
@@ -65,8 +70,8 @@ func TestHandleTransferItemsRequest(t *testing.T) {
 	if area == nil {
 		t.Fatalf("Test area not found")
 	}
-	area.AddCharacter(charFrom)
-	area.AddCharacter(charTo)
+	area.AddObject(charFrom)
+	area.AddObject(charTo)
 	// Add items.
 	game.Update(1)
 	item1 := item.NewMisc(itemData)
@@ -125,7 +130,7 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 	if area == nil {
 		t.Fatalf("Test area not found")
 	}
-	area.AddCharacter(char)
+	area.AddObject(char)
 	// Add items.
 	game.Update(1)
 	item1 := item.NewMisc(itemData)
@@ -174,7 +179,7 @@ func TestHandleUseRequest(t *testing.T) {
 	if area == nil {
 		t.Fatalf("Test area not found")
 	}
-	area.AddCharacter(char)
+	area.AddObject(char)
 	// Add skills.
 	skill := skill.New(skillData)
 	char.AddSkill(skill)
