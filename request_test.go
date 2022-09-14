@@ -205,3 +205,35 @@ func TestHandleUseRequest(t *testing.T) {
 		t.Fatalf("Skill was not used: character cooldown: %d", char.Cooldown())
 	}
 }
+
+// TestHandleChatRequest tests handling chat request.
+func TestHandleChatRequest(t *testing.T) {
+	// Create game & character.
+	game = newGame(modData)
+	char := character.New(charData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddObject(char)
+	// Create user & client.
+	user := user.New(userData)
+	user.AddChar(char)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request.
+	req := request.Chat{
+		ObjectID:     char.ID(),
+		ObjectSerial: char.Serial(),
+		Message:      "Test message",
+	}
+	// Test.
+	err := handleChatRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handing error: %v", err)
+	}
+	msg := char.ChatLog().Messages()[0]
+	if msg.Text != req.Message {
+		t.Fatalf("Request message was not added to the chat log")
+	}
+}
