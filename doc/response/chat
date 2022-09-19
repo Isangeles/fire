@@ -1,0 +1,25 @@
+.TH chat
+.SH NAME
+chat - server response with chat message.
+.SH DESCRIPTION
+The chat response is sent to the client after chat request sent by any object in sightrange
+of any object controlled by the client.
+.br
+This response inform about any message sent on the object chat channel.
+.br
+The chat response contains an ID and serial value of an object with a chat log
+for the message, text of the message, and the flag idicating whether message is translated or not.
+.SH JSON EXAMPLE
+.nf
+{
+  "chat": [
+    {
+      "object-id": "char1",
+      "object-serial": "0",
+      "message": "Hey!",
+      "translated": true
+    }
+  ]
+}
+.SH SEE ALSO
+responses, request/chat

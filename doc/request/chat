@@ -2,13 +2,14 @@
 .SH NAME
 chat - client request with chat message.
 .SH DESCRIPTION
-The training request is used by the client to send a new message to the chat
+The chat request is used by the client to send a new message to the chat
 log of a specified object.
 .br
 The object needs to be controlled by the user.
 .br
 Chat request contains an ID and serial value of an object with a chat log
-for the message and text of the message.
+for the message, text of the message, and the flag indicating whether message
+is translated.
 .br
 By default message will be marked as not translated, to mark a message as
 translated set translated value to true.
@@ -24,3 +25,5 @@ translated set translated value to true.
     }
   ]
 }
+.SH SEE ALSO
+requests, response/chat

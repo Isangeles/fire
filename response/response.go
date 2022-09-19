@@ -38,6 +38,7 @@ type Response struct {
 	TradeCompleted []TradeCompleted       `json:"trade-completed"`
 	Dialog         []res.ObjectDialogData `json:"dialog"`
 	Use            []Use                  `json:"use"`
+	Chat           []Chat                 `json:"chat"`
 	Command        []Command              `json:"command"`
 	Load           Load                   `json:"load"`
 	Error          []string               `json:"error"`

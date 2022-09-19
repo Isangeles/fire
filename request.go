@@ -26,6 +26,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/isangeles/flame/area"
 	"github.com/isangeles/flame/character"
 	flamedata "github.com/isangeles/flame/data"
 	"github.com/isangeles/flame/data/res"
@@ -767,6 +768,19 @@ func handleChatRequest(cli *Client, req request.Chat) error {
 			req.ObjectSerial)
 	}
 	logger.ChatLog().Add(objects.Message{Translated: req.Translated, Text: req.Message})
+	areaOb, ok := logger.(area.Object)
+	if !ok {
+		return nil
+	}
+	// Notify near chars.
+	chatResp := response.Chat{
+		ObjectID:     req.ObjectID,
+		ObjectSerial: req.ObjectSerial,
+		Message:      req.Message,
+		Translated:   req.Translated,
+	}
+	resp := response.Response{Chat: []response.Chat{chatResp}}
+	go game.NotifyNearObjects(areaOb, resp)
 	return nil
 }
 
