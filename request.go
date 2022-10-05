@@ -242,7 +242,7 @@ func handleNewCharRequest(cli *Client, req request.NewChar) error {
 func handleMoveRequest(cli *Client, req request.Move) error {
 	// Retrieve object.
 	chapter := game.Chapter()
-	ob := chapter.Object(req.ID, req.Serial)
+	ob := chapter.AreaObject(req.ID, req.Serial)
 	if ob == nil {
 		return fmt.Errorf("Object not found: %s %s", req.ID, req.Serial)
 	}
