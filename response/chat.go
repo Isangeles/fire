@@ -20,10 +20,13 @@
 
 package response
 
+import "time"
+
 // Struct for chat request.
 type Chat struct {
-	ObjectID     string `json:"object-id"`
-	ObjectSerial string `json:"object-serial"`
-	Message      string `json:"message"`
-	Translated   bool   `json:"translated"`
+	ObjectID     string    `json:"object-id"`
+	ObjectSerial string    `json:"object-serial"`
+	Message      string    `json:"message"`
+	Translated   bool      `json:"translated"`
+	Time         time.Time `json:"time"`
 }

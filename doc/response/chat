@@ -8,7 +8,8 @@ of any object controlled by the client.
 This response inform about any message sent on the object chat channel.
 .br
 The chat response contains an ID and serial value of an object with a chat log
-for the message, text of the message, and the flag idicating whether message is translated or not.
+for the message, text of the message, the flag idicating whether message is translated or not,
+and time of the message.
 .SH JSON EXAMPLE
 .nf
 {
@@ -17,7 +18,8 @@ for the message, text of the message, and the flag idicating whether message is 
       "object-id": "char1",
       "object-serial": "0",
       "message": "Hey!",
-      "translated": true
+      "translated": true,
+      "time": "2009-11-10 23:00:00"
     }
   ]
 }

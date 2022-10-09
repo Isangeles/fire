@@ -767,7 +767,8 @@ func handleChatRequest(cli *Client, req request.Chat) error {
 		return fmt.Errorf("Object is has no chat log: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
-	logger.ChatLog().Add(objects.Message{Translated: req.Translated, Text: req.Message})
+	msg := objects.NewMessage(req.Message, req.Translated)
+	logger.ChatLog().Add(msg)
 	areaOb, ok := logger.(area.Object)
 	if !ok {
 		return nil
@@ -778,6 +779,7 @@ func handleChatRequest(cli *Client, req request.Chat) error {
 		ObjectSerial: req.ObjectSerial,
 		Message:      req.Message,
 		Translated:   req.Translated,
+		Time:         msg.Time(),
 	}
 	resp := response.Response{Chat: []response.Chat{chatResp}}
 	go game.NotifyNearObjects(areaOb, resp)
