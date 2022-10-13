@@ -779,7 +779,7 @@ func handleChatRequest(cli *Client, req request.Chat) error {
 		ObjectSerial: req.ObjectSerial,
 		Message:      req.Message,
 		Translated:   req.Translated,
-		Time:         msg.Time(),
+		Time:         msg.Time,
 	}
 	resp := response.Response{Chat: []response.Chat{chatResp}}
 	go game.NotifyNearObjects(areaOb, resp)
