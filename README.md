@@ -92,7 +92,7 @@ update-break:[duration in milliseconds]
 ```
 Duration of update break after each game update in milliseconds.
 
-If not set, the default value is 16 milliseconds(which should match the client's GUI running on 60 FPS).
+If not set, the default value is 1 millisecond.
 ```
 action-min-range:[range value]
 ```
