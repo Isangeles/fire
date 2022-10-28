@@ -4,6 +4,7 @@ MINOR:
 * Kicking clients
 * Canceling unaccepted requests
 * Configurable message to display to each user after login
+* Saving server logs to file
 DONE:
 * Handling requests and sending responses
 * Update response
@@ -17,9 +18,9 @@ DONE:
 * Burn command request/response
 * Users
 * Transfer items request
-* Use request
+* Use request/response
 * Training request
-* Chat request
+* Chat request/response
 * Target request
 * Save request
 * Close server request
