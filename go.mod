@@ -1,8 +1,8 @@
 module github.com/isangeles/fire
 
-go 1.18
+go 1.19
 
 require (
-	github.com/isangeles/burn v0.0.0-20221102215753-7f38d7b2dd45
-	github.com/isangeles/flame v0.0.0-20221106104118-3c8be122caf3
+	github.com/isangeles/burn v0.0.0-20230106123012-2af33c50c937
+	github.com/isangeles/flame v0.0.0-20230109192222-0e673f413a8e
 )

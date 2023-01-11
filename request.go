@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,6 @@ import (
 	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/effect"
 	"github.com/isangeles/flame/item"
-	"github.com/isangeles/flame/object"
 	"github.com/isangeles/flame/objects"
 	"github.com/isangeles/flame/serial"
 	"github.com/isangeles/flame/training"
@@ -510,15 +509,6 @@ func handleTransferItemsRequest(cli *Client, req request.TransferItems) error {
 		if err != nil {
 			return fmt.Errorf("Unable to transfer items: %v", err)
 		}
-	case *object.Object:
-		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
-			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectFromID,
-				req.ObjectFromSerial)
-		}
-		err := transferItems(from, to, req.Items)
-		if err != nil {
-			return fmt.Errorf("Unable to transfer items: %v", err)
-		}
 	default:
 		return fmt.Errorf("Unsupported object 'from': %s %s", req.ObjectFromID,
 			req.ObjectFromSerial)
@@ -546,15 +536,6 @@ func handleThrowItemsRequest(cli *Client, req request.ThrowItems) error {
 	// Remove items.
 	switch container := container.(type) {
 	case *character.Character:
-		if !cli.User().Controls(container.ID(), container.Serial()) && container.Live() {
-			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectID,
-				req.ObjectSerial)
-		}
-		err := removeItems(container, req.Items)
-		if err != nil {
-			return fmt.Errorf("Unable to remove items: %v", err)
-		}
-	case *object.Object:
 		if !cli.User().Controls(container.ID(), container.Serial()) && container.Live() {
 			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectID,
 				req.ObjectSerial)
@@ -654,10 +635,6 @@ func handleUseRequest(cli *Client, req request.Use) error {
 		if user.Inventory().Item(usable.ID(), usable.Serial()) == nil {
 			return fmt.Errorf("User doesn't own usable item: %s %s",
 				usable.ID(), usable.Serial())
-		}
-	case *object.Object:
-		if !inRange(user, usable) {
-			return fmt.Errorf("Objects are not in the minimal range")
 		}
 	}
 	// Use object.
