@@ -1,10 +1,12 @@
 MAJOR:
 * Prevent clients to interact with inactive(offline) characters
+* Range check while handling use request
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
 * Configurable message to display to each user after login
 * Saving server logs to file
+* Sending use response after handling training request
 DONE:
 * Handling requests and sending responses
 * Update response
