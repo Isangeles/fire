@@ -1,6 +1,5 @@
 MAJOR:
 * Prevent clients to interact with inactive(offline) characters
-* Range check while handling use request
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests

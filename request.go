@@ -637,6 +637,10 @@ func handleUseRequest(cli *Client, req request.Use) error {
 				usable.ID(), usable.Serial())
 		}
 	}
+	// Check range.
+	if !inRange(user, ob) {
+		return fmt.Errorf("Objects are not in the minimal range")
+	}
 	// Use object.
 	err := user.Use(usable)
 	if err != nil {
