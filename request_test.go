@@ -27,6 +27,7 @@ import (
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/skill"
+	"github.com/isangeles/flame/training"
 
 	"github.com/isangeles/fire/data/res"
 	"github.com/isangeles/fire/request"
@@ -40,8 +41,19 @@ var (
 			TargetEffects: []flameres.UseActionEffectData{flameres.UseActionEffectData{}},
 		},
 	}
-	itemData  = flameres.MiscItemData{ID: "item"}
-	charData  = flameres.CharacterData{
+	trainingData = flameres.TrainingData{
+		ID: "trainingSkill",
+		Use: flameres.UseActionData{
+			UserMods: flameres.ModifiersData{
+				AddSkillMods: []flameres.AddSkillModData{flameres.AddSkillModData{"skill"}},
+			},
+		},
+	}
+	trainerTrainingData = flameres.TrainerTrainingData{
+		ID: "training",
+	}
+	itemData = flameres.MiscItemData{ID: "item"}
+	charData = flameres.CharacterData{
 		ID:         "char",
 		Level:      1,
 		Attributes: flameres.AttributesData{5, 5, 5, 5, 5},
@@ -167,6 +179,48 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 	if char.Inventory().Item(item2.ID(), item2.Serial()) != nil {
 		t.Errorf("Item should be removed from %s inventory: %s %s", char.ID(),
 			item2.ID(), item2.Serial())
+	}
+}
+
+// TestHandleTrainingRequest tests handling training request.
+func TestHandleTrainingRequest(t *testing.T) {
+	// Create game & character.
+	game = newGame(modData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	char := character.New(charData)
+	area.AddObject(char)
+	// Add training skill to resources base.
+	flameres.Skills = append(flameres.Skills, skillData)
+	// Create trainer.
+	trainer := character.New(charData)
+	area.AddObject(trainer)
+	train := training.New(trainingData)
+	trainerTrain := training.NewTrainerTraining(train, trainerTrainingData)
+	trainer.AddTraining(trainerTrain)
+	// Create user & client.
+	user := user.New(userData)
+	user.AddChar(char)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request.
+	req := request.Training{
+		UserID:        char.ID(),
+		UserSerial:    char.Serial(),
+		TrainerID:     trainer.ID(),
+		TrainerSerial: trainer.Serial(),
+		TrainingID:    trainerTrain.ID(),
+	}
+	// Test.
+	err := handleTrainingRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handing error: %v", err)
+	}
+	game.Update(1)
+	if charSkillRecipe(char, skillData.ID) == nil {
+		t.Fatalf("Skill not trained: %s", skillData.ID)
 	}
 }
 
