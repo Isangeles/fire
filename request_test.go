@@ -1,7 +1,7 @@
 /*
  * request_test.go
  *
- * Copyright (C) 2022 Dariusz Sikora <<ds@isangeles.dev>>
+ * Copyright (C) 2022-2023 Dariusz Sikora <<ds@isangeles.dev>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -110,7 +110,14 @@ func TestHandleTransferItemsRequest(t *testing.T) {
 		Items:            make(map[string][]string),
 	}
 	req.Items[item1.ID()] = []string{item1.Serial(), item2.Serial()}
-	// Test.
+	// Test out of range.
+	charTo.SetPosition(100, 100)
+	err = handleTransferItemsRequest(client, req)
+	if err == nil {
+		t.Errorf("Request handling didn't returned out of range error")
+	}
+	// Test in range.
+	charTo.SetPosition(0, 0)
 	err = handleTransferItemsRequest(client, req)
 	if err != nil {
 		t.Fatalf("Request handing error: %v", err)
@@ -213,8 +220,15 @@ func TestHandleTrainingRequest(t *testing.T) {
 		TrainerSerial: trainer.Serial(),
 		TrainingID:    trainerTrain.ID(),
 	}
-	// Test.
+	// Test out of range.
+	trainer.SetPosition(100, 100)
 	err := handleTrainingRequest(client, req)
+	if err == nil {
+		t.Errorf("Request handling didn't returned out of range error")
+	}
+	// Test in range.
+	trainer.SetPosition(0, 0)
+	err = handleTrainingRequest(client, req)
 	if err != nil {
 		t.Fatalf("Request handing error: %v", err)
 	}
@@ -271,7 +285,6 @@ func TestHandleUseRequestAreaObject(t *testing.T) {
 	char := character.New(charData)
 	area.AddObject(char)
 	ob := character.New(charData)
-	ob.SetPosition(200, 200)
 	area.AddObject(ob)
 	// Create user & client.
 	user := user.New(userData)
@@ -286,9 +299,10 @@ func TestHandleUseRequestAreaObject(t *testing.T) {
 		UserSerial:   char.Serial(),
 	}
 	// Test out of range.
+	ob.SetPosition(100, 100)
 	err := handleUseRequest(client, req)
 	if err == nil {
-		t.Fatalf("Request handing didn't returned out of range error")
+		t.Errorf("Request handing didn't returned out of range error")
 	}
 	// Test in range.
 	ob.SetPosition(0, 0)
