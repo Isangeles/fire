@@ -224,8 +224,8 @@ func TestHandleTrainingRequest(t *testing.T) {
 	}
 }
 
-// TestHandleUseRequest tests handling use request.
-func TestHandleUseRequest(t *testing.T) {
+// TestHandleUseRequestSkill tests handling use request for skill.
+func TestHandleUseRequestSkill(t *testing.T) {
 	// Create game & character.
 	game = newGame(modData)
 	char := character.New(charData)
@@ -253,6 +253,48 @@ func TestHandleUseRequest(t *testing.T) {
 	err := handleUseRequest(client, req)
 	if err != nil {
 		t.Fatalf("Request handing error: %v", err)
+	}
+	game.Update(1)
+	if char.Cooldown() <= 0 {
+		t.Fatalf("Skill was not used: character cooldown: %d", char.Cooldown())
+	}
+}
+
+// TestHandleUseRequestAreaObject tests handling use request for area object.
+func TestHandleUseRequestAreaObject(t *testing.T) {
+	// Create game & objects.
+	game = newGame(modData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	char := character.New(charData)
+	area.AddObject(char)
+	ob := character.New(charData)
+	ob.SetPosition(200, 200)
+	area.AddObject(ob)
+	// Create user & client.
+	user := user.New(userData)
+	user.AddChar(char)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request.
+	req := request.Use{
+		ObjectID:     ob.ID(),
+		ObjectSerial: ob.Serial(),
+		UserID:       char.ID(),
+		UserSerial:   char.Serial(),
+	}
+	// Test out of range.
+	err := handleUseRequest(client, req)
+	if err == nil {
+		t.Fatalf("Request handing didn't returned out of range error")
+	}
+	// Test in range.
+	ob.SetPosition(0, 0)
+	err = handleUseRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handling error: %v", err)
 	}
 	game.Update(1)
 	if char.Cooldown() <= 0 {
