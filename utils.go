@@ -1,7 +1,7 @@
 /*
  * utils.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,11 +47,7 @@ func transferItems(from, to item.Container, items map[string][]string) error {
 					id, serial)
 			}
 			from.Inventory().RemoveItem(item)
-			err := to.Inventory().AddItem(item)
-			if err != nil {
-				return fmt.Errorf("Unable to add item inventory: %v",
-					err)
-			}
+			to.Inventory().AddItem(item)
 		}
 	}
 	return nil
