@@ -1,7 +1,7 @@
 /*
  * client.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <<dev@isangeles.pl>>
+ * Copyright (C) 2020-2023 Dariusz Sikora <<ds@isangeles.dev>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
  *
  */
 
