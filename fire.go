@@ -1,7 +1,7 @@
 /*
  * fire.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -148,7 +148,7 @@ func update() {
 			handleRequest(req)
 		case resp := <-charResponses:
 			for _, c := range clients {
-				if !c.User().Controls(resp.CharID, resp.CharSerial) {
+				if c.User() != nil && !c.User().Controls(resp.CharID, resp.CharSerial) {
 					continue
 				}
 				updateClient(c, resp.Response)
@@ -232,15 +232,15 @@ func updateClient(client *Client, resp response.Response) error {
 	// Update user characters.
 	if client.User() != nil {
 		game.UpdateUserChars(client.User())
+		for _, c := range client.User().Chars() {
+			charResp := response.Character{c.ID, c.Serial}
+			resp.Character = append(resp.Character, charResp)
+		}
 	}
 	// Send update response.
 	resp.Update = response.Update{Module: game.ClientData()}
 	resp.Logon = client.User() == nil
 	resp.Closed = close
-	for _, c := range client.User().Chars() {
-		charResp := response.Character{c.ID, c.Serial}
-		resp.Character = append(resp.Character, charResp)
-	}
 	client.Out <- resp
 	return nil
 }
