@@ -99,11 +99,11 @@ func main() {
 		log.Printf("Unable to load users: %v", err)
 	}
 	if len(config.Module) < 1 {
-		panic(fmt.Errorf("no game module configurated"))
+		panic(fmt.Errorf("No game module configurated"))
 	}
 	modData, err := importModule(config.ModulePath())
 	if err != nil {
-		panic(fmt.Errorf("unable to load game module: %v", err))
+		panic(fmt.Errorf("Unable to load game module: %v", err))
 	}
 	game = newGame(modData)
 	burn.Module = game.Module
