@@ -682,7 +682,7 @@ func handleEquipRequest(cli *Client, req request.Equip) error {
 			req.ItemID, req.ItemSerial)
 	}
 	// Equip item.
-	eqItem, ok := it.(item.Equiper)
+	eqItem, ok := it.Item.(item.Equiper)
 	if !ok {
 		return fmt.Errorf("Item is not equipable: %s %s", it.ID(),
 			it.Serial())
@@ -722,7 +722,7 @@ func handleUnequipRequest(cli *Client, req request.Unequip) error {
 			req.ItemID, req.ItemSerial)
 	}
 	// Equip item.
-	eqItem, ok := it.(item.Equiper)
+	eqItem, ok := it.Item.(item.Equiper)
 	if !ok {
 		return fmt.Errorf("Item is not equipable: %s %s", req.ItemID,
 			req.ItemSerial)
