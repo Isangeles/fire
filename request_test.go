@@ -88,14 +88,8 @@ func TestHandleTransferItemsRequest(t *testing.T) {
 	game.Update(1)
 	item1 := item.NewMisc(itemData)
 	item2 := item.NewMisc(itemData)
-	err := charFrom.Inventory().AddItem(item1)
-	if err != nil {
-		t.Fatalf("Unable to add item 1 to character inventory: %v", err)
-	}
-	err = charFrom.Inventory().AddItem(item2)
-	if err != nil {
-		t.Fatalf("Unable to add item 2 to character inventory: %v", err)
-	}
+	charFrom.Inventory().AddItem(item1)
+	charFrom.Inventory().AddItem(item2)
 	// Create user & client.
 	user := user.New(userData)
 	user.AddChar(charTo)
@@ -112,7 +106,7 @@ func TestHandleTransferItemsRequest(t *testing.T) {
 	req.Items[item1.ID()] = []string{item1.Serial(), item2.Serial()}
 	// Test out of range.
 	charTo.SetPosition(100, 100)
-	err = handleTransferItemsRequest(client, req)
+	err := handleTransferItemsRequest(client, req)
 	if err == nil {
 		t.Errorf("Request handling didn't returned out of range error")
 	}
@@ -154,14 +148,8 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 	game.Update(1)
 	item1 := item.NewMisc(itemData)
 	item2 := item.NewMisc(itemData)
-	err := char.Inventory().AddItem(item1)
-	if err != nil {
-		t.Fatalf("Unable to add item 1 to character inventory: %v", err)
-	}
-	err = char.Inventory().AddItem(item2)
-	if err != nil {
-		t.Fatalf("Unable to add item 2 to character inventory: %v", err)
-	}
+	char.Inventory().AddItem(item1)
+	char.Inventory().AddItem(item2)
 	// Create user & client.
 	user := user.New(userData)
 	user.AddChar(char)
@@ -175,7 +163,7 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 	}
 	req.Items[item1.ID()] = []string{item1.Serial(), item2.Serial()}
 	// Test.
-	err = handleThrowItemsRequest(client, req)
+	err := handleThrowItemsRequest(client, req)
 	if err != nil {
 		t.Fatalf("Request handing error: %v", err)
 	}
