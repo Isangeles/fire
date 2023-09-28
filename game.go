@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -79,6 +79,7 @@ func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, err
 	}
 	area.AddObject(char)
 	char.SetPosition(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
+	char.SetDestPoint(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
 	return char, nil
 }
 
