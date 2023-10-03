@@ -22,7 +22,7 @@ Without address and host configuration, the server will use `localhost:8000` by 
 
 Module ID is the name of the module directory placed in `data/modules` in the server executable directory.
 
-Flame modules are available to download [here](http://flame.isangeles.pl/mods).
+Flame modules are available to download [here](https://flame.isangeles.dev/mods).
 
 Run server:
 ```
