@@ -1,4 +1,5 @@
 MAJOR:
+* Handle switching module chapters
 * Prevent clients to interact with inactive(offline) characters
 MINOR:
 * Kicking clients
