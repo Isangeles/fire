@@ -228,7 +228,9 @@ func handleNewCharRequest(cli *Client, req request.NewChar) error {
 	if !game.ValidNewCharacter(req.Data) {
 		return fmt.Errorf("Invalid character")
 	}
-	char, err := game.SpawnChar(req.Data)
+	char := character.New(req.Data)
+	game.Chapter().Resources().Characters = append(game.Chapter().Resources().Characters, req.Data)
+	err := game.SpawnChar(char)
 	if err != nil {
 		return fmt.Errorf("Unable to spawn char: %v", err)
 	}

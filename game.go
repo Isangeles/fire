@@ -67,20 +67,17 @@ func newGame(data flameres.ModuleData) *Game {
 	return &g
 }
 
-// SpawnChar creates new character for specified data and
-// spawns it in game start area.
-func (g *Game) SpawnChar(data flameres.CharacterData) (*character.Character, error) {
-	char := character.New(data)
-	g.Chapter().Resources().Characters = append(g.Chapter().Resources().Characters, data)
+// SpawnChar spawns specified character in game start area.
+func (g *Game) SpawnChar(char *character.Character) error {
 	area := g.Chapter().Area(g.Chapter().Conf().StartArea)
 	if area == nil {
-		return nil, fmt.Errorf("start area not found: %s",
+		return fmt.Errorf("start area not found: %s",
 			g.Chapter().Conf().StartArea)
 	}
 	area.AddObject(char)
 	char.SetPosition(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
 	char.SetDestPoint(g.Chapter().Conf().StartPosX, g.Chapter().Conf().StartPosY)
-	return char, nil
+	return nil
 }
 
 // ValidNewCharacter checks if specified data is valid  for the
