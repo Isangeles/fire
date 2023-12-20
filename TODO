@@ -7,6 +7,8 @@ MINOR:
 * Configurable message to display to each user after login
 * Saving server logs to file
 * Sending use response after handling training request
+* request.go is large and growing, how to split it in a sane way?
+* Server config file getting wiped sometimes after closing the server(macOS only?)
 DONE:
 * Handling requests and sending responses
 * Update response
