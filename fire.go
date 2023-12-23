@@ -76,7 +76,7 @@ type clientConfirm struct {
 	Client *Client
 }
 
-// Struct with request for owner of game
+// Struct with response for the owner of game
 // character with specifed ID and serial.
 type charResponse struct {
 	response.Response
@@ -179,11 +179,7 @@ func update() {
 			if c.User() == nil {
 				continue
 			}
-			err := updateClient(c, response.Response{})
-			if err != nil {
-				log.Printf("Unable to update client: %s: %v",
-					c.RemoteAddr(), err)
-			}
+			updateClient(c, response.Response{})
 		}
 		if close {
 			// Wait some time before closing the server to ensure that
@@ -228,7 +224,7 @@ func handleConnection(conn net.Conn) {
 
 // updateClient adds update, logon, closed, and charcter responses to specified
 // response and sends this response to the specified client.
-func updateClient(client *Client, resp response.Response) error {
+func updateClient(client *Client, resp response.Response) {
 	// Update user characters.
 	if client.User() != nil {
 		game.UpdateUserChars(client.User())
@@ -242,7 +238,6 @@ func updateClient(client *Client, resp response.Response) error {
 	resp.Logon = client.User() == nil
 	resp.Closed = close
 	client.Out <- resp
-	return nil
 }
 
 // clientWriter handles writing on client out channel.
