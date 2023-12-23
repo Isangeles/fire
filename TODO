@@ -1,5 +1,4 @@
 MAJOR:
-* Handle switching module chapters
 * Prevent clients to interact with inactive(offline) characters
 MINOR:
 * Kicking clients
@@ -33,3 +32,4 @@ DONE:
 * Handling module Ash scripts
 * Excluding user characters from update response after user logout
 * Throw items request
+* Handling module chapter change

@@ -1,7 +1,7 @@
 /*
  * response.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,7 @@ import (
 type Response struct {
 	Logon          bool                   `json:"logon"`
 	Update         Update                 `json:"update"`
+	ChangeChapter  bool                   `json:"change-chapter"`
 	Character      []Character            `json:"character"`
 	Trade          []Trade                `json:"trade"`
 	TradeCompleted []TradeCompleted       `json:"trade-completed"`

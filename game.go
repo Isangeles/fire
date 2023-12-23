@@ -31,6 +31,7 @@ import (
 	"github.com/isangeles/flame"
 	"github.com/isangeles/flame/area"
 	"github.com/isangeles/flame/character"
+	flamedata "github.com/isangeles/flame/data"
 	flameres "github.com/isangeles/flame/data/res"
 	"github.com/isangeles/flame/flag"
 
@@ -58,6 +59,7 @@ func newGame(data flameres.ModuleData) *Game {
 		Module:  flame.NewModule(data),
 		scripts: make(map[string]*ash.Script),
 	}
+	g.AddChapterChangeEvent(g.changeChapter)
 	go g.update()
 	err := g.runChapterScripts()
 	if err != nil {
@@ -239,6 +241,34 @@ func (g *Game) update() {
 		update = time.Now()
 		time.Sleep(time.Duration(config.UpdateBreak) * time.Millisecond)
 	}
+}
+
+// changeChapter handles chapter change triggered by specified character.
+func (g *Game) changeChapter(char *character.Character) {
+	// Change chapter.
+	g.Conf().Chapter = char.ChapterID()
+	chapterPath := filepath.Join(g.Conf().ChaptersPath(), g.Conf().Chapter)
+	chapterData, err := flamedata.ImportChapterDir(chapterPath)
+	if err != nil {
+		log.Printf("Unable to change chapter: unable to load chapter data: %v",
+			err)
+		return
+	}
+	chapter := flame.NewChapter(g.Module, chapterData)
+	g.SetChapter(chapter)
+	// Respawn character.
+	err = g.SpawnChar(char)
+	if err != nil {
+		log.Printf("Unable to change chapter: unable to respawn character: %v",
+			err)
+	}
+	// Notify client about chapter change.
+	resp := charResponse{
+		Response:   response.Response{ChangeChapter: true},
+		CharID:     char.ID(),
+		CharSerial: char.Serial(),
+	}
+	charResponses <- resp
 }
 
 // runChapterScripts starts all ash scripts for

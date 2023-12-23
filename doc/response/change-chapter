@@ -1,0 +1,14 @@
+.TH change-chapter
+.SH NAME
+change-chapter - server response to inform the client about the game chapter change.
+.SH DESCRIPTION
+The change-chapter response is sent to a client to inform about the recent change of the game chapter.
+.br
+When the response value is set to 'true' it indicates that the game chapter was changed and the update response contains module data with new chapter set.
+.SH JSON EXAMPLE
+.nf
+{
+  "change-chapter": true
+}
+.SH SEE ALSO
+responses, response/update
