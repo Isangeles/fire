@@ -59,7 +59,7 @@ func newGame(data flameres.ModuleData) *Game {
 		Module:  flame.NewModule(data),
 		scripts: make(map[string]*ash.Script),
 	}
-	g.AddChapterChangeEvent(g.changeChapter)
+	g.AddChangeChapterEvent(g.changeChapter)
 	go g.update()
 	err := g.runChapterScripts()
 	if err != nil {
