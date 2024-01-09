@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -198,6 +198,9 @@ func handleRequest(req clientRequest) {
 	}
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
+	}
+	if req.Client.User().Admin() {
+		game.pause = req.Pause
 	}
 	if req.Close > 0 {
 		err := handleCloseRequest(req.Client, req.Close)

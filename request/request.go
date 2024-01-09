@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,6 +48,7 @@ type Request struct {
 	Command       []string        `json:"command"`
 	Accept        []int           `json:"accept"`
 	Close         int64           `json:"close"`
+	Pause         bool            `json:"pause"`
 }
 
 // Unmarshal parses specified text data to action struct.

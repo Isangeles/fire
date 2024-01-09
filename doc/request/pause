@@ -1,0 +1,16 @@
+.TH pause
+.SH NAME
+pause - client request for pausing the game.
+.SH DESCRIPTION
+The close request can be sent by a client to pause the game hosted on the server.
+.br
+After pausing the game with this request, the game update loop will be stopped until the another pause request is recieved disabling the pause.
+.br
+This request will only be handled if user have administrative permissions, otherwise the server will ignore the pause request.
+.SH JSON EXAMPLE
+.nf
+{
+  "pause": true
+}
+.SH SEE ALSO
+requests, game

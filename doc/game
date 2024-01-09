@@ -9,5 +9,7 @@ New characters are placed in the current chapter starting area and on starting p
 Game hosted on the server is updated by default every 1 millisecond.
 .br
 A different value can be configurated in the .fire config file.
+.br
+Game update loop can be paused with the pause request.
 .SH SEE ALSO
-responses, response/update, request/new-char, config/.fire
+responses, response/update, request/new-char, request/pause, config/.fire

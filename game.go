@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,6 +49,7 @@ const inactiveCharFlag = flag.Flag("flagFireInactive")
 type Game struct {
 	*flame.Module
 	scripts map[string]*ash.Script
+	pause   bool
 }
 
 // newGame creates game for specified module data.
@@ -234,6 +235,9 @@ func (g *Game) ClientData() flameres.ModuleData {
 func (g *Game) update() {
 	update := time.Now()
 	for {
+		if g.pause {
+			continue
+		}
 		// Delta.
 		delta := time.Since(update).Milliseconds()
 		// Update.
