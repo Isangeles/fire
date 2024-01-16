@@ -1,7 +1,7 @@
 /*
  * fire.go
  *
- * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -237,6 +237,7 @@ func updateClient(client *Client, resp response.Response) {
 	resp.Update = response.Update{Module: game.ClientData()}
 	resp.Logon = client.User() == nil
 	resp.Closed = close
+	resp.Paused = game.pause
 	client.Out <- resp
 }
 

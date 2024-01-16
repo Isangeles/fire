@@ -1,7 +1,7 @@
 /*
  * response.go
  *
- * Copyright (C) 2020-2023 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,7 @@ import (
 // Struct for server response.
 type Response struct {
 	Logon          bool                   `json:"logon"`
+	Paused         bool                   `json:"paused"`
 	Update         Update                 `json:"update"`
 	ChangeChapter  bool                   `json:"change-chapter"`
 	Character      []Character            `json:"character"`

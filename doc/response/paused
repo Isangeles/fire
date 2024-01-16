@@ -1,0 +1,16 @@
+.TH paused
+.SH NAME
+paused - server response to inform the client about the game pause.
+.SH DESCRIPTION
+The close request is sent to a client to inform whether the game hosted on the server is paused or not.
+.br
+Response contains boolean value, true or false.
+.br
+It is sent to all connected clients along with an update reponse.
+.SH JSON EXAMPLE
+.nf
+{
+  "paused": true
+}
+.SH SEE ALSO
+responses, game, request/pause

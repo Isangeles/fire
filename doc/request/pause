@@ -13,4 +13,4 @@ This request will only be handled if user have administrative permissions, other
   "pause": true
 }
 .SH SEE ALSO
-requests, game
+requests, game, response/paused

@@ -1,6 +1,5 @@
 MAJOR:
 * Prevent clients to interact with inactive(offline) characters
-* Pause response
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
@@ -30,7 +29,7 @@ DONE:
 * Close server request
 * Closed response
 * Load request/response
-* Pause request
+* Pause request/reponse
 * Handling module Ash scripts
 * Excluding user characters from update response after user logout
 * Throw items request
