@@ -1,6 +1,6 @@
-github.com/isangeles/burn v0.0.0-20231211162654-96c6ddd40b4c h1:TSoJVfRGV5JayIEAcdXkmJgv/16qgDX2Ko1/qxEUdgI=
-github.com/isangeles/burn v0.0.0-20231211162654-96c6ddd40b4c/go.mod h1:PGHRJ1lHgRX5wkn1E6Zxd4xXxp+hFcUJpNoV0TUCWKY=
-github.com/isangeles/flame v0.0.0-20231224130251-cc2361940191 h1:8zDOdSRAEH3RH8Xnu4B5CETpDVR36cch0WNKbOpBY4M=
-github.com/isangeles/flame v0.0.0-20231224130251-cc2361940191/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
+github.com/isangeles/burn v0.0.0-20240308171729-0cacbfcb317f h1:/A9yRVBWhtL05zF/7vGEMNqgB0WS5AHzkDAZZWEdITM=
+github.com/isangeles/burn v0.0.0-20240308171729-0cacbfcb317f/go.mod h1:PGHRJ1lHgRX5wkn1E6Zxd4xXxp+hFcUJpNoV0TUCWKY=
+github.com/isangeles/flame v0.0.0-20240312184759-ac9a988d6a9b h1:cdMvXkShIPGSyrp7l2HdVCD/JI3GFxnybXsCXFLdDU8=
+github.com/isangeles/flame v0.0.0-20240312184759-ac9a988d6a9b/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b h1:TfKHKtfJnlSIe2OZ8QaPLBskYJ5LE7Sf/dVDhDEFZxs=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b/go.mod h1:HQTF1Ct50epzMRfRAG8Pg6Fzy84J/w8ZFvR4id62X2g=
