@@ -1,7 +1,7 @@
 /*
  * request_test.go
  *
- * Copyright (C) 2022-2023 Dariusz Sikora <<ds@isangeles.dev>>
+ * Copyright (C) 2022-2024 Dariusz Sikora <<ds@isangeles.dev>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,11 +52,17 @@ var (
 	trainerTrainingData = flameres.TrainerTrainingData{
 		ID: "training",
 	}
-	itemData = flameres.MiscItemData{ID: "item"}
+	itemData      = flameres.MiscItemData{ID: "item"}
+	healthModData = flameres.HealthModData{1, 10}
+	useActionData = flameres.UseActionData{
+		TargetMods: flameres.ModifiersData{
+			HealthMods: []flameres.HealthModData{healthModData},
+		}}
 	charData = flameres.CharacterData{
 		ID:         "char",
 		Level:      1,
 		Attributes: flameres.AttributesData{5, 5, 5, 5, 5},
+		Action:     useActionData,
 	}
 	areaData      = flameres.AreaData{ID: "area"}
 	resourcesData = flameres.ResourcesData{Areas: []flameres.AreaData{areaData}}
