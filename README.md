@@ -118,7 +118,7 @@ After you finish, open a pull request to merge your changes with master branch.
 ## Contact
 * Isangeles <<ds@isangeles.dev>>
 ## License
-Copyright (C) 2020-2024 Dariusz Sikora <<ds@isangeles.dev>>
+Copyright (C) 2020-2025 Dariusz Sikora <<ds@isangeles.dev>>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
