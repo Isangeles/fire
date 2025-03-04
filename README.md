@@ -97,6 +97,10 @@ If not set, the default value is 1 millisecond.
 action-min-range:[range value]
 ```
 The minimum range required for game objects to interact with each other.
+```
+message:[message text]
+```
+The server message to include with every update response.
 ## Documentation
 Source code documentation could be easily browsed with the `go doc` command.
 

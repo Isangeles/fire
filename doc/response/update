@@ -10,6 +10,8 @@ For example, data of inactive characters(controlled by users that are currently 
 .br
 The client can use this data to recreate the current module on the client-side.
 .br
+Besides the module data the update response also contains message field with the current server message.
+.br
 An update response is included in all responses sent to the authorized clients.
 .br
 Also, a separate update response is sent to all logged clients after each new request processed by a server.
@@ -18,7 +20,8 @@ Also, a separate update response is sent to all logged clients after each new re
 {
   "update": [
     {
-      "module": {...}
+      "module": {...},
+      "message": "Server Message"
     }
   ]
 }

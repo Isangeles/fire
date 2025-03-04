@@ -36,9 +36,14 @@ If not set, the default value is 16 milliseconds(which should match the client's
 The minimum range required for game objects to interact with each other.
 .br
 This value is used to validate requests like dialog or trade.
+.P
+* message
+.br
+The server message to be included with every update response.
 .SH EXAMPLE
 .nf
 host:localhost
 port:8000
 module:test
 action-min-range:50
+message:server message

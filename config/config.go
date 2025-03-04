@@ -1,7 +1,7 @@
 /*
  * config.go
  *
- * Copyright (C) 2020-2022 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,6 +46,7 @@ var (
 	Module         = ""
 	UpdateBreak    = 1
 	ActionMinRange = 50.0
+	Message        = ""
 )
 
 // Load load server configuration file.
@@ -82,6 +83,9 @@ func Load() error {
 			ActionMinRange = minRange
 		}
 	}
+	if len(conf["message"]) > 0 {
+		Message = conf["message"][0]
+	}
 	return nil
 }
 
@@ -99,6 +103,7 @@ func Save() error {
 	conf["module"] = []string{Module}
 	conf["update-break"] = []string{fmt.Sprintf("%d", UpdateBreak)}
 	conf["action-min-range"] = []string{fmt.Sprintf("%f", ActionMinRange)}
+	conf["message"] = []string{Message}
 	text := text.MarshalConfig(conf)
 	// Write config to file.
 	write := bufio.NewWriter(file)

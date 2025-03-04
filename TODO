@@ -3,7 +3,6 @@ MAJOR:
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
-* Configurable message to display to each user after login
 * Saving server logs to file
 * Sending use response after handling training request
 * request.go is large and growing, how to split it in a sane way?
@@ -35,3 +34,4 @@ DONE:
 * Excluding user characters from update response after user logout
 * Throw items request
 * Handling module chapter change
+* Configurable server message

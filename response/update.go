@@ -1,7 +1,7 @@
 /*
  * response.go
  *
- * Copyright (C) 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,5 +26,6 @@ import (
 
 // Struct for update response.
 type Update struct {
-	Module res.ModuleData `json:"module"`
+	Module  res.ModuleData `json:"module"`
+	Message string         `json:"message"`
 }
