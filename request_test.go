@@ -1,7 +1,7 @@
 /*
  * request_test.go
  *
- * Copyright (C) 2022-2024 Dariusz Sikora <<ds@isangeles.dev>>
+ * Copyright (C) 2022-2025 Dariusz Sikora <<ds@isangeles.dev>>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ import (
 
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
+	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/skill"
 	"github.com/isangeles/flame/training"
@@ -58,7 +59,9 @@ var (
 		TargetMods: flameres.ModifiersData{
 			HealthMods: []flameres.HealthModData{healthModData},
 		}}
-	charData = flameres.CharacterData{
+	dialogStageData = flameres.DialogStageData{ID: "dialogStage", Start: true}
+	dialogData = flameres.DialogData{ID: "dialog", Stages: []flameres.DialogStageData{dialogStageData}}
+	charData   = flameres.CharacterData{
 		ID:         "char",
 		Level:      1,
 		Attributes: flameres.AttributesData{5, 5, 5, 5, 5},
@@ -339,5 +342,51 @@ func TestHandleChatRequest(t *testing.T) {
 	msg := char.ChatLog().Messages()[0]
 	if msg.Text != req.Message {
 		t.Fatalf("Request message was not added to the chat log")
+	}
+}
+
+// TestDialogRequest tests handling of dialog request.
+func TestDialogRequest(t *testing.T) {
+	// Create objects & dialog
+	ob1 := character.New(charData)
+	ob2 := character.New(charData)
+	dialog := dialog.New(dialogData)
+	ob2.AddDialog(dialog)
+	// Create game & add objects
+	game = newGame(modData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddObject(ob1)
+	area.AddObject(ob2)
+	// Create client user
+	user := user.New(userData)
+	user.AddChar(ob1)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request
+	req := request.Dialog{
+		TargetID:     ob1.ID(),
+		TargetSerial: ob1.Serial(),
+		OwnerID:      ob2.ID(),
+		OwnerSerial:  ob2.Serial(),
+		DialogID:     dialog.ID(),
+	}
+	// Test
+	respDialog, err := handleDialogRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handling error: %v", err)
+	}
+	if dialog.Target() != ob1 {
+		t.Errorf("Invalid dialog target")
+	}
+	if respDialog.ID != dialog.ID() {
+		t.Errorf("Invalid response dialog ID: %s != %s", respDialog.ID,
+			dialog.ID())
+	}
+	if respDialog.Stage != dialog.Stage().ID() {
+		t.Errorf("Invalid response dialog stage ID: %s != %s", respDialog.Stage,
+			dialog.Stage().ID())
 	}
 }
