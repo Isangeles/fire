@@ -23,4 +23,4 @@ The server will answer with the dialog response if this request was successfully
   ]
 }
 .SH SEE ALSO
-request/dialog-answer, response/dialog
+request/dialog-answer, request/dialog-end, response/dialog

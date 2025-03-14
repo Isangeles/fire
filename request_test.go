@@ -390,3 +390,43 @@ func TestDialogRequest(t *testing.T) {
 			dialog.Stage().ID())
 	}
 }
+
+// TestDialogEndRequest tests handling of dialog end request.
+func TestDialogEndRequest(t *testing.T) {
+	// Create objects & dialog
+	ob1 := character.New(charData)
+	ob2 := character.New(charData)
+	dialog := dialog.New(dialogData)
+	ob2.AddDialog(dialog)
+	// Create game & add objects
+	game = newGame(modData)
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddObject(ob1)
+	area.AddObject(ob2)
+	// Create client user
+	user := user.New(userData)
+	user.AddChar(ob1)
+	client := new(Client)
+	client.SetUser(user)
+	// Start dialog
+	dialog.SetTarget(ob1)
+	// Create request
+	req := request.DialogEnd{
+		TargetID:     ob1.ID(),
+		TargetSerial: ob1.Serial(),
+		OwnerID:      ob2.ID(),
+		OwnerSerial:  ob2.Serial(),
+		DialogID:     dialog.ID(),
+	}
+	// Test
+	err := handleDialogEndRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handling error: %v", err)
+	}
+	if dialog.Target() != nil {
+		t.Errorf("Dialog between objects not ended")
+	}
+}

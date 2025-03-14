@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -100,6 +100,14 @@ func handleRequest(req clientRequest) {
 			continue
 		}
 		resp.Dialog = append(resp.Dialog, r)
+	}
+	for _, de := range req.DialogEnd {
+		err := handleDialogEndRequest(req.Client, de)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle dialog-end request: %v", err)
+			resp.Error = append(resp.Error, err)
+			continue
+		}
 	}
 	for _, t := range req.Trade {
 		r, err := handleTradeRequest(req.Client, t)
@@ -408,6 +416,57 @@ func handleDialogAnswerRequest(cli *Client, req request.DialogAnswer) (resp res.
 	// Make response for the client.
 	resp = res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
 	return
+}
+
+// handleDialogEndRequest handles dialog end request.
+func handleDialogEndRequest(cli *Client, req request.DialogEnd) error {
+	// Check if client controls dialog target
+	if !cli.User().Controls(req.TargetID, req.TargetSerial) {
+		return fmt.Errorf("Object not controlled: %s %s", req.TargetID,
+			req.TargetSerial)
+	}
+	// Retrieve dialog onwer & target
+	object := game.Object(req.OwnerID, req.OwnerSerial)
+	if object == nil {
+		return fmt.Errorf("Dialog owner not found: %s %s", req.OwnerID,
+			req.OwnerSerial)
+	}
+	owner, ok := object.(dialog.Talker)
+	if !ok {
+		return fmt.Errorf("Invalid dialog onwer: %s %s", req.OwnerID,
+			req.OwnerSerial)
+	}
+	object = game.Object(req.TargetID, req.TargetSerial)
+	if object == nil {
+		return fmt.Errorf("Dialog target not found: %s %s", req.TargetID,
+			req.TargetSerial)
+	}
+	target, ok := object.(dialog.Talker)
+	if !ok {
+		return fmt.Errorf("Invalid dialog target: %s %s", req.TargetID,
+			req.TargetSerial)
+	}
+	// Check range
+	if !inRange(owner, target) {
+		return fmt.Errorf("Objects are not in the minimal range")
+	}
+	// Retrieve requested dialog from owner
+	var dialog *dialog.Dialog
+	for _, d := range owner.Dialogs() {
+		if d.ID() == req.DialogID {
+			dialog = d
+		}
+	}
+	if dialog == nil {
+		return fmt.Errorf("Dialog not found: %s", req.DialogID)
+	}
+	if dialog.Target().ID() != req.TargetID || dialog.Target().Serial() != req.TargetSerial {
+		return fmt.Errorf("Dialog not started by the target object: %s", req.DialogID)
+	}
+	// End dialog
+	dialog.Restart()
+	dialog.SetTarget(nil)
+	return nil
 }
 
 // handleTradeRequest handles trade request.

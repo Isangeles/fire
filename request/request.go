@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,7 @@ type Request struct {
 	Move          []Move          `json:"move"`
 	Dialog        []Dialog        `json:"dialog"`
 	DialogAnswer  []DialogAnswer  `json:"dialog-answer"`
+	DialogEnd     []DialogEnd     `json:"dialog-end"`
 	Trade         []Trade         `json:"trade"`
 	TransferItems []TransferItems `json:"transfer-items"`
 	ThrowItems    []ThrowItems    `json:"throw-items"`

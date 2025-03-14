@@ -1,7 +1,7 @@
 /*
  * dialog.go
  *
- * Copyright 2020 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,3 +37,6 @@ type DialogAnswer struct {
 	Dialog
 	AnswerID     string `json:"answer-id"`
 }
+
+// Struct for dialog end request.
+type DialogEnd Dialog
