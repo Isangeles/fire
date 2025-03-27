@@ -1,7 +1,7 @@
 /*
  * user.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ import (
 // Struct for user.
 type User struct {
 	Logged    bool
-	admin     bool
+	Admin     bool
 	id        string
 	pass      string
 	charFlags []flag.Flag
@@ -48,7 +48,7 @@ func New(data res.UserData) *User {
 	u := User{
 		id:    data.ID,
 		pass:  data.Pass,
-		admin: data.Admin,
+		Admin: data.Admin,
 		chars: make(map[string]Character),
 	}
 	for _, f := range data.CharFlags {
@@ -65,11 +65,6 @@ func (u *User) ID() string {
 // Pass returns user password.
 func (u *User) Pass() string {
 	return u.pass
-}
-
-// Admin checks if user is the admin.
-func (u *User) Admin() bool {
-	return u.admin
 }
 
 // Chars returns user characters.

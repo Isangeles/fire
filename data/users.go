@@ -1,7 +1,7 @@
 /*
  * users.go
  *
- * Copyright (C) 2020-2021 Dariusz Sikora <dev@isangeles.pl>
+ * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -118,7 +118,7 @@ func saveUser(path string, user *user.User) error {
 	}
 	conf := make(map[string][]string)
 	conf["pass"] = []string{user.Pass()}
-	conf["admin"] = []string{fmt.Sprintf("%v", user.Admin())}
+	conf["admin"] = []string{fmt.Sprintf("%v", user.Admin)}
 	for _, f := range user.CharFlags() {
 		conf["char-flags"] = append(conf["char-flags"], string(f))
 	}

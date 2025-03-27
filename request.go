@@ -207,7 +207,7 @@ func handleRequest(req clientRequest) {
 	for _, a := range req.Accept {
 		handleAcceptRequest(req.Client, a)
 	}
-	if req.Client.User().Admin() {
+	if req.Client.User().Admin {
 		game.pause = req.Pause
 	}
 	if req.Close > 0 {
@@ -870,8 +870,8 @@ func handleTargetRequest(cli *Client, req request.Target) error {
 
 // handleSaveRequest handles save request.
 func handleSaveRequest(cli *Client, saveName string) error {
-	if !cli.User().Admin() {
-		return fmt.Errorf("You are not the admin")
+	if !cli.User().Admin {
+		return fmt.Errorf("You are not an admin")
 	}
 	path := filepath.Join(config.ModulesPath, saveName)
 	err := flamedata.ExportModule(path, game.Data())
@@ -883,8 +883,8 @@ func handleSaveRequest(cli *Client, saveName string) error {
 
 // handleLoadRequest handles load request.
 func handleLoadRequest(cli *Client, saveName string) error {
-	if !cli.User().Admin() {
-		return fmt.Errorf("You are not the admin")
+	if !cli.User().Admin {
+		return fmt.Errorf("You are not an admin")
 	}
 	// Import module.
 	path := filepath.Join(config.ModulesPath, saveName+flamedata.ModuleFileExt)
@@ -901,8 +901,8 @@ func handleLoadRequest(cli *Client, saveName string) error {
 
 // handleCommandRequest handles command request.
 func handleCommandRequest(cli *Client, cmdText string) (resp response.Command, err error) {
-	if !cli.User().Admin() {
-		err = fmt.Errorf("You are not the admin")
+	if !cli.User().Admin {
+		err = fmt.Errorf("You are not an admin")
 		return
 	}
 	exp, err := syntax.NewSTDExpression(cmdText)
@@ -924,8 +924,8 @@ func handleAcceptRequest(cli *Client, id int) {
 
 // handleCloseRequest handles close request.
 func handleCloseRequest(cli *Client, timeNano int64) error {
-	if !cli.User().Admin() {
-		return fmt.Errorf("You are not the admin")
+	if !cli.User().Admin {
+		return fmt.Errorf("You are not an admin")
 	}
 	closeTime := time.Unix(0, timeNano)
 	closeFunc := func() { close = true }
