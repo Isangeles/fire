@@ -60,8 +60,8 @@ var (
 			HealthMods: []flameres.HealthModData{healthModData},
 		}}
 	dialogStageData = flameres.DialogStageData{ID: "dialogStage", Start: true}
-	dialogData = flameres.DialogData{ID: "dialog", Stages: []flameres.DialogStageData{dialogStageData}}
-	charData   = flameres.CharacterData{
+	dialogData      = flameres.DialogData{ID: "dialog", Stages: []flameres.DialogStageData{dialogStageData}}
+	charData        = flameres.CharacterData{
 		ID:         "char",
 		Level:      1,
 		Attributes: flameres.AttributesData{5, 5, 5, 5, 5},
@@ -73,6 +73,47 @@ var (
 	modData       = flameres.ModuleData{ID: "module", Chapter: chapterData}
 	userData      = res.UserData{ID: "user"}
 )
+
+// TestHandleSetPosRequest tests handling of set position request.
+func TestHandleSetPosRequest(t *testing.T) {
+	// Create game & object
+	game = newGame(modData)
+	ob := character.New(charData)
+	// Add object to game area
+	area := game.Chapter().Area("area")
+	if area == nil {
+		t.Fatalf("Test area not found")
+	}
+	area.AddObject(ob)
+	// Create user & client
+	user := user.New(userData)
+	user.AddChar(ob)
+	client := new(Client)
+	client.SetUser(user)
+	// Create request
+	req := request.SetPos{
+		ID:     ob.ID(),
+		Serial: ob.Serial(),
+		PosX:   100,
+		PosY:   200,
+	}
+	// Test no admin error
+	err := handleSetPosRequest(client, req)
+	if err == nil {
+		t.Errorf("Request handling didn't returned permission error")
+	}
+	// Test admin
+	user.Admin = true
+	err = handleSetPosRequest(client, req)
+	if err != nil {
+		t.Fatalf("Request handling error: %v", err)
+	}
+	posX, posY := ob.Position()
+	if posX != req.PosX || posY != req.PosY {
+		t.Errorf("Invalid object position: %f != %f, %f != %f",
+			posX, req.PosX, posY, req.PosY)
+	}
+}
 
 // TestHandleTransferItemsRequest tests handling transfer items request.
 func TestHandleTransferItemsRequest(t *testing.T) {

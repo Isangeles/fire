@@ -76,6 +76,13 @@ func handleRequest(req clientRequest) {
 			continue
 		}
 	}
+	for _, r := range req.SetPos {
+		err := handleSetPosRequest(req.Client, r)
+		if err != nil {
+			err := fmt.Sprintf("Unable to handle set-pos request: %v", err)
+			resp.Error = append(resp.Error, err)
+		}
+	}
 	for _, m := range req.Move {
 		err := handleMoveRequest(req.Client, m)
 		if err != nil {
@@ -247,6 +254,26 @@ func handleNewCharRequest(cli *Client, req request.NewChar) error {
 	}
 	game.AddTranslationAll(res.TranslationData{req.Data.ID, []string{req.Name}})
 	cli.User().AddChar(char)
+	return nil
+}
+
+// handleSetPosRequest handles set position request.
+func handleSetPosRequest(cli *Client, req request.SetPos) error {
+	// Admin check
+	if !cli.User().Admin {
+		return fmt.Errorf("User is not an admin")
+	}
+	// Retrieve object
+	ob := game.Object(req.ID, req.Serial)
+	if ob == nil {
+		return fmt.Errorf("Object no found: %s %s", req.ID, req.Serial)
+	}
+	char, ok := ob.(*character.Character)
+	if !ok {
+		return fmt.Errorf("Object is not a character: %s %s", req.ID, req.Serial)
+	}
+	// Set position
+	char.SetPosition(req.PosX, req.PosY)
 	return nil
 }
 

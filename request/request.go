@@ -31,6 +31,7 @@ import (
 type Request struct {
 	Login         []Login         `json:"login"`
 	NewChar       []NewChar       `json:"new-char"`
+	SetPos        []SetPos        `json:"set-pos"`
 	Move          []Move          `json:"move"`
 	Dialog        []Dialog        `json:"dialog"`
 	DialogAnswer  []DialogAnswer  `json:"dialog-answer"`

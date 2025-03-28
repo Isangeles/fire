@@ -1,12 +1,12 @@
-.TH move
+.TH set-pos
 .SH NAME
-move - a client request used to move one of the controlled objects.
+set-pos - a client request used to set position of the game objects.
 .SH DESCRIPTION
-The move request is sent by the client to change the destination point of one of the module characters.
+The move request is sent by the client to change the position of one of the module characters.
 .br
 This request contains an ID and serial value of the character to move and XY position.
 .br
-Only characters controlled by the author of the move request can be moved.
+Client admin role is required in order to process this request.
 .br
 In case of error, the server sends a proper error response to the client.
 .SH JSON EXAMPLE
@@ -22,4 +22,4 @@ In case of error, the server sends a proper error response to the client.
   ]
 }
 .SH SEE ALSO
-request/set-pos, response/error
+request/move, response/error
