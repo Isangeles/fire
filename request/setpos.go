@@ -27,3 +27,6 @@ type SetPos struct {
 	PosX   float64 `json:"pos-x"`
 	PosY   float64 `json:"pos-y"`
 }
+
+// Type for move request.
+type Move SetPos
