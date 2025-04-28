@@ -1,6 +1,5 @@
 MAJOR:
 * Prevent clients to interact with inactive(offline) characters
-* Allow multiple clients to use the same dialog at the same time
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests

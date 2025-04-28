@@ -336,26 +336,14 @@ func handleDialogRequest(cli *Client, req request.Dialog) (resp res.ObjectDialog
 		err = fmt.Errorf("Objects are not in the minimal range")
 		return
 	}
-	// Retrieve requested dialog from owner.
-	var dialog *dialog.Dialog
-	for _, d := range owner.Dialogs() {
-		if d.ID() == req.DialogID {
-			dialog = d
-		}
-	}
+	// Retrieve dialog from the owner.
+	dialog := owner.Dialog(target)
 	if dialog == nil {
 		err = fmt.Errorf("Dialog not found: %s", req.DialogID)
 		return
 	}
-	if dialog.Target() != nil {
-		err = fmt.Errorf("Dialog already in progress: %s", req.DialogID)
-		return
-	}
-	dialog.Restart()
-	// Set dialog target.
-	dialog.SetTarget(target)
 	// Make response for the client.
-	resp = res.ObjectDialogData{dialog.ID(), dialog.Stage().ID()}
+	resp = res.ObjectDialogData{ID: dialog.ID(), Stage: dialog.Stage().ID()}
 	return
 }
 
@@ -398,21 +386,12 @@ func handleDialogAnswerRequest(cli *Client, req request.DialogAnswer) (resp res.
 		return
 	}
 	// Retrieve requested dialog from owner.
-	var reqDialog *dialog.Dialog
-	for _, d := range owner.Dialogs() {
-		if d.ID() == req.DialogID {
-			reqDialog = d
-		}
-	}
+	reqDialog := owner.Dialog(target)
 	if reqDialog == nil {
 		err = fmt.Errorf("Dialog not found: %s", req.DialogID)
 		return
 	}
 	// Check dialog target.
-	if reqDialog.Target() == nil {
-		err = fmt.Errorf("Dialog not started: %s", reqDialog.ID())
-		return
-	}
 	if reqDialog.Target().ID() != req.TargetID ||
 		reqDialog.Target().Serial() != req.TargetSerial {
 		err = fmt.Errorf("Target different then specified in request: %s %s",
@@ -441,7 +420,7 @@ func handleDialogAnswerRequest(cli *Client, req request.DialogAnswer) (resp res.
 		return
 	}
 	// Make response for the client.
-	resp = res.ObjectDialogData{reqDialog.ID(), reqDialog.Stage().ID()}
+	resp = res.ObjectDialogData{ID: reqDialog.ID(), Stage: reqDialog.Stage().ID()}
 	return
 }
 
@@ -478,12 +457,7 @@ func handleDialogEndRequest(cli *Client, req request.DialogEnd) error {
 		return fmt.Errorf("Objects are not in the minimal range")
 	}
 	// Retrieve requested dialog from owner
-	var dialog *dialog.Dialog
-	for _, d := range owner.Dialogs() {
-		if d.ID() == req.DialogID {
-			dialog = d
-		}
-	}
+	dialog := owner.Dialog(target)
 	if dialog == nil {
 		return fmt.Errorf("Dialog not found: %s", req.DialogID)
 	}

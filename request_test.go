@@ -25,7 +25,6 @@ import (
 
 	"github.com/isangeles/flame/character"
 	flameres "github.com/isangeles/flame/data/res"
-	"github.com/isangeles/flame/dialog"
 	"github.com/isangeles/flame/item"
 	"github.com/isangeles/flame/skill"
 	"github.com/isangeles/flame/training"
@@ -391,8 +390,7 @@ func TestDialogRequest(t *testing.T) {
 	// Create objects & dialog
 	ob1 := character.New(charData)
 	ob2 := character.New(charData)
-	dialog := dialog.New(dialogData)
-	ob2.AddDialog(dialog)
+	ob2.AddDialog(dialogData)
 	// Create game & add objects
 	game = newGame(modData)
 	area := game.Chapter().Area("area")
@@ -412,23 +410,20 @@ func TestDialogRequest(t *testing.T) {
 		TargetSerial: ob1.Serial(),
 		OwnerID:      ob2.ID(),
 		OwnerSerial:  ob2.Serial(),
-		DialogID:     dialog.ID(),
+		DialogID:     dialogData.ID,
 	}
 	// Test
 	respDialog, err := handleDialogRequest(client, req)
 	if err != nil {
 		t.Fatalf("Request handling error: %v", err)
 	}
-	if dialog.Target() != ob1 {
-		t.Errorf("Invalid dialog target")
-	}
-	if respDialog.ID != dialog.ID() {
+	if respDialog.ID != dialogData.ID {
 		t.Errorf("Invalid response dialog ID: %s != %s", respDialog.ID,
-			dialog.ID())
+			dialogData.ID)
 	}
-	if respDialog.Stage != dialog.Stage().ID() {
+	if respDialog.Stage != dialogData.Stages[0].ID {
 		t.Errorf("Invalid response dialog stage ID: %s != %s", respDialog.Stage,
-			dialog.Stage().ID())
+			dialogData.Stages[0].ID)
 	}
 }
 
@@ -437,8 +432,7 @@ func TestDialogEndRequest(t *testing.T) {
 	// Create objects & dialog
 	ob1 := character.New(charData)
 	ob2 := character.New(charData)
-	dialog := dialog.New(dialogData)
-	ob2.AddDialog(dialog)
+	ob2.AddDialog(dialogData)
 	// Create game & add objects
 	game = newGame(modData)
 	area := game.Chapter().Area("area")
@@ -453,7 +447,7 @@ func TestDialogEndRequest(t *testing.T) {
 	client := new(Client)
 	client.SetUser(user)
 	// Start dialog
-	dialog.SetTarget(ob1)
+	dialog := ob2.Dialog(ob1)
 	// Create request
 	req := request.DialogEnd{
 		TargetID:     ob1.ID(),
