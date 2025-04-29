@@ -1,6 +1,6 @@
 github.com/isangeles/burn v0.0.0-20250424161312-bb860a52a87e h1:LbeyUUhphHlg2Yv43C5Y+X4uZ41UZpfKTKVxbaBv8LY=
 github.com/isangeles/burn v0.0.0-20250424161312-bb860a52a87e/go.mod h1:20kGGHXzOgzbbsiotF3FaH81fo8zPhxf6Q5m6Qqn0gQ=
-github.com/isangeles/flame v0.0.0-20250424203702-0c5701b56dde h1:HbQkIqKWn0HbzPNn5R8wfEh9yUkjdKxjhZsETHd5TgI=
-github.com/isangeles/flame v0.0.0-20250424203702-0c5701b56dde/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
+github.com/isangeles/flame v0.0.0-20250429150329-52a6c94c8d27 h1:1xa9UxlZJJLtmzgejFdfFI/1e6QDFQ1GdlRayAzRweg=
+github.com/isangeles/flame v0.0.0-20250429150329-52a6c94c8d27/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b h1:TfKHKtfJnlSIe2OZ8QaPLBskYJ5LE7Sf/dVDhDEFZxs=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b/go.mod h1:HQTF1Ct50epzMRfRAG8Pg6Fzy84J/w8ZFvR4id62X2g=
