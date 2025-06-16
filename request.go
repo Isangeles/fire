@@ -566,7 +566,7 @@ func handleTransferItemsRequest(cli *Client, req request.TransferItems) error {
 	// Transfer items.
 	switch from := from.(type) {
 	case *character.Character:
-		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() {
+		if !cli.User().Controls(from.ID(), from.Serial()) && from.Live() && !from.OpenLoot() {
 			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectFromID,
 				req.ObjectFromSerial)
 		}
