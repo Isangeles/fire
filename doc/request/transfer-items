@@ -6,7 +6,7 @@ The transfer-items request is used by the client to transfer items from one obje
 to another object that is controlled by the client.
 .br
 Object to transfer items from, need to be under client control or need to be available to loot,
-e.g. not live.
+e.g. not live or marked with the open-loot flag.
 .br
 This request contains IDs and serial values of two objects and list
 of items to transfer.
