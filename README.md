@@ -2,7 +2,7 @@
 Fire is a TCP game server for [Flame](https://github.com/Isangeles/flame) RPG engine, which enables multiple users
 to connect and play together.
 
-The server serves as a simple interface that handles connected users and offers them a set of requests to control
+The server is used as a simple interface that handles connected users and offers them a set of requests to control
 their characters and interact with the game world hosted on the server.
 
 Communication between client and server is realized through a JSON request/response system.
