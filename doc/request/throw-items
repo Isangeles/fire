@@ -7,6 +7,8 @@ The throw-items request is used by the client to remove items from the object in
 Object to remove items from, need to be under client control.
 .br
 This request contains ID and serial value of object and list of items to remove.
+.br
+List contains a map of the item IDs as keys and serial values of specific items to remove from the object inventory.
 .SH JSON EXAMPLE
 .nf
 {
