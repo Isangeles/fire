@@ -589,29 +589,34 @@ func handleThrowItemsRequest(cli *Client, req request.ThrowItems) error {
 		return fmt.Errorf("Object not found: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
-	container, ok := ob.(item.Container)
+	char, ok := ob.(*character.Character)
 	if !ok {
-		return fmt.Errorf("Object is not a container: %s %s", req.ObjectID,
+		return fmt.Errorf("Object is not a character: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
-	if !cli.User().Controls(container.ID(), container.Serial()) {
+	if !cli.User().Controls(char.ID(), char.Serial()) {
 		return fmt.Errorf("Object is not controlled: %s %s", req.ObjectID,
 			req.ObjectSerial)
 	}
+	// Create loot object.
+	lootData := res.Character("fireLoot1", "")
+	if lootData == nil {
+		lootData = &res.CharacterData{ID: "fireLoot1", Level: 1, OpenLoot: true}
+		res.Characters = append(res.Characters, *lootData)
+	}
+	loot := character.New(*lootData)
+	area := game.Chapter().ObjectArea(char)
+	if area == nil {
+		return fmt.Errorf("Object area not found: %s %s", ob.ID(), ob.Serial())
+	}
+	area.AddObject(loot)
+	posX, posY := char.Position()
+	loot.SetPosition(posX, posY)
+	loot.SetDestPoint(posX, posY)
 	// Remove items.
-	switch container := container.(type) {
-	case *character.Character:
-		if !cli.User().Controls(container.ID(), container.Serial()) && container.Live() {
-			return fmt.Errorf("Can't transfer items from: %s %s", req.ObjectID,
-				req.ObjectSerial)
-		}
-		err := removeItems(container, req.Items)
-		if err != nil {
-			return fmt.Errorf("Unable to remove items: %v", err)
-		}
-	default:
-		return fmt.Errorf("Unsupported object: %s %s", req.ObjectID,
-			req.ObjectSerial)
+	err := transferItems(char, loot, req.Items)
+	if err != nil {
+		return fmt.Errorf("Unable to remove items: %v", err)
 	}
 	return nil
 }

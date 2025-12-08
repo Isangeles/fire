@@ -8,7 +8,6 @@ MINOR:
 * Sending use response after handling training request
 * request.go is large and growing, how to split it in a sane way?
 * Server config file getting wiped sometimes after closing the server(macOS only?)
-* Throw items req: put items on the ground(container area object) instead of removing them
 DONE:
 * Handling requests and sending responses
 * Update response
