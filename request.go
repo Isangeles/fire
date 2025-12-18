@@ -599,9 +599,9 @@ func handleThrowItemsRequest(cli *Client, req request.ThrowItems) error {
 			req.ObjectSerial)
 	}
 	// Create loot object.
-	lootData := res.Character("fireLoot1", "")
+	lootData := res.Character("obLoot1", "")
 	if lootData == nil {
-		lootData = &res.CharacterData{ID: "fireLoot1", Level: 1, OpenLoot: true}
+		lootData = &res.CharacterData{ID: "obLoot1", Level: 1, OpenLoot: true}
 		res.Characters = append(res.Characters, *lootData)
 	}
 	loot := character.New(*lootData)
