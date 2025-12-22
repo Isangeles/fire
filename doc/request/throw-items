@@ -10,7 +10,7 @@ This request contains ID and serial value of object and list of items to remove.
 .br
 List contains a map of the item IDs as keys and serial values of specific items to remove from the object inventory.
 .br
-The removed items will be transfered to the fireLoot area object spawned on the same position as the current position of the request object.
+The removed items will be transfered to the area object(obLoot1) spawned on the same position as the current position of the request object.
 .SH JSON EXAMPLE
 .nf
 {
