@@ -224,6 +224,10 @@ func TestHandleThrowItemsRequest(t *testing.T) {
 		t.Errorf("Item should be removed from %s inventory: %s %s", char.ID(),
 			item2.ID(), item2.Serial())
 	}
+	loot := game.Chapter().AreaObject("obLoot1", "0")
+	if loot == nil {
+		t.Fatalf("Loot object not found")
+	}
 }
 
 // TestHandleTrainingRequest tests handling training request.
