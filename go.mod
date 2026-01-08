@@ -3,8 +3,8 @@ module github.com/isangeles/fire
 go 1.20
 
 require (
-	github.com/isangeles/burn v0.0.0-20250926144233-7a33f466931e
-	github.com/isangeles/flame v0.0.0-20251010135543-d9abe7270053
+	github.com/isangeles/burn v0.0.0-20251121141326-4359db6ed649
+	github.com/isangeles/flame v0.0.0-20260107192943-ab2cb6a25692
 )
 
 require github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b // indirect
