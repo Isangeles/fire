@@ -1,7 +1,7 @@
 /*
  * config.go
  *
- * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,12 +41,13 @@ const (
 )
 
 var (
-	Host           = ""
-	Port           = "8000"
-	Module         = ""
-	UpdateBreak    = 1
-	ActionMinRange = 50.0
-	Message        = ""
+	Host            = ""
+	Port            = "8000"
+	Module          = ""
+	UpdateBreak     = 1
+	ActionMinRange  = 50.0
+	Message         = ""
+	LootDespawnTime = int64(5000)
 )
 
 // Load load server configuration file.
@@ -86,6 +87,12 @@ func Load() error {
 	if len(conf["message"]) > 0 {
 		Message = conf["message"][0]
 	}
+	if len(conf["loot-despawn-time"]) > 0 {
+		despawnTime, err := strconv.Atoi(conf["loot-despawn-time"][0])
+		if err == nil {
+			LootDespawnTime = int64(despawnTime)
+		}
+	}
 	return nil
 }
 
@@ -104,6 +111,7 @@ func Save() error {
 	conf["update-break"] = []string{fmt.Sprintf("%d", UpdateBreak)}
 	conf["action-min-range"] = []string{fmt.Sprintf("%f", ActionMinRange)}
 	conf["message"] = []string{Message}
+	conf["loot-despawn-time"] = []string{fmt.Sprintf("%d", LootDespawnTime)}
 	text := text.MarshalConfig(conf)
 	// Write config to file.
 	write := bufio.NewWriter(file)

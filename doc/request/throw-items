@@ -11,6 +11,8 @@ This request contains ID and serial value of object and list of items to remove.
 List contains a map of the item IDs as keys and serial values of specific items to remove from the object inventory.
 .br
 The removed items will be transfered to the area object(obLoot1) spawned on the same position as the current position of the request object.
+.br
+Despawn time of the loot object can be configured with loot-despawn-time config value(5 sec by default).
 .SH JSON EXAMPLE
 .nf
 {

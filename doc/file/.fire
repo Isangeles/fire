@@ -40,6 +40,12 @@ This value is used to validate requests like dialog or trade.
 * message
 .br
 The server message to be included with every update response.
+.P
+* loot-despawn-time
+.br
+The time in milliseconds after which the empty loot object should be despawned.
+.br
+5 seconds by default.
 .SH EXAMPLE
 .nf
 host:localhost
@@ -47,3 +53,4 @@ port:8000
 module:test
 action-min-range:50
 message:server message
+loot-despawn-time:5000

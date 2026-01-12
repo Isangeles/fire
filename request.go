@@ -1,7 +1,7 @@
 /*
  * request.go
  *
- * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -605,6 +605,7 @@ func handleThrowItemsRequest(cli *Client, req request.ThrowItems) error {
 		res.Characters = append(res.Characters, *lootData)
 	}
 	loot := character.New(*lootData)
+	loot.SetDespawn(config.LootDespawnTime)
 	area := game.Chapter().ObjectArea(char)
 	if area == nil {
 		return fmt.Errorf("Object area not found: %s %s", ob.ID(), ob.Serial())

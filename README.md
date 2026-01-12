@@ -101,6 +101,12 @@ The minimum range required for game objects to interact with each other.
 message:[message text]
 ```
 The server message to include with every update response.
+```
+loot-despawn-time:[time in milliseconds]
+```
+The time in milliseconds after which the empty loot object should be despawned.
+
+If not set, the default value is 5 seconds.
 ## Documentation
 Source code documentation could be easily browsed with the `go doc` command.
 
