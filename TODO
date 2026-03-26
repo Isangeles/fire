@@ -1,7 +1,6 @@
 MAJOR:
 * Prevent clients to interact with inactive(offline) characters
 * Handle the character visibility
-* Switch from TCP to websockets
 MINOR:
 * Kicking clients
 * Canceling unaccepted requests
@@ -36,3 +35,4 @@ DONE:
 * Throw items request
 * Handling module chapter change
 * Configurable server message
+* Websocket hosting

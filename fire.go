@@ -1,7 +1,7 @@
 /*
  * fire.go
  *
- * Copyright (C) 2020-2025 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,13 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"net"
+	"net/http"
 	"os"
 	"time"
+
+	"github.com/gorilla/websocket"
 
 	flameres "github.com/isangeles/flame/data/res"
 	flamelog "github.com/isangeles/flame/log"
@@ -43,6 +44,7 @@ import (
 )
 
 var (
+	upgrader        = websocket.Upgrader{CheckOrigin: checkOrigin}
 	game            *Game
 	enter           = make(chan *Client)
 	leave           = make(chan string)
@@ -108,18 +110,11 @@ func main() {
 	game = newGame(modData)
 	burn.Module = game.Module
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
-	server, err := net.Listen("tcp", addr)
-	if err != nil {
-		panic(fmt.Errorf("Unable to create listener: %v", err))
-	}
-	log.Printf("%s(%s)@%s", config.Name, config.Version, server.Addr())
+	log.Printf("%s(%s)@%s", config.Name, config.Version, addr)
 	go update()
-	for {
-		conn, err := server.Accept()
-		if err != nil {
-			log.Printf("Unable to accept connection: %v", err)
-		}
-		go handleConnection(conn)
+	http.HandleFunc("/", handleHttpReq)
+	if err := http.ListenAndServe(addr, nil); err != nil {
+		panic(fmt.Errorf("Unable to start server: %v", err))
 	}
 }
 
@@ -184,13 +179,29 @@ func update() {
 		if close {
 			// Wait some time before closing the server to ensure that
 			// all clients will receive closed response.
-			time.AfterFunc(time.Duration(2) * time.Second, closeServer)
+			time.AfterFunc(time.Duration(2)*time.Second, closeServer)
 		}
 	}
 }
 
-// handleConnection handles client connection.
-func handleConnection(conn net.Conn) {
+// checkOrigin checks the incoming connection request origin.
+// Allows everything.
+func checkOrigin(req *http.Request) bool {
+	return true
+}
+
+// handleHttpReq upgrades an HTTP connection to WebSocket and handles it.
+func handleHttpReq(writer http.ResponseWriter, req *http.Request) {
+	conn, err := upgrader.Upgrade(writer, req, nil)
+	if err != nil {
+		log.Printf("Unable to upgrade connection: %v", err)
+		return
+	}
+	go handleConnection(conn)
+}
+
+// handleConnection handles a WebSocket client connection.
+func handleConnection(conn *websocket.Conn) {
 	// Create client.
 	cli := newClient(conn)
 	defer cli.Close()
@@ -198,13 +209,12 @@ func handleConnection(conn net.Conn) {
 	go clientWriter(cli)
 	// Enter & listen.
 	enter <- cli
-	input := bufio.NewScanner(cli)
-	for input.Scan() {
-		if input.Err() != nil {
-			log.Printf("Client: %s: unable to read input: %v",
-				cli.RemoteAddr(), input.Err())
+	for {
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			break
 		}
-		r, err := request.Unmarshal(input.Text())
+		r, err := request.Unmarshal(string(msg))
 		if err != nil {
 			log.Printf("Client: %s: unable to create request: %v",
 				cli.RemoteAddr(), err)
@@ -250,7 +260,7 @@ func clientWriter(c *Client) {
 				c.RemoteAddr(), err)
 			return
 		}
-		_, err = fmt.Fprintf(c, "%s\r\n", respData)
+		err = c.Conn.WriteMessage(websocket.TextMessage, []byte(respData))
 		if err != nil {
 			log.Printf("Client writer: %s: unable to write on client out: %v",
 				c.RemoteAddr(), err)

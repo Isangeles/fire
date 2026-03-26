@@ -1,5 +1,5 @@
 ## Introduction
-Fire is a TCP game server for [Flame](https://github.com/Isangeles/flame) RPG engine, which enables multiple users
+Fire is a WebSocket game server for [Flame](https://github.com/Isangeles/flame) RPG engine, which enables multiple users
 to connect and play together.
 
 The server is used as a simple interface that handles connected users and offers them a set of requests to control
@@ -30,13 +30,16 @@ Run server:
 ```
 After this, the server is ready to handle incoming connections from the client programs.
 ## Clients
-Any program able to send data through a TCP connection can serve as a Fire client.
+Any program able to communicate over a WebSocket connection can serve as a Fire client.
 
-For example, you can use [Ncat](https://nmap.org/ncat) utility to receive responses and make requests to the server.
-Of course, interpreting server responses with just Ncat will be difficult, that's why some kind of specialized program is recommended.
+For example, you can use ncat-like [websocat](https://github.com/vi/websocat) utility to receive responses and make requests to the server:
+```
+websocat ws://localhost:8000/
+```
+Of course, interpreting server responses with just terminal utility will be difficult, that's why some kind of specialized program is recommended.
 [Burn Shell](https://github.com/isangeles/burnsh) and [Mural](https://github.com/isangeles/mural) are examples of interfaces that enable the user to play the game hosted on the Fire server.
 
-Client programs use JSON based interface to communicate with the server via a set of requests and responses.
+Client programs use a JSON based interface to communicate with the server via a set of requests and responses.
 
 For each new connection, server sends a logon response to client, which is JSON in following format:
 ```

@@ -21,7 +21,7 @@
 package main
 
 import (
-	"net"
+	"github.com/gorilla/websocket"
 
 	"github.com/isangeles/fire/response"
 	"github.com/isangeles/fire/user"
@@ -29,14 +29,14 @@ import (
 
 // Struct for the server client.
 type Client struct {
-	net.Conn
+	*websocket.Conn
 	user *user.User
 	Out  chan response.Response
 }
 
 // newClient makes new client from
 // specified connection.
-func newClient(conn net.Conn) *Client {
+func newClient(conn *websocket.Conn) *Client {
 	c := new(Client)
 	c.Conn = conn
 	c.Out = make(chan response.Response, 2)
