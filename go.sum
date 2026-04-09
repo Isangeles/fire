@@ -2,7 +2,7 @@ github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aN
 github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/isangeles/burn v0.0.0-20260129151419-bab6be01e35e h1:uUSu4cC7Q56msAtDBk2jr9YsXpl/lQd4srqn1m+c/Jo=
 github.com/isangeles/burn v0.0.0-20260129151419-bab6be01e35e/go.mod h1:VjwxtB6rlQ9Abz+lEz/DGgncNYcm/5icR90n8wZh7o4=
-github.com/isangeles/flame v0.0.0-20260109195814-c1ad2bc239b0 h1:EVMsZEvZLH+PSSwRp+ddc+csRlSsxhpKdIARNjADSsA=
-github.com/isangeles/flame v0.0.0-20260109195814-c1ad2bc239b0/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
+github.com/isangeles/flame v0.0.0-20260407181657-41ac1c3c8249 h1:1fUVSOjLLF4urNFsJ1vFq5uvGmuIq50QjSFt8KFS9NU=
+github.com/isangeles/flame v0.0.0-20260407181657-41ac1c3c8249/go.mod h1:LvI0xJLcFHGZkUeqKIqn1mpFxF28CZ4Vfn+UFjsAa2M=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b h1:TfKHKtfJnlSIe2OZ8QaPLBskYJ5LE7Sf/dVDhDEFZxs=
 github.com/isangeles/tmx v0.0.0-20230925150339-5410bc1b891b/go.mod h1:HQTF1Ct50epzMRfRAG8Pg6Fzy84J/w8ZFvR4id62X2g=
