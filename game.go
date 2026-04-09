@@ -1,7 +1,7 @@
 /*
  * game.go
  *
- * Copyright (C) 2020-2024 Dariusz Sikora <ds@isangeles.dev>
+ * Copyright (C) 2020-2026 Dariusz Sikora <ds@isangeles.dev>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -119,10 +119,7 @@ func (g *Game) UpdateUserChars(usr *user.User) {
 	}
 	// Add new characters.
 outer:
-	for _, c := range g.Chapter().Characters() {
-		if usr.Controls(c.ID(), c.Serial()) {
-			continue
-		}
+	for _, c := range g.UserChars(usr) {
 		for _, f := range usr.CharFlags() {
 			if !c.HasFlag(f) {
 				continue outer
@@ -158,21 +155,28 @@ func (g *Game) StopScripts() {
 // ActivateUserChars removes deactivated char flag from
 // all characters of the specified user.
 func (g *Game) ActivateUserChars(usr *user.User) {
-	for _, c := range g.Chapter().Characters() {
-		if usr.Controls(c.ID(), c.Serial()) {
-			c.RemoveFlag(inactiveCharFlag)
-		}
+	for _, c := range g.UserChars(usr) {
+		c.RemoveFlag(inactiveCharFlag)
 	}
 }
 
 // DeactivatesUserChars add deactivated char flag to all
 // characters of the specified user.
 func (g *Game) DeactivateUserChars(usr *user.User) {
+	for _, c := range g.UserChars(usr) {
+		c.AddFlag(inactiveCharFlag)
+	}
+}
+
+// UserChars returns all game characters controlled by
+// the specified user.
+func (g *Game) UserChars(usr *user.User) (chars []*character.Character) {
 	for _, c := range g.Chapter().Characters() {
 		if usr.Controls(c.ID(), c.Serial()) {
-			c.AddFlag(inactiveCharFlag)
+			chars = append(chars, c)
 		}
 	}
+	return
 }
 
 // NotifyNearChars sends response to all objects that can
