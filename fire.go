@@ -244,7 +244,7 @@ func updateClient(client *Client, resp response.Response) {
 		}
 	}
 	// Send update response.
-	resp.Update = response.Update{Module: game.ClientData(), Message: config.Message}
+	resp.Update = response.Update{Module: game.UserData(client.User()), Message: config.Message}
 	resp.Logon = client.User() == nil
 	resp.Closed = close
 	resp.Paused = game.pause

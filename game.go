@@ -198,10 +198,10 @@ func (g *Game) NotifyNearObjects(ob area.Object, resp response.Response) {
 
 }
 
-// ClientData returns game data for server clients.
+// UserData returns game data for server users.
 // Data like characers of incative(offline) users
 // will be excluded.
-func (g *Game) ClientData() flameres.ModuleData {
+func (g *Game) UserData(usr *user.User) flameres.ModuleData {
 	data := g.Data()
 	// Search for inactive characters.
 	inactiveChars := make(map[string]flameres.CharacterData)
@@ -226,13 +226,24 @@ func (g *Game) ClientData() flameres.ModuleData {
 		var chars []flameres.AreaCharData
 		for _, char := range area.Characters {
 			_, inactive := inactiveChars[char.ID+char.Serial]
-			if !inactive {
+			if !inactive && g.userSees(usr, char.PosX, char.PosY) {
 				chars = append(chars, char)
 			}
 		}
 		data.Chapter.Resources.Areas[id].Characters = chars
 	}
 	return data
+}
+
+// userSees checks if specified x/y position is in sight of any
+// character controlled by the user.
+func (g *Game) userSees(usr *user.User, x, y float64) bool {
+	for _, c := range g.UserChars(usr) {
+		if c.InSight(x, y) {
+			return true
+		}
+	}
+	return false
 }
 
 // update handles game update loop.
