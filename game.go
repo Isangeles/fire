@@ -119,7 +119,10 @@ func (g *Game) UpdateUserChars(usr *user.User) {
 	}
 	// Add new characters.
 outer:
-	for _, c := range g.UserChars(usr) {
+	for _, c := range g.Chapter().Characters() {
+		if usr.Controls(c.ID(), c.Serial()) {
+			continue
+		}
 		for _, f := range usr.CharFlags() {
 			if !c.HasFlag(f) {
 				continue outer
